@@ -1,0 +1,154 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  body {
+    background-color: lavender;
+  }
+  
+  #container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    padding-left: 2rem;
+    padding-right: 2rem;
+    border: 3px outset black;
+  }
+  
+  #title {
+    text-align: center;
+    font-size: 2rem;
+    padding-top: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  #username,
+  #password,
+  #fname,
+  #lname,
+  #salary,
+  #age {
+    font-size: medium;
+    height: 2rem;
+    margin-left: 5px;
+    border-radius: 5px;
+  }
+  
+  #row-flex-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  #signin-btn,
+  #register-btn {
+    background-color: rgb(197, 220, 247);
+    font-size: medium;
+    width: 100%;
+    height: 2rem;
+    border-radius: 5px;
+  }
+  #signin-btn:hover,
+  #register-btn:hover {
+    background-color: lightsteelblue;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  #flex-box {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+  
+  #home-container {
+    text-align: center;
+    padding: 2rem;
+    padding-top: 0;
+  }
+  
+  #search-div {
+    padding-bottom: 1rem;
+    border-bottom: 3px solid rgb(100, 100, 100);
+  }
+  
+  #search-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #search-label {
+    font-size: large;
+    margin-right: auto;
+  }
+  .search-input {
+      font-size: medium;
+      width: 16rem;
+      height: 2rem;
+      border-radius: 5px;
+      margin: 0.5rem;
+  }
+  
+  #search-btn {
+    background-color: rgb(197, 220, 247);
+    font-size: medium;
+    width: 5%;
+    height: 2.3rem;
+    border-radius: 5px;
+  }
+  #search-btn:hover {
+    background-color: lightsteelblue;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  #logout-btn {
+    background-color: rgb(215, 215, 215);
+    font-size: medium;
+    width: 5rem;
+    height: 2.3rem;
+    border-radius: 5px;
+  }
+  #logout-btn:hover {
+    background-color: rgb(198, 198, 198);
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  #table-container {
+    overflow-y: auto;
+    margin-bottom: 1.25rem;
+  }
+  table {
+    width: 100%;
+    margin-top: 2rem;
+    border-collapse: collapse;
+  }
+  td, th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  th {
+    color: black;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: rgb(197, 220, 247);
+  }
+  tr {
+    text-align: left;
+  }
+  tr:nth-child(odd) {
+    background-color: #e2e2e2;
+  }
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  tr:hover {
+    background-color: #d2d2d2;
+  }
