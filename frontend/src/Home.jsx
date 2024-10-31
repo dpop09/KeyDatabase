@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext,useEffect, useState } from "react";
+import { AuthContext } from './AuthContext'
 import { Link, useNavigate } from "react-router-dom";
 
 function Home() {
 
     const [data, setData] = useState([]);
+
+    const { setKeyData } = useContext(AuthContext)
 
     const navigate = useNavigate();
     const handleLogout = () => {
@@ -45,7 +48,8 @@ function Home() {
     }
 
     const handleRowClick = (d) => {
-        alert(d.key_number);
+        setKeyData(d);
+        navigate('/keyinfo');
     }
 
     const getKeyNumber = (d) => {

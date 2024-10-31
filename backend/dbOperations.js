@@ -55,7 +55,31 @@ const dbOperations = {
         } catch (error) {
             console.log(error);
         }
-    }
+    },
+    getKeyRequestForm: async function (key_number) {
+        try {
+            const sql = 'SELECT * FROM `key_request_forms` WHERE key_number = ?';
+            const values = [key_number];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else if (result.length > 0) {
+                        // Convert the image data to Base64 if it exists
+                        result[0].image_data = result[0].image_data
+                            ? result[0].image_data.toString('base64')
+                            : null;
+                        resolve(result[0]);
+                    } else {
+                        resolve(null); // No result found
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
 }
 
 module.exports = dbOperations
