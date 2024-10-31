@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 function Home() {
 
     const [data, setData] = useState([]);
+
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        navigate('/')
+    }
 
     useEffect(() => {
         fetch('http://localhost:8081/getall')
@@ -10,6 +16,37 @@ function Home() {
        .then(data => setData(data))
        .catch(err => console.log(err));
     }, []);
+
+    const handleSearch = async (event) => {
+        event.preventDefault();
+        const column = document.getElementById('Home-select-column').value;
+        const row = document.getElementById('Home-input-search-row').value;
+        if (!column || !row) {
+            alert('Please fill both column and row');
+            return
+        }
+        try {
+            const response = await fetch('http://localhost:8081/search', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ column: column, row: row })
+            })
+            const data = await response.json();
+            if (data) { // if the response is successful
+                setData(data);
+            } else { // if the response is unsuccessful
+                alert("Internal Server Error. Please try again later.");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleRowClick = (d) => {
+        alert(d.key_number);
+    }
 
     const getKeyNumber = (d) => {
         return d.key_number.split('-')[0];
@@ -76,9 +113,31 @@ function Home() {
     }
 
     return (
-        <div id="home-container">
-            <div id="table-container">
-                <table>
+        <div id="Home-div-container">
+            <form id="Home-form-container">
+                <div id="Home-div-search-container">
+                    <label id="Home-label-search-column">Column:</label>
+                    <select id="Home-select-column">
+                        <option value="tag_number">Tag Number</option>
+                        <option value="core_number">Core Number</option>
+                        <option value="room_number">Room Number</option>
+                        <option value="room_type">Room Type</option>
+                        <option value="key_number">Key Number</option>
+                        <option value="key_holder_fname">Key Holder's First Name</option>
+                        <option value="key_holder_lname">Key Holder's Last Name</option>
+                        <option value="date_assigned">Date Key was Assigned</option>
+                        <option value="last_edited_by">Last Edited By</option>
+                        <option value="date_last_edited">Date Last Edited</option>
+                    </select>
+                </div>
+                <div id="Home-div-search-container">
+                    <label id="Home-label-search-row">Search:</label>
+                    <input id="Home-input-search-row" type="text" />
+                    <button id="Home-button-search-row" onClick={handleSearch}>Search</button>
+                </div>
+            </form>
+            <div id="Home-table-container">
+                <table id="Home-table-main">
                     <tbody>
                         <tr>
                             <th>Tag Number</th>
@@ -96,14 +155,22 @@ function Home() {
                             <th>Date Last Edited</th>
                         </tr>
                         {data.map((d, i) => (                 // Maps over the data array to create a table row (<tr>) for each item d in data. The index i is used as a unique key for each row.
-                            <tr key={i}>
-                                <td>{d.tag_number}</td>
+                            <tr key={i} onClick={() => handleRowClick(d)}>
+                                <td 
+                                    id="Home-table-td-tag_number" 
+                                    style={{ backgroundColor: d.tag_color || 'transparent' }} // Set background color or default to transparent
+                                >{d.tag_number}
+                                </td>
                                 <td>{d.core_number}</td>
                                 <td>{d.room_number}</td>
                                 <td>{d.room_type}</td>
                                 <td>{getKeyNumber(d)}</td>
                                 <td>{getKeySequence(d)}</td>
-                                <td>{d.available ? 'Yes' : 'No'}</td>
+                                <td 
+                                    style={{ backgroundColor: d.available ? 'lightgreen' : 'lightcoral' }}
+                                >
+                                    {d.available ? 'Yes' : 'No'}
+                                </td>
                                 <td>{d.key_holder_fname}</td>
                                 <td>{d.key_holder_lname}</td>                
                                 <td>{getReadableDateAssigned(d)}</td>
@@ -115,6 +182,7 @@ function Home() {
                     </tbody>
                 </table>
             </div>
+            <button id="Home-button-logout" onClick={handleLogout}>Logout</button>
         </div>
     )
 }

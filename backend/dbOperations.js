@@ -38,6 +38,24 @@ const dbOperations = {
             console.log(error);
         }
     },
+    search: async function (column, row) {
+        try {
+            const sql = 'SELECT * FROM `Keys` WHERE ?? = ?';
+            const values = [column, row];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 module.exports = dbOperations

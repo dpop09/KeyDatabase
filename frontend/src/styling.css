@@ -1,154 +1,180 @@
+/*
+Styling by using element ids
+naming format is "[ComponentName]-[ElementType]-[DescriptiveName]"
+*/
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Universal styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
 * {
-    font-family: Arial, Helvetica, sans-serif;
-  }
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(12, 84, 73, 1);
+}
+
+body {
+  background-color: rgb(244, 244, 245, 1);
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Signin.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
   
-  body {
-    background-color: lavender;
-  }
+#Signin-h1-page-title {
+  text-align: center;
+  font-size: 3rem;
+  padding-top: 1rem;
+}
+
+#Signin-div-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  padding: 3rem;
+  border: 25px outset rgb(12, 84, 73);
+}
   
-  #container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-right: -50%;
-    transform: translate(-50%, -50%);
-    padding-left: 2rem;
-    padding-right: 2rem;
-    border: 3px outset black;
-  }
+#Signin-h1-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
   
-  #title {
-    text-align: center;
-    font-size: 2rem;
-    padding-top: 1rem;
-    margin-bottom: 2rem;
-  }
+#Signin-input-username,
+#Signin-input-password {
+  font-size: medium;
+  height: 2rem;
+  margin-left: 5px;
+  border-radius: 5px;
+}
   
-  #username,
-  #password,
-  #fname,
-  #lname,
-  #salary,
-  #age {
-    font-size: medium;
-    height: 2rem;
-    margin-left: 5px;
-    border-radius: 5px;
-  }
+#Signin-div-row-flex-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
   
-  #row-flex-box {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
+#Signin-button-signin {
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  width: 100%;
+  height: 2rem;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+#Signin-button-signin:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Home.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#Home-div-container {
+  text-align: center;
+  padding: 2rem;
+  padding-top: 0;
+}
+
+#Home-form-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#Home-div-search-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+#Home-label-search-column,
+#Home-label-search-row {
+  font-size: large;
+  margin-right: auto;
+}
+
+#Home-select-column {
+  font-size: medium;
+  width: 8rem;
+  height: 2.35rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+}
+
+#Home-input-search-row {
+  font-size: medium;
+  width: 16rem;
+  height: 2rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+}
   
-  #signin-btn,
-  #register-btn {
-    background-color: rgb(197, 220, 247);
-    font-size: medium;
-    width: 100%;
-    height: 2rem;
-    border-radius: 5px;
-  }
-  #signin-btn:hover,
-  #register-btn:hover {
-    background-color: lightsteelblue;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  #flex-box {
-    margin-top: 2rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-  }
-  
-  #home-container {
-    text-align: center;
-    padding: 2rem;
-    padding-top: 0;
-  }
-  
-  #search-div {
-    padding-bottom: 1rem;
-    border-bottom: 3px solid rgb(100, 100, 100);
-  }
-  
-  #search-form {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-  #search-label {
-    font-size: large;
-    margin-right: auto;
-  }
-  .search-input {
-      font-size: medium;
-      width: 16rem;
-      height: 2rem;
-      border-radius: 5px;
-      margin: 0.5rem;
-  }
-  
-  #search-btn {
-    background-color: rgb(197, 220, 247);
-    font-size: medium;
-    width: 5%;
-    height: 2.3rem;
-    border-radius: 5px;
-  }
-  #search-btn:hover {
-    background-color: lightsteelblue;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  
-  #logout-btn {
-    background-color: rgb(215, 215, 215);
-    font-size: medium;
-    width: 5rem;
-    height: 2.3rem;
-    border-radius: 5px;
-  }
-  #logout-btn:hover {
-    background-color: rgb(198, 198, 198);
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  #table-container {
-    overflow-y: auto;
-    margin-bottom: 1.25rem;
-  }
-  table {
-    width: 100%;
-    margin-top: 2rem;
-    border-collapse: collapse;
-  }
-  td, th {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-  th {
-    color: black;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: left;
-    background-color: rgb(197, 220, 247);
-  }
-  tr {
-    text-align: left;
-  }
-  tr:nth-child(odd) {
-    background-color: #e2e2e2;
-  }
-  tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-  tr:hover {
-    background-color: #d2d2d2;
-  }
+#Home-button-search-row {
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#Home-button-search-row:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#Home-table-container {
+  overflow-y: auto;
+  margin-bottom: 1.25rem;
+}
+
+#Home-table-main {
+  width: 100%;
+  margin-top: 2rem;
+  border-collapse: collapse;
+}
+td, th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+th {
+  color: white;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgb(9, 64, 56, 1);
+}
+tr {
+  text-align: left;
+}
+tr:nth-child(odd) {
+  background-color: #e2e2e2;
+}
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+tr:hover {
+  background-color: #d2d2d2;
+}
+
+#Home-button-logout {
+  background-color: rgb(215, 215, 215);
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+}
+#Home-button-logout:hover {
+  background-color: rgb(198, 198, 198);
+  cursor: pointer;
+  transition: 0.3s;
+}
