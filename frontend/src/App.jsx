@@ -3,6 +3,7 @@ import { AuthContext, AuthProvider } from './AuthContext'
 import Home from './Home.jsx'
 import Signin from './Signin.jsx'
 import KeyInfo from './KeyInfo.jsx'
+import EditKey from './EditKey.jsx'
 
 function App() {
 
@@ -24,6 +25,11 @@ function App() {
             exact
             path='/keyinfo'
             element={<KeyInfo />}
+          />
+          <Route
+            exact
+            path='/editkey'
+            element={<EditKey />}
           />
           <Route
             path='*'

@@ -179,3 +179,158 @@ tr:hover {
   cursor: pointer;
   transition: 0.3s;
 }
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+KeyInfo.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#KeyInfo-div-container {
+  text-align: center;
+  width: auto;
+  padding: 2rem;
+  padding-top: 0;
+}
+
+#KeyInfo-div-flex-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#KeyInfo-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#KeyInfo-div-row-flex-box {
+  display: flex;
+  width: 180%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.3rem;
+}
+
+#KeyInfo-label-row {
+  font-size: medium;
+}
+
+#KeyInfo-input-tag_number,
+#KeyInfo-input-tag_color,
+#KeyInfo-input-core_number,
+#KeyInfo-input-room_number,
+#KeyInfo-input-room_type,
+#KeyInfo-input-key_number,
+#KeyInfo-input-available,
+#KeyInfo-input-key_holder_fname,
+#KeyInfo-input-key_holder_lname,
+#KeyInfo-input-date_assigned,
+#KeyInfo-input-comments,
+#KeyInfo-input-last_edited_by,
+#KeyInfo-input-date_last_edited {
+  font-size: medium;
+  width: 60%;
+  height: 2rem;
+  border-radius: 5px;
+}
+
+#KeyInfo-input-tag_number:hover,
+#KeyInfo-input-tag_color:hover,
+#KeyInfo-input-core_number:hover,
+#KeyInfo-input-room_number:hover,
+#KeyInfo-input-room_type:hover,
+#KeyInfo-input-key_number:hover,
+#KeyInfo-input-available:hover,
+#KeyInfo-input-key_holder_fname:hover,
+#KeyInfo-input-key_holder_lname:hover,
+#KeyInfo-input-date_assigned:hover,
+#KeyInfo-input-comments:hover,
+#KeyInfo-input-last_edited_by:hover,
+#KeyInfo-input-date_last_edited:hover {
+  cursor: not-allowed;
+}
+
+#KeyInfo-div-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+#KeyInfo-button-back {
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#KeyInfo-button-back:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#KeyInfo-button-edit {
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#KeyInfo-button-edit:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+EditKey.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#EditKey-div-container {
+  text-align: center;
+  width: auto;
+  padding: 2rem;
+  padding-top: 0;
+}
+
+#EditKey-div-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+#EditKey-button-cancel {
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#EditKey-button-cancel:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#EditKey-button-submit {
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#EditKey-button-submit:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}

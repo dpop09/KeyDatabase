@@ -10,6 +10,9 @@ function KeyInfo() {
     const handleGoBack = () => {
         navigate('/home');
     }
+    const handleEdit = () => {
+        navigate('/editkey');
+    }
 
     const { keyData } = useContext(AuthContext);
 
@@ -51,74 +54,61 @@ function KeyInfo() {
     return (
         <div id="KeyInfo-div-container">
             <h1 id="KeyInfo-h1-title">KEY {keyData.key_number} INFORMATION</h1>
-            <form>
-                <div id="KeyInfo-div-row-flex-box">
-                    <label for="tag_number">Tag Number: </label>
-                    <input type="text" id="KeyInfo-input-tag_number" value={keyData.tag_number} disabled />
-                </div>
-                <br></br>
-                <div id ="KeyInfo-div-row-flex-box">
-                    <label for="tag_color">Tag Color: </label>
-                    <input type="text" id="KeyInfo-input-tag_color" value={keyData.tag_color} disabled />
-                </div>
-                <br></br>
-                <div id="KeyInfo-div-row-flex-box">
-                    <label for="core_number">Core Number: </label>
-                    <input type="text" id="KeyInfo-input-core_number" value={keyData.core_number} disabled />
-                </div>
-                <br></br>
-                <div id="KeyInfo-div-row-flex-box">
-                    <label for="room_number">Room Number: </label>
-                    <input type="text" id="KeyInfo-input-room_number" value={keyData.room_number} disabled />
-                </div>
-                <br></br>
-                <div id="KeyInfo-div-row-flex-box">
-                    <label for="room_type">Room Type: </label>
-                    <input type="text" id="KeyInfo-input-room_number" value={keyData.room_type} disabled />
-                </div>
-                <br></br>
-                <div id="KeyInfo-div-row-flex-box">
-                    <label for="key_number">Key Number: </label>
-                    <input type="text" id="KeyInfo-input-key_number" value={keyData.key_number} disabled />
-                </div>
-                <br></br>
-                <div id="KeyInfo-div-row-flex-box">
-                    <label for="available">Available: </label>
-                    <input type="text" id="KeyInfo-input-available" value={keyData.available ? 'Yes' : 'No'} disabled />
-                </div>
-                <br></br>
-                <div id="KeyInfo-div-row-flex-box">
-                    <label for="key_holder_fname">Key Holder's First Name: </label>
-                    <input type="text" id="KeyInfo-input-key_holder_fname" value={keyData.key_holder_fname} disabled />
-                </div>
-                <br></br>
-                <div id="KeyInfo-div-row-flex-box">
-                    <label for="key_holder_lname">Key Holder's Last Name: </label>
-                    <input type="text" id="KeyInfo-input-key_holder_lname" value={keyData.key_holder_lname} disabled />
-                </div>
-                <br></br>
-                <div id="KeyInfo-div-row-flex-box">
-                    <label for="date_assigned">Key Assigned Date: </label>
-                    <input type="text" id="KeyInfo-input-date_assigned" value={keyData.date_assigned} disabled />
-                </div>
-                <br></br>
-                <div id="KeyInfo-div-row-flex-box">
-                    <label for="comments">Comments </label>
-                    <input type="text" id="KeyInfo-input-comments" value={keyData.comments} disabled />
-                </div>
-                <br></br>
-                <div id="KeyInfo-div-row-flex-box">
-                    <label for="last_edited_by">Key Last Edited By: </label>
-                    <input type="text" id="KeyInfo-input-last_edited_by" value={keyData.last_edited_by} disabled />
-                </div>
-                <br></br>
-                <div id="KeyInfo-div-row-flex-box">
-                    <label for="date_last_edited">Date Last Edited: </label>
-                    <input type="text" id="KeyInfo-input-date_last_edited" value={keyData.date_last_edited} disabled />
-                </div>
-                <br></br>
-                <div id="KeyInfo-div-row-flex-box">
-                    <label htmlFor="key_request_form">Key Request Form: </label>
+            <div id="KeyInfo-div-flex-box">
+                <form id="KeyInfo-form-container">
+                    <div id="KeyInfo-div-row-flex-box">
+                        <label for="tag_number" id="KeyInfo-label-row">Tag Number: </label>
+                        <input type="text" id="KeyInfo-input-tag_number" value={keyData.tag_number} disabled />
+                    </div>
+                    <div id ="KeyInfo-div-row-flex-box">
+                        <label for="tag_color" id="KeyInfo-label-row">Tag Color: </label>
+                        <input type="text" id="KeyInfo-input-tag_color" value={keyData.tag_color} disabled />
+                    </div>
+                    <div id="KeyInfo-div-row-flex-box">
+                        <label for="core_number" id="KeyInfo-label-row">Core Number: </label>
+                        <input type="text" id="KeyInfo-input-core_number" value={keyData.core_number} disabled />
+                    </div>
+                    <div id="KeyInfo-div-row-flex-box">
+                        <label for="room_number" id="KeyInfo-label-row">Room Number: </label>
+                        <input type="text" id="KeyInfo-input-room_number" value={keyData.room_number} disabled />
+                    </div>
+                    <div id="KeyInfo-div-row-flex-box">
+                        <label for="room_type" id="KeyInfo-label-row">Room Type: </label>
+                        <input type="text" id="KeyInfo-input-room_type" value={keyData.room_type} disabled />
+                    </div>
+                    <div id="KeyInfo-div-row-flex-box">
+                        <label for="key_number" id="KeyInfo-label-row">Key Number: </label>
+                        <input type="text" id="KeyInfo-input-key_number" value={keyData.key_number} disabled />
+                    </div>
+                    <div id="KeyInfo-div-row-flex-box">
+                        <label for="available" id="KeyInfo-label-row">Available: </label>
+                        <input type="text" id="KeyInfo-input-available" value={keyData.available ? 'Yes' : 'No'} disabled />
+                    </div>
+                    <div id="KeyInfo-div-row-flex-box">
+                        <label for="key_holder_fname" id="KeyInfo-label-row">Key Holder's First Name: </label>
+                        <input type="text" id="KeyInfo-input-key_holder_fname" value={keyData.key_holder_fname} disabled />
+                    </div>
+                    <div id="KeyInfo-div-row-flex-box">
+                        <label for="key_holder_lname" id="KeyInfo-label-row">Key Holder's Last Name: </label>
+                        <input type="text" id="KeyInfo-input-key_holder_lname" value={keyData.key_holder_lname} disabled />
+                    </div>
+                    <div id="KeyInfo-div-row-flex-box">
+                        <label for="date_assigned" id="KeyInfo-label-row">Key Assigned Date: </label>
+                        <input type="text" id="KeyInfo-input-date_assigned" value={keyData.date_assigned} disabled />
+                    </div>
+                    <div id="KeyInfo-div-row-flex-box">
+                        <label for="comments" id="KeyInfo-label-row">Comments </label>
+                        <input type="text" id="KeyInfo-input-comments" value={keyData.comments} disabled />
+                    </div>
+                    <div id="KeyInfo-div-row-flex-box">
+                        <label for="last_edited_by" id="KeyInfo-label-row">Key Last Edited By: </label>
+                        <input type="text" id="KeyInfo-input-last_edited_by" value={keyData.last_edited_by} disabled />
+                    </div>
+                    <div id="KeyInfo-div-row-flex-box">
+                        <label for="date_last_edited" id="KeyInfo-label-row">Date Last Edited: </label>
+                        <input type="text" id="KeyInfo-input-date_last_edited" value={keyData.date_last_edited} disabled />
+                    </div>
+                </form>
                     {keyRequestForm?.image_data ? (
                         <img
                             src={`data:image/jpeg;base64,${keyRequestForm.image_data}`}
@@ -128,9 +118,11 @@ function KeyInfo() {
                     ) : (
                         <p>The image was not found</p>
                     )}
-                </div>
-            </form>
-            <button id="KeyInfo-button-back" onClick={handleGoBack}>Go Back</button>
+            </div>
+            <div id="KeyInfo-div-button-container">
+                <button id="KeyInfo-button-back" onClick={handleGoBack}>Go Back</button>
+                <button id="KeyInfo-button-edit" onClick={handleEdit} >Edit</button>
+            </div>
         </div>
     )
 }
