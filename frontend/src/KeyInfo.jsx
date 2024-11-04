@@ -25,11 +25,13 @@ function KeyInfo() {
                 },
                 body: JSON.stringify({ key_number: keyData.key_number })
             })
-            const data = await response.json();
-            if (data) { // if the response is successful
-                setKeyRequestForm(data);
-            } else { // if the response is unsuccessful
-                alert("Internal Server Error. Please try again later.");
+            if (response.ok) { // if the response is successful
+                const data = await response.json();
+                setKeyRequestForm(`data:image/jpeg;base64,${data.image_data}`);
+            } else if (response.status === 404) { // if the response is unsuccessful
+                console.log("Error 404: The corresponding key request form pdf file was not found.");
+            } else {
+                console.log("Internal Server Error. Please try again later.");
             }
         } catch (error) {
             console.log(error);
@@ -89,7 +91,7 @@ function KeyInfo() {
                         <input type="text" id="KeyInfo-input-key_number" value={keyData.key_number} disabled />
                     </div>
                     <div id="KeyInfo-div-row-flex-box">
-                        <label for="available" id="KeyInfo-label-row">Available: </label>
+                        <label for="available" id="KeyInfo-label-row">Available (Yes/No): </label>
                         <input type="text" id="KeyInfo-input-available" value={keyData.available ? 'Yes' : 'No'} disabled />
                     </div>
                     <div id="KeyInfo-div-row-flex-box">
@@ -118,19 +120,21 @@ function KeyInfo() {
                         <input type="text" id="KeyInfo-input-last_edited_by" value={keyData.last_edited_by} disabled />
                     </div>
                     <div id="KeyInfo-div-row-flex-box">
-                        <label for="date_last_edited" id="KeyInfo-label-row">Date Last Edited: </label>
+                        <label for="date_last_edited" id="KeyInfo-label-row">Date Last Edited (MM/DD/YYYY): </label>
                         <input type="text" id="KeyInfo-input-date_last_edited" value={displayDateLastEdited} disabled />
                     </div>
                 </form>
-                    {keyRequestForm?.image_data ? (
+                <div id="KeyInfo-div-image-container">
+                    {keyRequestForm ? (
                         <img
-                            src={`data:image/jpeg;base64,${keyRequestForm.image_data}`}
+                            src={keyRequestForm}
                             alt="Key Request Form"
-                            style={{ width: '300px', height: 'auto' }}
+                            style={{ width: '600px', height: 'auto' }}
                         />
                     ) : (
                         <p>The image was not found</p>
                     )}
+                </div>
             </div>
             <div id="KeyInfo-div-button-container">
                 <button id="KeyInfo-button-back" onClick={handleGoBack}>Go Back</button>

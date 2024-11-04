@@ -240,6 +240,13 @@ KeyInfo.jsx component styling
   height: auto;
 }
 
+#KeyInfo-div-image-container {
+  width: 45%;
+  height: auto;
+  border: 2px black solid;
+  border-radius: 5px;
+}
+
 #KeyInfo-div-button-container {
   display: flex;
   flex-direction: row;
@@ -343,6 +350,13 @@ EditKey.jsx component styling
 #EditKey-input-last_edited_by:hover,
 #EditKey-input-date_last_edited:hover {
   cursor: not-allowed;
+}
+
+#EditKey-div-image-container {
+  width: 45%;
+  height: auto;
+  border: 2px black solid;
+  border-radius: 5px;
 }
 
 #EditKey-div-button-container {

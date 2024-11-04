@@ -22,11 +22,13 @@ function EditKey() {
                 },
                 body: JSON.stringify({ key_number: keyData.key_number })
             })
-            const data = await response.json();
-            if (data) { // if the response is successful
-                setKeyRequestForm(data);
-            } else { // if the response is unsuccessful
-                alert("Internal Server Error. Please try again later.");
+            if (response.ok) { // if the response is successful
+                const data = await response.json();
+                setKeyRequestForm(`data:image/jpeg;base64,${data.image_data}`);
+            } else if (response.status === 404) { // if the response is unsuccessful
+                console.log("Error 404: The corresponding key request form pdf file was not found.");
+            } else {
+                console.log("Internal Server Error. Please try again later.");
             }
         } catch (error) {
             console.log(error);
@@ -127,7 +129,7 @@ function EditKey() {
                         <input type="text" id="EditKey-input-key_number" placeholder={keyData.key_number} disabled />
                     </div>
                     <div id="EditKey-div-row-flex-box">
-                        <label for="available" id="EditKey-label-row">Available: </label>
+                        <label for="available" id="EditKey-label-row">Available (Yes/No): </label>
                         <input type="text" id="EditKey-input-available" placeholder={keyData.available ? 'Yes' : 'No'} />
                     </div>
                     <div id="EditKey-div-row-flex-box">
@@ -155,19 +157,21 @@ function EditKey() {
                         <input type="text" id="EditKey-input-last_edited_by" placeholder={keyData.last_edited_by} disabled />
                     </div>
                     <div id="EditKey-div-row-flex-box">
-                        <label for="date_last_edited" id="EditKey-label-row">Date Last Edited: </label>
+                        <label for="date_last_edited" id="EditKey-label-row">Date Last Edited (MM/DD/YYYY): </label>
                         <input type="text" id="EditKey-input-date_last_edited" placeholder={displayDateLastEdited} disabled />
                     </div>
                 </form>
-                    {keyRequestForm?.image_data ? (
+                <div id="EditKey-div-image-container">
+                    {keyRequestForm ? (
                         <img
-                            src={`data:image/jpeg;base64,${keyRequestForm.image_data}`}
+                            src={keyRequestForm}
                             alt="Key Request Form"
-                            style={{ width: '300px', height: 'auto' }}
+                            style={{ width: '600px', height: 'auto' }}
                         />
                     ) : (
                         <p>The image was not found</p>
                     )}
+                </div>
             </div>
             <div id="EditKey-div-button-container">
                 <button id="EditKey-button-cancel" onClick={handleCancel}>Cancel</button>
