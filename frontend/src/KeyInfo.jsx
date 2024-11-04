@@ -43,13 +43,21 @@ function KeyInfo() {
         fetchKeyRequestForm();
     }, []);
 
-    const getKeyNumber = (d) => {
-        return d.key_number.split('-')[0];
-    }
-
-    const getKeySequence = (d) => {
-        return d.key_number.split('-')[1];
-    }
+    const displayDateAssigned = keyData.date_assigned 
+        ? new Date(keyData.date_assigned).toLocaleDateString("en-US", {
+            month: "2-digit",
+            day: "2-digit",
+            year: "numeric"
+        }) 
+        : "";
+    
+    const displayDateLastEdited = keyData.date_last_edited 
+    ? new Date(keyData.date_last_edited).toLocaleDateString("en-US", {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric"
+    }) 
+    : "";
 
     return (
         <div id="KeyInfo-div-container">
@@ -93,12 +101,17 @@ function KeyInfo() {
                         <input type="text" id="KeyInfo-input-key_holder_lname" value={keyData.key_holder_lname} disabled />
                     </div>
                     <div id="KeyInfo-div-row-flex-box">
-                        <label for="date_assigned" id="KeyInfo-label-row">Key Assigned Date: </label>
-                        <input type="text" id="KeyInfo-input-date_assigned" value={keyData.date_assigned} disabled />
+                        <label for="date_assigned" id="KeyInfo-label-row">Key Assigned Date (MM/DD/YYYY): </label>
+                        <input 
+                            type="text" 
+                            id="KeyInfo-input-date_assigned" 
+                            value={displayDateAssigned}
+                            disabled 
+                        />
                     </div>
                     <div id="KeyInfo-div-row-flex-box">
-                        <label for="comments" id="KeyInfo-label-row">Comments </label>
-                        <input type="text" id="KeyInfo-input-comments" value={keyData.comments} disabled />
+                        <label for="comments" id="KeyInfo-label-row">Comments</label>
+                        <textarea id="KeyInfo-textarea-comments" rows="5" cols="5" value={keyData.comments} disabled />
                     </div>
                     <div id="KeyInfo-div-row-flex-box">
                         <label for="last_edited_by" id="KeyInfo-label-row">Key Last Edited By: </label>
@@ -106,7 +119,7 @@ function KeyInfo() {
                     </div>
                     <div id="KeyInfo-div-row-flex-box">
                         <label for="date_last_edited" id="KeyInfo-label-row">Date Last Edited: </label>
-                        <input type="text" id="KeyInfo-input-date_last_edited" value={keyData.date_last_edited} disabled />
+                        <input type="text" id="KeyInfo-input-date_last_edited" value={displayDateLastEdited} disabled />
                     </div>
                 </form>
                     {keyRequestForm?.image_data ? (

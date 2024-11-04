@@ -206,7 +206,7 @@ KeyInfo.jsx component styling
 
 #KeyInfo-div-row-flex-box {
   display: flex;
-  width: 180%;
+  width: 150%;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -227,7 +227,7 @@ KeyInfo.jsx component styling
 #KeyInfo-input-key_holder_fname,
 #KeyInfo-input-key_holder_lname,
 #KeyInfo-input-date_assigned,
-#KeyInfo-input-comments,
+#KeyInfo-textarea-comments,
 #KeyInfo-input-last_edited_by,
 #KeyInfo-input-date_last_edited {
   font-size: medium;
@@ -236,20 +236,8 @@ KeyInfo.jsx component styling
   border-radius: 5px;
 }
 
-#KeyInfo-input-tag_number:hover,
-#KeyInfo-input-tag_color:hover,
-#KeyInfo-input-core_number:hover,
-#KeyInfo-input-room_number:hover,
-#KeyInfo-input-room_type:hover,
-#KeyInfo-input-key_number:hover,
-#KeyInfo-input-available:hover,
-#KeyInfo-input-key_holder_fname:hover,
-#KeyInfo-input-key_holder_lname:hover,
-#KeyInfo-input-date_assigned:hover,
-#KeyInfo-input-comments:hover,
-#KeyInfo-input-last_edited_by:hover,
-#KeyInfo-input-date_last_edited:hover {
-  cursor: not-allowed;
+#KeyInfo-textarea-comments {
+  height: auto;
 }
 
 #KeyInfo-div-button-container {
@@ -297,6 +285,64 @@ EditKey.jsx component styling
   width: auto;
   padding: 2rem;
   padding-top: 0;
+}
+
+#EditKey-div-flex-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#EditKey-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#EditKey-div-row-flex-box {
+  display: flex;
+  width: 150%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.3rem;
+}
+
+#EditKey-label-row {
+  font-size: medium;
+}
+
+#EditKey-input-tag_number,
+#EditKey-input-tag_color,
+#EditKey-input-core_number,
+#EditKey-input-room_number,
+#EditKey-input-room_type,
+#EditKey-input-key_number,
+#EditKey-input-available,
+#EditKey-input-key_holder_fname,
+#EditKey-input-key_holder_lname,
+#EditKey-input-date_assigned,
+#EditKey-textarea-comments,
+#EditKey-input-last_edited_by,
+#EditKey-input-date_last_edited {
+  font-size: medium;
+  width: 60%;
+  height: 2rem;
+  border-radius: 5px;
+}
+
+#EditKey-textarea-comments {
+  height: auto;
+}
+
+#EditKey-input-core_number:hover,
+#EditKey-input-room_number:hover,
+#EditKey-input-room_type:hover,
+#EditKey-input-key_number:hover,
+#EditKey-input-last_edited_by:hover,
+#EditKey-input-date_last_edited:hover {
+  cursor: not-allowed;
 }
 
 #EditKey-div-button-container {

@@ -80,6 +80,27 @@ const dbOperations = {
             console.log(error);
         }
     },
+    editKey: async function (key_number, tag_number, tag_color, available, key_holder_fname, key_holder_lname, date_assigned, comments) {
+        try {
+            const sql = 'UPDATE `Keys` SET tag_number = ?, tag_color = ?, available = ?, key_holder_fname = ?, key_holder_lname = ?, date_assigned = ?, comments = ? WHERE key_number = ?';
+            const values = [tag_number, tag_color, available, key_holder_fname, key_holder_lname, date_assigned, comments, key_number];
+            
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(false); // Reject with false on error
+                    } else {
+                        resolve(result.affectedRows > 0); // Resolve with true if rows were affected, otherwise false
+                    }
+                });
+            });
+    
+            return response; // This will be true if the update was successful, otherwise false
+        } catch (error) {
+            console.log(error);
+            return false; // Return false in case of any error
+        }
+    }    
 }
 
 module.exports = dbOperations

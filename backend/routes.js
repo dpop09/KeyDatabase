@@ -39,4 +39,16 @@ router.post('/getKeyRequestForm' , async (request, response) => {
     }
 });
 
+router.post('/editKey', async (request, response) => {
+    try {
+        const { key_number, tag_number, tag_color, available, key_holder_fname, key_holder_lname, date_assigned, comments } = request.body;
+        //console.log(key_number, tag_number, tag_color, available, key_holder_fname, key_holder_lname, date_assigned, comments);
+        const result = await dbOperations.editKey(key_number, tag_number, tag_color, available, key_holder_fname, key_holder_lname, date_assigned, comments);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
 module.exports = router;
