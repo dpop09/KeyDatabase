@@ -12,6 +12,9 @@ function Home() {
     const handleLogout = () => {
         navigate('/')
     }
+    const handleCreateKey = () => {
+        navigate('/createkey');
+    }
 
     useEffect(() => {
         fetch('http://localhost:8081/getall')
@@ -118,7 +121,7 @@ function Home() {
 
     return (
         <div id="Home-div-container">
-            <form id="Home-form-container">
+            <div id="Home-div-top-flex-box">
                 <div id="Home-div-search-container">
                     <label id="Home-label-search-column">Column:</label>
                     <select id="Home-select-column">
@@ -133,13 +136,15 @@ function Home() {
                         <option value="last_edited_by">Last Edited By</option>
                         <option value="date_last_edited">Date Last Edited</option>
                     </select>
-                </div>
-                <div id="Home-div-search-container">
                     <label id="Home-label-search-row">Search:</label>
                     <input id="Home-input-search-row" type="text" />
                     <button id="Home-button-search-row" onClick={handleSearch}>Search</button>
                 </div>
-            </form>
+                <div id="Home-div-create-key-container">
+                    <button id="Home-button-create-key" onClick={handleCreateKey}/>
+                    <button id="Home-button-logout" onClick={handleLogout}>Logout</button>
+                </div>
+            </div>
             <div id="Home-table-container">
                 <table id="Home-table-main">
                     <tbody>
@@ -186,7 +191,6 @@ function Home() {
                     </tbody>
                 </table>
             </div>
-            <button id="Home-button-logout" onClick={handleLogout}>Logout</button>
         </div>
     )
 }

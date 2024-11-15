@@ -2,6 +2,7 @@ import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom
 import { AuthContext, AuthProvider } from './AuthContext'
 import Home from './Home.jsx'
 import Signin from './Signin.jsx'
+import CreateKey from './CreateKey.jsx'
 import KeyInfo from './KeyInfo.jsx'
 import EditKey from './EditKey.jsx'
 
@@ -20,6 +21,11 @@ function App() {
             exact
             path='/home'
             element={<Home />}
+          />
+          <Route
+            exact
+            path='/createkey'
+            element={<CreateKey />}
           />
           <Route
             exact

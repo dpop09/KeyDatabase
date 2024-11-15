@@ -82,17 +82,18 @@ Home.jsx component styling
   padding-top: 0;
 }
 
-#Home-form-container {
+#Home-div-top-flex-box {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  margin-top: 1rem;
 }
 
 #Home-div-search-container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   margin-left: 1rem;
 }
@@ -105,7 +106,7 @@ Home.jsx component styling
 
 #Home-select-column {
   font-size: medium;
-  width: 8rem;
+  width: 12rem;
   height: 2.35rem;
   border-radius: 5px;
   margin: 0.5rem;
@@ -113,7 +114,7 @@ Home.jsx component styling
 
 #Home-input-search-row {
   font-size: medium;
-  width: 16rem;
+  width: 20rem;
   height: 2rem;
   border-radius: 5px;
   margin: 0.5rem;
@@ -132,6 +133,48 @@ Home.jsx component styling
   transition: 0.3s;
 }
 
+#Home-div-create-key-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+#Home-button-create-key {
+  width: 52px;
+  height: 52px;
+  background-color: transparent;
+  background-image: url('./assets/add_key_icon_default.png');
+  background-size: cover;
+  border: none;
+  outline: none;
+  margin-right: 1rem;
+}
+#Home-button-create-key:hover {
+  background-color: transparent;
+  background-image: url('./assets/add_key_icon_hover.png');
+  background-size: cover;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: .3s;
+}
+
+#Home-button-logout {
+  background-color: rgb(215, 215, 215);
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#Home-button-logout:hover {
+  background-color: rgb(198, 198, 198);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
 #Home-table-container {
   overflow-y: auto;
   margin-bottom: 1.25rem;
@@ -139,7 +182,7 @@ Home.jsx component styling
 
 #Home-table-main {
   width: 100%;
-  margin-top: 2rem;
+  margin-top: 1rem;
   border-collapse: collapse;
 }
 td, th {
@@ -165,19 +208,6 @@ tr:nth-child(even) {
 tr:hover {
   background-color: #d2d2d2;
   cursor: pointer;
-}
-
-#Home-button-logout {
-  background-color: rgb(215, 215, 215);
-  font-size: medium;
-  width: 5rem;
-  height: 2.3rem;
-  border-radius: 5px;
-}
-#Home-button-logout:hover {
-  background-color: rgb(198, 198, 198);
-  cursor: pointer;
-  transition: 0.3s;
 }
 
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -229,7 +259,8 @@ KeyInfo.jsx component styling
 #KeyInfo-input-date_assigned,
 #KeyInfo-textarea-comments,
 #KeyInfo-input-last_edited_by,
-#KeyInfo-input-date_last_edited {
+#KeyInfo-input-date_last_edited,
+#KeyInfo-input-key_request_form {
   font-size: medium;
   width: 60%;
   height: 2rem;
@@ -332,7 +363,8 @@ EditKey.jsx component styling
 #EditKey-input-date_assigned,
 #EditKey-textarea-comments,
 #EditKey-input-last_edited_by,
-#EditKey-input-date_last_edited {
+#EditKey-input-date_last_edited,
+#EditKey-input-key_request_form {
   font-size: medium;
   width: 60%;
   height: 2rem;

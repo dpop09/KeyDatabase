@@ -153,12 +153,8 @@ function EditKey() {
                         <textarea id="EditKey-textarea-comments" rows="5" cols="5" placeholder={keyData.comments} />
                     </div>
                     <div id="EditKey-div-row-flex-box">
-                        <label for="last_edited_by" id="EditKey-label-row">Key Last Edited By: </label>
-                        <input type="text" id="EditKey-input-last_edited_by" placeholder={keyData.last_edited_by} disabled />
-                    </div>
-                    <div id="EditKey-div-row-flex-box">
-                        <label for="date_last_edited" id="EditKey-label-row">Date Last Edited (MM/DD/YYYY): </label>
-                        <input type="text" id="EditKey-input-date_last_edited" placeholder={displayDateLastEdited} disabled />
+                        <label for="key_request_form" id="EditKey-label-row">Key Request Form: </label>
+                        <input type="file" id="EditKey-input-key_request_form" accept="application/pdf" />
                     </div>
                 </form>
                 <div id="EditKey-div-image-container">

@@ -123,6 +123,10 @@ function KeyInfo() {
                         <label for="date_last_edited" id="KeyInfo-label-row">Date Last Edited (MM/DD/YYYY): </label>
                         <input type="text" id="KeyInfo-input-date_last_edited" value={displayDateLastEdited} disabled />
                     </div>
+                    <div id="KeyInfo-div-row-flex-box">
+                        <label for="key_request_form" id="KeyInfo-label-row">Key Request Form: </label>
+                        <input type="text" id="KeyInfo-input-key_request_form" value={`${keyData.key_number}.pdf`} disabled />
+                    </div>
                 </form>
                 <div id="KeyInfo-div-image-container">
                     {keyRequestForm ? (
