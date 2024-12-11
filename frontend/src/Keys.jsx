@@ -132,6 +132,7 @@ function Home() {
                             <option value="key_number">Key Number</option>
                             <option value="key_holder_fname">Key Holder's First Name</option>
                             <option value="key_holder_lname">Key Holder's Last Name</option>
+                            <option value="key_holder_access_id">Key Holder's Access ID</option>
                             <option value="date_assigned">Date Key was Assigned</option>
                             <option value="last_edited_by">Last Edited By</option>
                             <option value="date_last_edited">Date Last Edited</option>
@@ -155,12 +156,11 @@ function Home() {
                                 <th>Key Number</th>
                                 <th>Sequence</th>
                                 <th>Avaliable</th>
-                                <th>Key Holder First Name</th>
-                                <th>Key Holder Last Name</th>
-                                <th>Date Key Assigned</th>
+                                <th>Key Holder's First Name</th>
+                                <th>Key Holder's Last Name</th>
+                                <th>Key Holder's Access ID</th>
+                                <th>Date Assigned</th>
                                 <th>Comments</th>
-                                <th>Lasted Edited By</th>
-                                <th>Date Last Edited</th>
                             </tr>
                             {data.map((d, i) => (                 // Maps over the data array to create a table row (<tr>) for each item d in data. The index i is used as a unique key for each row.
                                 <tr key={i} onClick={() => handleRowClick(d)}>
@@ -175,16 +175,15 @@ function Home() {
                                     <td>{getKeyNumber(d)}</td>
                                     <td>{getKeySequence(d)}</td>
                                     <td 
-                                        style={{ backgroundColor: d.available ? 'lightgreen' : 'lightcoral' }}
+                                        style={{ backgroundColor: d.key_holder_fname && d.key_holder_lname && d.key_holder_access_id && d.date_assigned ? 'lightcoral' : 'lightgreen' }}
                                     >
-                                        {d.available ? 'Yes' : 'No'}
+                                        {d.key_holder_fname && d.key_holder_lname && d.key_holder_access_id && d.date_assigned ? 'No' : 'Yes'}
                                     </td>
                                     <td>{d.key_holder_fname}</td>
-                                    <td>{d.key_holder_lname}</td>                
+                                    <td>{d.key_holder_lname}</td>         
+                                    <td>{d.key_holder_access_id}</td>       
                                     <td>{getReadableDateAssigned(d)}</td>
                                     <td>{d.comments}</td>
-                                    <td>{d.last_edited_by}</td>
-                                    <td>{getReadableDateEdited(d)}</td>
                                 </tr>
                             ))}
                         </tbody>

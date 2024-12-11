@@ -39,11 +39,31 @@ router.post('/getKeyRequestForm' , async (request, response) => {
     }
 });
 
-router.post('/editKey', async (request, response) => {
+router.post('/edit-key', async (request, response) => {
     try {
-        const { key_number, tag_number, tag_color, available, key_holder_fname, key_holder_lname, date_assigned, comments } = request.body;
-        //console.log(key_number, tag_number, tag_color, available, key_holder_fname, key_holder_lname, date_assigned, comments);
-        const result = await dbOperations.editKey(key_number, tag_number, tag_color, available, key_holder_fname, key_holder_lname, date_assigned, comments);
+        const { tag_number,
+            tag_color,
+            core_number,
+            room_number,
+            room_type,
+            key_number,
+            key_holder_fname,
+            key_holder_lname,
+            key_holder_access_id,
+            date_assigned,
+            comments } = request.body;
+        const result = await dbOperations.editKey(tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.post('/remove-key-holder', async (request, response) => {
+    try {
+        const { key_number } = request.body;
+        const result = await dbOperations.removeKeyHolder(key_number);
         response.status(200).send(result);
     } catch (error) {
         console.log(error);

@@ -89,27 +89,49 @@ const dbOperations = {
             return null;
         }
     },
-    editKey: async function (key_number, tag_number, tag_color, available, key_holder_fname, key_holder_lname, date_assigned, comments) {
+    editKey: async function (tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments) {
         try {
-            const sql = 'UPDATE `Keys` SET tag_number = ?, tag_color = ?, available = ?, key_holder_fname = ?, key_holder_lname = ?, date_assigned = ?, comments = ? WHERE key_number = ?';
-            const values = [tag_number, tag_color, available, key_holder_fname, key_holder_lname, date_assigned, comments, key_number];
-            
+            const date_assigned_parts = date_assigned.split(/[-\/]/); // Split date
+            const formatted_date_assigned = `${date_assigned_parts[2]}-${date_assigned_parts[0]}-${date_assigned_parts[1]}`; // Rebuild date
+            const current_date = new Date() // Get current date
+            const formatted_date_last_edited = current_date.toISOString().slice(0, 19).replace('T', ' '); // Format date
+            const sql = 'UPDATE `Keys` SET tag_number = ?, tag_color = ?, core_number = ?, room_number = ?, room_type = ?, key_holder_fname = ?, key_holder_lname = ?, key_holder_access_id = ?, date_assigned = ?, comments = ?, date_last_edited = ? WHERE key_number = ?';
+            const values = [tag_number, tag_color, core_number, room_number, room_type, key_holder_fname, key_holder_lname, key_holder_access_id, formatted_date_assigned, comments, formatted_date_last_edited, key_number];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {
-                        reject(false); // Reject with false on error
+                        reject(err);
                     } else {
-                        resolve(result.affectedRows > 0); // Resolve with true if rows were affected, otherwise false
+                        resolve(result);
                     }
                 });
             });
-    
-            return response; // This will be true if the update was successful, otherwise false
+            return response; 
         } catch (error) {
             console.log(error);
-            return false; // Return false in case of any error
         }
-    }    
+    },
+    removeKeyHolder: async function (key_number) {
+        try {
+            const current_date = new Date() // Get current date
+            const formatted_date_last_edited = current_date.toISOString().slice(0, 19).replace('T', ' '); // Format date
+            const last_action_made = 'Removed key holder';
+            const sql = 'UPDATE `Keys` SET key_holder_fname = NULL, key_holder_lname = NULL, key_holder_access_id = NULL, date_assigned = NULL, last_action_made = ?, date_last_edited = ? WHERE key_number = ?';
+            const values = [last_action_made, formatted_date_last_edited, key_number];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 module.exports = dbOperations

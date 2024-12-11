@@ -304,6 +304,13 @@ KeyInfo.jsx component styling
   border: 2px black solid;
   border-radius: 5px;
 }
+#KeyInfo-image-key-request-form {
+  width: 100%;
+  height: auto;
+}
+#KeyInfo-h1-no-request-form {
+  padding-top: 45%;
+}
 
 #KeyInfo-div-button-container {
   display: flex;
@@ -414,11 +421,12 @@ EditKey.jsx component styling
   border: 2px black solid;
   border-radius: 5px;
 }
-
 #EditKey-textarea-comments {
-  height: auto;
+  resize: none;
 }
 
+#EditKey-input-tag_number:hover,
+#EditKey-input-tag_color:hover,
 #EditKey-input-core_number:hover,
 #EditKey-input-room_number:hover,
 #EditKey-input-room_type:hover,
@@ -428,11 +436,32 @@ EditKey.jsx component styling
   cursor: not-allowed;
 }
 
+#EditKey-button-remove-holder {
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  font-weight: bold;
+  height: 50%;
+  border-radius: 5px;
+  border: none;
+}
+#EditKey-button-remove-holder:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
 #EditKey-div-image-container {
   width: 50%;
   height: auto;
   border: 2px black solid;
   border-radius: 5px;
+}
+#EditKey-image-key-request-form {
+  width: 100%;
+  height: auto;
+}
+#EditKey-h1-no-request-form {
+  padding-top: 45%;
 }
 
 #EditKey-div-button-container {

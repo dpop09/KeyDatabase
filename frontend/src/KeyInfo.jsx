@@ -97,7 +97,7 @@ function KeyInfo() {
                         </div>
                         <div id="KeyInfo-div-row-flex-box">
                             <h2>Available:</h2>
-                            <h2>{keyData.available ? "Yes" : "No"}</h2>
+                            <h2>{keyData.key_holder_fname && keyData.key_holder_lname && keyData.key_holder_access_id && keyData.date_assigned ? "No" : "Yes"}</h2>
                         </div>
                         <div id="KeyInfo-div-row-flex-box-title">
                             <h2>KEY HOLDER INFO</h2>
@@ -123,11 +123,15 @@ function KeyInfo() {
                             <h2>{keyData.comments}</h2>
                         </div>
                         <div id="KeyInfo-div-row-flex-box-title">
-                            <h2>EDITED BY</h2>
+                            <h2>METADATA</h2>
                         </div>
                         <div id="KeyInfo-div-row-flex-box">
                             <h2>Last Edited By:</h2>
                             <h2>{keyData.last_edited_by}</h2>
+                        </div>
+                        <div id="KeyInfo-div-row-flex-box">
+                            <h2>Last Action Made:</h2>
+                            <h2>{keyData.last_action_made}</h2>
                         </div>
                         <div id="KeyInfo-div-row-flex-box-even">
                             <h2>Date Last Edited:</h2>
@@ -136,13 +140,9 @@ function KeyInfo() {
                     </div>
                     <div id="KeyInfo-div-image-container">
                         {keyRequestForm ? (
-                            <img
-                                src={keyRequestForm}
-                                alt="Key Request Form"
-                                style={{ width: '100%' }}
-                            />
+                            <img id="KeyInfo-image-key-request-form" src={keyRequestForm} alt="Key Request Form" />
                         ) : (
-                            <p>The image was not found</p>
+                            <h1 id="KeyInfo-h1-no-request-form">No request form was found for this key :(</h1>
                         )}
                     </div>
                 </div>
