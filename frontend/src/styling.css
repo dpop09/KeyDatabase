@@ -450,6 +450,20 @@ EditKey.jsx component styling
   transition: 0.3s;
 }
 
+#EditKey-button-remove-key {
+  background-color: #dc4c64;
+  font-size: medium;
+  font-weight: bold;
+  height: 50%;
+  border-radius: 5px;
+  border: none;
+}
+#EditKey-button-remove-key:hover {
+  background-color:  #e27b8e;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
 #EditKey-div-image-container {
   width: 50%;
   height: auto;

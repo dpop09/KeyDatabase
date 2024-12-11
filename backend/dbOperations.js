@@ -131,6 +131,24 @@ const dbOperations = {
         } catch (error) {
             console.log(error);
         }
+    },
+    deleteKey: async function (key_number) {
+        try {
+            const sql = 'DELETE FROM `Keys` WHERE key_number = ?';
+            const values = [key_number];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 

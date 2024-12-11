@@ -71,4 +71,15 @@ router.post('/remove-key-holder', async (request, response) => {
     }
 });
 
+router.post('/delete-key', async (request, response) => {
+    try {
+        const { key_number } = request.body;
+        const result = await dbOperations.deleteKey(key_number);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
 module.exports = router;

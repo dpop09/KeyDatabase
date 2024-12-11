@@ -124,6 +124,26 @@ function EditKey() {
         }
     }
 
+    const handleDeleteKey = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await fetch('http://localhost:8081/delete-key', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ key_number: keyData.key_number })
+            })
+            if (response.ok) { // if the response is successful
+                navigate('/keys');
+            } else { // if the response is unsuccessful
+                console.log("Internal Server Error. Please try again later.");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <>
             <NavBar />
@@ -189,7 +209,11 @@ function EditKey() {
                         </div>
                         <div id="EditKey-div-row-flex-box">
                             <h2>REMOVE HOLDER AND SUBMIT:</h2>
-                            <button id="EditKey-button-remove-holder" onClick={handleRemoveHolder}>Remove</button>
+                            <button id="EditKey-button-remove-holder" onClick={handleRemoveHolder}>Remove Holder</button>
+                        </div>
+                        <div id="EditKey-div-row-flex-box-even">
+                            <h2>DELETE KEY:</h2>
+                            <button id="EditKey-button-remove-key" onClick={handleDeleteKey} disabled={false}>Delete Key</button>
                         </div>
                     </form>
                     <div id="EditKey-div-image-container">
