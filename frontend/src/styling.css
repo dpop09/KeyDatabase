@@ -73,16 +73,56 @@ Signin.jsx component styling
 }
 
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+NavBar.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#NavBar-div-container {
+  background-color: #0e584c;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+#NavBar-h1-title {
+  color: white;
+  text-align: center;
+  font-size: 2rem;
+  margin-left: 1rem;
+}
+
+#NavBar-div-links {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#NavBar-button-link {
+  background-color: transparent;
+  color: white;
+  font-size: large;
+  border: none;
+  margin-right: 1rem;
+}
+#NavBar-button-link:hover {
+  cursor: pointer;
+  color: rgb(255, 204, 51, 1);
+  transition: 0.3s;
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Home.jsx component styling
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-#Home-div-container {
+#Keys-div-container {
   text-align: center;
   padding: 2rem;
   padding-top: 0;
 }
 
-#Home-div-top-flex-box {
+#Keys-div-top-flex-box {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -90,7 +130,7 @@ Home.jsx component styling
   margin-top: 1rem;
 }
 
-#Home-div-search-container {
+#Keys-div-search-container {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -98,13 +138,13 @@ Home.jsx component styling
   margin-left: 1rem;
 }
 
-#Home-label-search-column,
-#Home-label-search-row {
+#Keys-label-search-column,
+#Keys-label-search-row {
   font-size: large;
   margin-right: auto;
 }
 
-#Home-select-column {
+#Keys-select-column {
   font-size: medium;
   width: 12rem;
   height: 2.35rem;
@@ -112,7 +152,7 @@ Home.jsx component styling
   margin: 0.5rem;
 }
 
-#Home-input-search-row {
+#Keys-input-search-row {
   font-size: medium;
   width: 20rem;
   height: 2rem;
@@ -120,20 +160,20 @@ Home.jsx component styling
   margin: 0.5rem;
 }
   
-#Home-button-search-row {
+#Keys-button-search-row {
   background-color: rgb(255, 204, 51, 1);
   font-size: medium;
   height: 2.3rem;
   border-radius: 5px;
   border: none;
 }
-#Home-button-search-row:hover {
+#Keys-button-search-row:hover {
   background-color: rgb(255, 224, 133, 1);
   cursor: pointer;
   transition: 0.3s;
 }
 
-#Home-div-create-key-container {
+#Keys-div-create-key-container {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -141,7 +181,7 @@ Home.jsx component styling
   margin-right: 1rem;
 }
 
-#Home-button-create-key {
+#Keys-button-create-key {
   width: 52px;
   height: 52px;
   background-color: transparent;
@@ -151,7 +191,7 @@ Home.jsx component styling
   outline: none;
   margin-right: 1rem;
 }
-#Home-button-create-key:hover {
+#Keys-button-create-key:hover {
   background-color: transparent;
   background-image: url('./assets/add_key_icon_hover.png');
   background-size: cover;
@@ -161,7 +201,7 @@ Home.jsx component styling
   transition: .3s;
 }
 
-#Home-button-logout {
+#Keys-button-logout {
   background-color: rgb(215, 215, 215);
   font-size: medium;
   width: 5rem;
@@ -169,18 +209,18 @@ Home.jsx component styling
   border-radius: 5px;
   border: none;
 }
-#Home-button-logout:hover {
+#Keys-button-logout:hover {
   background-color: rgb(198, 198, 198);
   cursor: pointer;
   transition: 0.3s;
 }
 
-#Home-table-container {
+#Keys-table-container {
   overflow-y: auto;
   margin-bottom: 1.25rem;
 }
 
-#Home-table-main {
+#Keys-table-main {
   width: 100%;
   margin-top: 1rem;
   border-collapse: collapse;
@@ -225,54 +265,41 @@ KeyInfo.jsx component styling
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
 }
 
-#KeyInfo-form-container {
+#KeyInfo-div-info-container {
+  width: 50%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-}
-
-#KeyInfo-div-row-flex-box {
-  display: flex;
-  width: 150%;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0.3rem;
-}
-
-#KeyInfo-label-row {
-  font-size: medium;
-}
-
-#KeyInfo-input-tag_number,
-#KeyInfo-input-tag_color,
-#KeyInfo-input-core_number,
-#KeyInfo-input-room_number,
-#KeyInfo-input-room_type,
-#KeyInfo-input-key_number,
-#KeyInfo-input-available,
-#KeyInfo-input-key_holder_fname,
-#KeyInfo-input-key_holder_lname,
-#KeyInfo-input-date_assigned,
-#KeyInfo-textarea-comments,
-#KeyInfo-input-last_edited_by,
-#KeyInfo-input-date_last_edited,
-#KeyInfo-input-key_request_form {
-  font-size: medium;
-  width: 60%;
-  height: 2rem;
+  justify-content: flex-start;
+  border: black solid 2px;
   border-radius: 5px;
 }
 
-#KeyInfo-textarea-comments {
-  height: auto;
+#KeyInfo-div-row-flex-box,
+#KeyInfo-div-row-flex-box-even,
+#KeyInfo-div-row-flex-box-title {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: black solid 2px;
+}
+#KeyInfo-div-row-flex-box-even {
+  background-color: #e2e2e2;
+}
+#KeyInfo-div-row-flex-box-title {
+  justify-content: center;
+  background-color: rgb(9, 64, 56, 1);
+}
+#KeyInfo-div-row-flex-box-title h2 {
+  color: rgb(255, 204, 51, 1);
 }
 
 #KeyInfo-div-image-container {
-  width: 45%;
+  width: 50%;
   height: auto;
   border: 2px black solid;
   border-radius: 5px;
@@ -329,22 +356,37 @@ EditKey.jsx component styling
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
 }
 
 #EditKey-form-container {
+  width: 50%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
+  border: black solid 2px;
+  border-radius: 5px;
 }
 
-#EditKey-div-row-flex-box {
+#EditKey-div-row-flex-box,
+#EditKey-div-row-flex-box-even,
+#EditKey-div-row-flex-box-title {
+  padding-left: 1rem;
+  padding-right: 1rem;
   display: flex;
-  width: 150%;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin: 0.3rem;
+  border-bottom: black solid 2px;
+}
+#EditKey-div-row-flex-box-even {
+  background-color: #e2e2e2;
+}
+#EditKey-div-row-flex-box-title {
+  justify-content: center;
+  background-color: rgb(9, 64, 56, 1);
+}
+#EditKey-div-row-flex-box-title h2 {
+  color: rgb(255, 204, 51, 1);
 }
 
 #EditKey-label-row {
@@ -360,14 +402,16 @@ EditKey.jsx component styling
 #EditKey-input-available,
 #EditKey-input-key_holder_fname,
 #EditKey-input-key_holder_lname,
+#EditKey-input-key_holder_access_id,
 #EditKey-input-date_assigned,
 #EditKey-textarea-comments,
 #EditKey-input-last_edited_by,
 #EditKey-input-date_last_edited,
 #EditKey-input-key_request_form {
-  font-size: medium;
-  width: 60%;
-  height: 2rem;
+  font-size: large;
+  width: 50%;
+  height: 80%;
+  border: 2px black solid;
   border-radius: 5px;
 }
 
@@ -385,7 +429,7 @@ EditKey.jsx component styling
 }
 
 #EditKey-div-image-container {
-  width: 45%;
+  width: 50%;
   height: auto;
   border: 2px black solid;
   border-radius: 5px;

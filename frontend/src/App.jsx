@@ -1,10 +1,11 @@
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom'
 import { AuthContext, AuthProvider } from './AuthContext'
-import Home from './Home.jsx'
+import Keys from './Keys.jsx'
 import Signin from './Signin.jsx'
 import CreateKey from './CreateKey.jsx'
 import KeyInfo from './KeyInfo.jsx'
 import EditKey from './EditKey.jsx'
+import RequestForms from './RequestForms.jsx'
 
 function App() {
 
@@ -19,8 +20,13 @@ function App() {
           />
           <Route
             exact
-            path='/home'
-            element={<Home />}
+            path='/keys'
+            element={<Keys />}
+          />
+          <Route
+            exact
+            path='/requestforms'
+            element={<RequestForms />}
           />
           <Route
             exact

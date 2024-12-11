@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from './AuthContext';
 import { Link, useNavigate } from "react-router-dom";
+import NavBar from "./NavBar";
 
 function EditKey() {
 
@@ -100,81 +101,92 @@ function EditKey() {
     }
 
     return (
-        <div id="EditKey-div-container">
-            <h1>EDIT KEY {keyData.key_number}</h1>
-            <div id="EditKey-div-flex-box">
-                <form id="EditKey-form-container">
-                    <div id="EditKey-div-row-flex-box">
-                        <label for="tag_number" id="EditKey-label-row">Tag Number: </label>
-                        <input type="text" id="EditKey-input-tag_number" placeholder={keyData.tag_number} />
+        <>
+            <NavBar />
+            <div id="EditKey-div-container">
+                <div id="EditKey-div-flex-box">
+                    <form id="EditKey-form-container">
+                        <div id="EditKey-div-row-flex-box-title">
+                            <h2>EDIT KEY</h2>
+                        </div>
+                        <div id="EditKey-div-row-flex-box">
+                            <h2>Tag Number:</h2>
+                            <input type="text" id="EditKey-input-tag_number" placeholder={keyData.tag_number} />
+                        </div>
+                        <div id ="EditKey-div-row-flex-box-even">
+                            <h2>Tag Color:</h2>
+                            <input type="text" id="EditKey-input-tag_color" placeholder={keyData.tag_color} />
+                        </div>
+                        <div id="EditKey-div-row-flex-box">
+                            <h2>Core Number:</h2>
+                            <input type="text" id="EditKey-input-core_number" placeholder={keyData.core_number} disabled />
+                        </div>
+                        <div id="EditKey-div-row-flex-box-even">
+                            <h2>Room Number:</h2>
+                            <input type="text" id="EditKey-input-room_number" placeholder={keyData.room_number} disabled />
+                        </div>
+                        <div id="EditKey-div-row-flex-box">
+                            <h2>Room Type:</h2>
+                            <input type="text" id="EditKey-input-room_type" placeholder={keyData.room_type} disabled />
+                        </div>
+                        <div id="EditKey-div-row-flex-box-even">
+                            <h2>Key Number:</h2>
+                            <input type="text" id="EditKey-input-key_number" placeholder={keyData.key_number} disabled />
+                        </div>
+                        <div id="EditKey-div-row-flex-box">
+                            <h2>Available:</h2>
+                            <input type="text" id="EditKey-input-available" placeholder={keyData.available ? 'Yes' : 'No'} />
+                        </div>
+                        <div id="EditKey-div-row-flex-box-title">
+                            <h2>EDIT KEY HOLDER</h2>
+                        </div>
+                        <div id="EditKey-div-row-flex-box-even">
+                            <h2>Key Holder's First Name:</h2>
+                            <input type="text" id="EditKey-input-key_holder_fname" placeholder={keyData.key_holder_fname} />
+                        </div>
+                        <div id="EditKey-div-row-flex-box">
+                            <h2>Key Holder's Last Name:</h2>
+                            <input type="text" id="EditKey-input-key_holder_lname" placeholder={keyData.key_holder_lname} />
+                        </div>
+                        <div id="EditKey-div-row-flex-box-even">
+                            <h2>Key Holder's Access ID:</h2>
+                            <input type="text" id="EditKey-input-key_holder_access_id" placeholder={keyData.key_holder_access_id} />
+                        </div>
+                        <div id="EditKey-div-row-flex-box">
+                            <h2>Date Assigned:</h2>
+                            <input 
+                                type="text" 
+                                id="EditKey-input-date_assigned" 
+                                placeholder={displayDateAssigned} 
+                            />
+                        </div>
+                        <div id="EditKey-div-row-flex-box-even">
+                            <h2>Comments:</h2>
+                            <textarea id="EditKey-textarea-comments" rows="5" cols="5" placeholder={keyData.comments} />
+                        </div>
+                        <div id="EditKey-div-row-flex-box">
+                            <h2>Key Request Form:</h2>
+                            <input type="file" id="EditKey-input-key_request_form" accept="application/pdf" />
+                        </div>
+                    </form>
+                    <div id="EditKey-div-image-container">
+                        {keyRequestForm ? (
+                            <img
+                                src={keyRequestForm}
+                                alt="Key Request Form"
+                                style={{ width: '100%', height: 'auto' }}
+                            />
+                        ) : (
+                            <p>The image was not found</p>
+                        )}
                     </div>
-                    <div id ="EditKey-div-row-flex-box">
-                        <label for="tag_color" id="EditKey-label-row">Tag Color: </label>
-                        <input type="text" id="EditKey-input-tag_color" placeholder={keyData.tag_color} />
-                    </div>
-                    <div id="EditKey-div-row-flex-box">
-                        <label for="core_number" id="EditKey-label-row">Core Number: </label>
-                        <input type="text" id="EditKey-input-core_number" placeholder={keyData.core_number} disabled />
-                    </div>
-                    <div id="EditKey-div-row-flex-box">
-                        <label for="room_number" id="EditKey-label-row">Room Number: </label>
-                        <input type="text" id="EditKey-input-room_number" placeholder={keyData.room_number} disabled />
-                    </div>
-                    <div id="EditKey-div-row-flex-box">
-                        <label for="room_type" id="EditKey-label-row">Room Type: </label>
-                        <input type="text" id="EditKey-input-room_type" placeholder={keyData.room_type} disabled />
-                    </div>
-                    <div id="EditKey-div-row-flex-box">
-                        <label for="key_number" id="EditKey-label-row">Key Number: </label>
-                        <input type="text" id="EditKey-input-key_number" placeholder={keyData.key_number} disabled />
-                    </div>
-                    <div id="EditKey-div-row-flex-box">
-                        <label for="available" id="EditKey-label-row">Available (Yes/No): </label>
-                        <input type="text" id="EditKey-input-available" placeholder={keyData.available ? 'Yes' : 'No'} />
-                    </div>
-                    <div id="EditKey-div-row-flex-box">
-                        <label for="key_holder_fname" id="EditKey-label-row">Key Holder's First Name: </label>
-                        <input type="text" id="EditKey-input-key_holder_fname" placeholder={keyData.key_holder_fname} />
-                    </div>
-                    <div id="EditKey-div-row-flex-box">
-                        <label for="key_holder_lname" id="EditKey-label-row">Key Holder's Last Name: </label>
-                        <input type="text" id="EditKey-input-key_holder_lname" placeholder={keyData.key_holder_lname} />
-                    </div>
-                    <div id="EditKey-div-row-flex-box">
-                        <label for="date_assigned" id="EditKey-label-row">Key Assigned Date (MM/DD/YYYY): </label>
-                        <input 
-                            type="text" 
-                            id="EditKey-input-date_assigned" 
-                            placeholder={displayDateAssigned} 
-                        />
-                    </div>
-                    <div id="EditKey-div-row-flex-box">
-                        <label for="comments" id="EditKey-label-row">Comments </label>
-                        <textarea id="EditKey-textarea-comments" rows="5" cols="5" placeholder={keyData.comments} />
-                    </div>
-                    <div id="EditKey-div-row-flex-box">
-                        <label for="key_request_form" id="EditKey-label-row">Key Request Form: </label>
-                        <input type="file" id="EditKey-input-key_request_form" accept="application/pdf" />
-                    </div>
-                </form>
-                <div id="EditKey-div-image-container">
-                    {keyRequestForm ? (
-                        <img
-                            src={keyRequestForm}
-                            alt="Key Request Form"
-                            style={{ width: '600px', height: 'auto' }}
-                        />
-                    ) : (
-                        <p>The image was not found</p>
-                    )}
+                </div>
+                <div id="EditKey-div-button-container">
+                    <button id="EditKey-button-cancel" onClick={handleCancel}>Cancel</button>
+                    <button id="EditKey-button-submit" onClick={handleSubmit}>Submit</button>
                 </div>
             </div>
-            <div id="EditKey-div-button-container">
-                <button id="EditKey-button-cancel" onClick={handleCancel}>Cancel</button>
-                <button id="EditKey-button-submit" onClick={handleSubmit}>Submit</button>
-            </div>
-        </div>
-        
+        </> 
     )  
 }
 

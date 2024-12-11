@@ -6,7 +6,7 @@ function Signin() {
     const navigate = useNavigate();
 
     const handleSignin = () => {
-        navigate('/home')
+        navigate('/keys')
     }
 
     return (
