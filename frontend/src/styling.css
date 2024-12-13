@@ -382,6 +382,19 @@ EditKey.jsx component styling
   color: rgb(255, 204, 51, 1);
 }
 
+#EditKey-div-table-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+#EditKey-table {
+  border-collapse: collapse;
+  overflow-y: auto;
+}
+.selected-form {
+  font-weight: bold;
+}
+
 #EditKey-input-tag_number,
 #EditKey-input-tag_color,
 #EditKey-input-core_number,
@@ -446,9 +459,9 @@ EditKey.jsx component styling
   transition: 0.3s;
 }
 
-#EditKey-div-image-container {
+#EditKey-div-request-form-container {
   width: 50%;
-  height: auto;
+  height: 1080px;
   border: 2px black solid;
   border-radius: 5px;
 }

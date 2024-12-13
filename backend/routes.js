@@ -65,7 +65,10 @@ router.post('/edit-key', async (request, response) => {
             key_holder_lname,
             key_holder_access_id,
             date_assigned,
-            comments } = request.body;
+            comments,
+            form_id
+            } = request.body;
+        const update_form_result = await dbOperations.updateKeyNumberInRequestForm(key_number, form_id);
         const result = await dbOperations.editKey(tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments);
         response.status(200).send(result);
     } catch (error) {

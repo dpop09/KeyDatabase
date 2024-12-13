@@ -5,8 +5,10 @@ import NavBar from "./NavBar";
 
 function EditKey() {
 
+    const [requestForms, setRequestForms] = useState([]);
+    const [selectedForm, setSelectedForm] = useState(null);
     const [pdfData, setPdfData] = useState(null);
-    
+
     const { keyData } = useContext(AuthContext);
 
     const navigate = useNavigate();
@@ -14,33 +16,20 @@ function EditKey() {
         navigate('/keyinfo');
     }
 
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            if (file.type === 'application/pdf') {
-                const fileReader = new FileReader();
-                fileReader.onload = (e) => {
-                    setPdfData(e.target.result);
-                };
-                fileReader.readAsDataURL(file);
-            } else {
-                alert('Only PDF files are allowed');
-            }
-        } else {
-            setPdfData(null);
-        }
-    }
-
-    const getKeyRequestForm = async () => {
-        return
+    const getKeyRequestForms = async () => {
+        fetch('http://localhost:8081/get-all-key-request-forms')
+        .then(response => response.json())
+        .then(data => setRequestForms(data))
+        .catch(err => console.log(err));
     }
 
     useEffect(() => {
-        const fetchKeyRequestForm = async () => {
-            await getKeyRequestForm();
-        };
-        fetchKeyRequestForm();
+        getKeyRequestForms();
     }, []);
+
+    const handleSelectForm = (form) => {
+        setSelectedForm(form);
+    }
 
     const displayDateAssigned = keyData.date_assigned 
         ? new Date(keyData.date_assigned).toLocaleDateString("en-US", {
@@ -49,6 +38,28 @@ function EditKey() {
             year: "numeric"
         }) 
         : "";
+
+    const getPdfData = async (form_id) => {
+        if (pdfData && pdfData.form_id === form_id) 
+            return; // Skip if the same image is already loaded
+        try {
+            const response = await fetch(`http://localhost:8081/get-key-request-form-image`, { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ form_id }),
+            });
+            if (response.ok) { // if the response is successful
+                const data = await response.json();
+                setPdfData(data.image_data);
+            } else {
+                console.log('Internal Server Error. Please try again later.'); // log an error message
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const handleSubmitEdit = async (event) => {
         event.preventDefault();
@@ -90,7 +101,8 @@ function EditKey() {
                     key_holder_lname: key_holder_lname,
                     key_holder_access_id: key_holder_access_id,
                     date_assigned: date_assigned,
-                    comments: comments
+                    comments: comments,
+                    form_id: selectedForm.form_id
                 })
             })
             if (response.ok) { // if the response is successful
@@ -148,79 +160,130 @@ function EditKey() {
             <NavBar />
             <div id="EditKey-div-container">
                 <div id="EditKey-div-flex-box">
-                    <form id="EditKey-form-container">
+                    <div id="EditKey-form-container">
                         <div id="EditKey-div-row-flex-box-title">
                             <h2>EDIT KEY *BLOCKED* </h2>
                         </div>
                         <div id="EditKey-div-row-flex-box">
-                            <h2>Tag Number:</h2>
+                            <h3>Tag Number:</h3>
                             <input type="text" id="EditKey-input-tag_number" placeholder={keyData.tag_number} disabled/>
                         </div>
                         <div id ="EditKey-div-row-flex-box-even">
-                            <h2>Tag Color:</h2>
+                            <h3>Tag Color:</h3>
                             <input type="text" id="EditKey-input-tag_color" placeholder={keyData.tag_color} disabled/>
                         </div>
                         <div id="EditKey-div-row-flex-box">
-                            <h2>Core Number:</h2>
+                            <h3>Core Number:</h3>
                             <input type="text" id="EditKey-input-core_number" placeholder={keyData.core_number} disabled />
                         </div>
                         <div id="EditKey-div-row-flex-box-even">
-                            <h2>Room Number:</h2>
+                            <h3>Room Number:</h3>
                             <input type="text" id="EditKey-input-room_number" placeholder={keyData.room_number} disabled />
                         </div>
                         <div id="EditKey-div-row-flex-box">
-                            <h2>Room Type:</h2>
+                            <h3>Room Type:</h3>
                             <input type="text" id="EditKey-input-room_type" placeholder={keyData.room_type} disabled />
                         </div>
                         <div id="EditKey-div-row-flex-box-even">
-                            <h2>Key Number:</h2>
+                            <h3>Key Number:</h3>
                             <input type="text" id="EditKey-input-key_number" placeholder={keyData.key_number} disabled />
                         </div>
+                    </div>
+                    <div id="EditKey-form-container">
                         <div id="EditKey-div-row-flex-box-title">
                             <h2>EDIT KEY HOLDER</h2>
                         </div>
                         <div id="EditKey-div-row-flex-box">
-                            <h2>Key Holder's First Name:</h2>
+                            <h3>Key Holder's First Name:</h3>
                             <input type="text" id="EditKey-input-key_holder_fname" placeholder={keyData.key_holder_fname} />
                         </div>
                         <div id="EditKey-div-row-flex-box-even">
-                            <h2>Key Holder's Last Name:</h2>
+                            <h3>Key Holder's Last Name:</h3>
                             <input type="text" id="EditKey-input-key_holder_lname" placeholder={keyData.key_holder_lname} />
                         </div>
                         <div id="EditKey-div-row-flex-box">
-                            <h2>Key Holder's Access ID:</h2>
+                            <h3>Key Holder's Access ID:</h3>
                             <input type="text" id="EditKey-input-key_holder_access_id" placeholder={keyData.key_holder_access_id} />
                         </div>
                         <div id="EditKey-div-row-flex-box-even">
-                            <h2>Date Assigned:</h2>
+                            <h3>Date Assigned:</h3>
                             <input type="text" id="EditKey-input-date_assigned" placeholder={displayDateAssigned} />
                         </div>
                         <div id="EditKey-div-row-flex-box">
-                            <h2>Comments:</h2>
+                            <h3>Comments:</h3>
                             <textarea id="EditKey-textarea-comments" rows="6" cols="5" placeholder={keyData.comments} />
                         </div>
-                        <div id="EditKey-div-row-flex-box-even">
-                            <h2>Key Request Form:</h2>
-                            <input type="file" id="EditKey-input-key_request_form" accept="application/pdf" onChange={handleFileChange}/>
-                        </div>
+                    </div>
+                </div>
+                <div id="EditKey-div-flex-box">
+                    <form id="EditKey-form-container">
                         <div id="EditKey-div-row-flex-box-title">
-                            <h2>QUICK ACTIONS</h2>
+                            <h2>ASSIGN REQUEST FORM TO KEY</h2>
+                        </div>
+                        <div id="EditKey-div-table-container">
+                            <table id="EditKey-table">
+                                <tbody>
+                                    <tr>
+                                        <th>Form ID</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Access ID</th>
+                                        <th>Date Signed</th>
+                                        <th>Assigned Key Number</th>
+                                    </tr>
+                                    {requestForms.map((d, i) => ( 
+                                        <tr 
+                                            key={i} 
+                                            onMouseOver={() => getPdfData(d.form_id)} 
+                                            onClick={() => handleSelectForm(d)}
+                                            className={selectedForm && selectedForm.form_id === d.form_id ? 'selected-form' : ''}
+                                        >
+                                            <td>{d.form_id}</td>
+                                            <td>{d.first_name}</td>
+                                            <td>{d.last_name}</td>
+                                            <td>{d.access_id}</td>
+                                            <td>{d.date_signed}</td>
+                                            <td>{d.assigned_key_number}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                         <div id="EditKey-div-row-flex-box">
-                            <h2>REMOVE HOLDER AND SUBMIT:</h2>
-                            <button id="EditKey-button-remove-holder" onClick={handleRemoveHolder}>Remove Holder</button>
-                        </div>
-                        <div id="EditKey-div-row-flex-box-even">
-                            <h2>DELETE KEY:</h2>
-                            <button id="EditKey-button-remove-key" onClick={handleDeleteKey} disabled={false}>Delete Key</button>
+                            <h3>Selected Form</h3>
+                            {selectedForm ? (
+                                <div id="EditKey-div-selected-form">
+                                    <h3>Form ID: {selectedForm.form_id}</h3>
+                                    <h3>First Name: {selectedForm.first_name}</h3>
+                                    <h3>Last Name: {selectedForm.last_name}</h3>
+                                    <h3>Access ID: {selectedForm.access_id}</h3>
+                                    <h3>Date Signed: {selectedForm.date_signed}</h3>
+                                    <h3>Assigned Key Number: {selectedForm.assigned_key_number}</h3>
+                                </div>
+                            ) : (
+                                <h3>No form selected.</h3>
+                            )}
                         </div>
                     </form>
-                    <div id="EditKey-div-image-container">
+                    <div id="EditKey-div-request-form-container">
                         {pdfData ? (
                             <iframe id="EditKey-iframe-key-request-form" src={pdfData} alt="Key Request Form" />
                         ) : (
-                            <h1 id="EditKey-h1-no-request-form">Upload a PDF file of the key request form.</h1>
+                            <h1 id="EditKey-h1-no-request-form">Assign a request form to this key.</h1>
                         )}
+                    </div>
+                </div>
+                <div id="EditKey-div-quick-actions">
+                    <div id="EditKey-div-row-flex-box-title">
+                        <h2>QUICK ACTIONS</h2>
+                    </div>
+                    <div id="EditKey-div-row-flex-box">
+                        <h3>REMOVE HOLDER AND SUBMIT:</h3>
+                        <button id="EditKey-button-remove-holder" onClick={handleRemoveHolder}>Remove Holder</button>
+                    </div>
+                    <div id="EditKey-div-row-flex-box-even">
+                        <h3>DELETE KEY:</h3>
+                        <button id="EditKey-button-remove-key" onClick={handleDeleteKey} disabled={false}>Delete Key</button>
                     </div>
                 </div>
                 <div id="EditKey-div-button-container">

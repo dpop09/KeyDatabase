@@ -211,7 +211,25 @@ const dbOperations = {
             console.error(error);
             throw error; // Throw the error to the calling function
         }
-    },    
+    },  
+    updateKeyNumberInRequestForm: async function (key_number, form_id) {
+        try {
+            const sql = 'UPDATE key_request_form SET assigned_key_number = ? WHERE form_id = ?';
+            const values = [key_number, form_id];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    }  
 }
 
 module.exports = dbOperations
