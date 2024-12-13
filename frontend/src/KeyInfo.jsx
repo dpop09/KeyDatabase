@@ -142,7 +142,7 @@ function KeyInfo() {
                         {keyRequestForm ? (
                             <img id="KeyInfo-image-key-request-form" src={keyRequestForm} alt="Key Request Form" />
                         ) : (
-                            <h1 id="KeyInfo-h1-no-request-form">No request form was found for this key :(</h1>
+                            <h1 id="KeyInfo-h1-no-request-form">No request form was found for this key.</h1>
                         )}
                     </div>
                 </div>

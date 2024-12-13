@@ -6,6 +6,7 @@ import CreateKey from './CreateKey.jsx'
 import KeyInfo from './KeyInfo.jsx'
 import EditKey from './EditKey.jsx'
 import RequestForms from './RequestForms.jsx'
+import AddRequestForm from './AddRequestForm.jsx'
 
 function App() {
 
@@ -42,6 +43,11 @@ function App() {
             exact
             path='/editkey'
             element={<EditKey />}
+          />
+          <Route
+            exact
+            path='/addrequestform'
+            element={<AddRequestForm />}
           />
           <Route
             path='*'

@@ -1,7 +1,21 @@
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
 const dbOperations = require('./dbOperations');
 
 const router = express.Router();
+
+const storage = multer.memoryStorage();
+const upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype === 'application/pdf') {
+            cb(null, true);
+        } else {
+            cb(new Error('Only PDF files are allowed'), false);
+        }
+    }
+})
 
 router.get('/getall', async (request, response) => {
     try {
@@ -79,6 +93,39 @@ router.post('/delete-key', async (request, response) => {
     } catch (error) {
         console.log(error);
         response.status(500).send(error);
+    }
+});
+
+router.get('/get-all-key-request-forms', async (request, response) => {
+    try {
+        const result = await dbOperations.getAllKeyRequestForms();
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.post('/add-key-request-form', upload.single('file'), async (request, response) => {
+    try {
+        const {first_name, last_name, access_id, date_signed} = request.body;
+        const file_buffer = request.file.buffer;
+        const result = await dbOperations.addKeyRequestForm(first_name, last_name, access_id, date_signed, file_buffer);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.post('/get-key-request-form-image', async (req, res) => {
+    const { form_id } = req.body;
+    try {
+        const result = await dbOperations.getKeyRequestFormImage(form_id);
+        res.status(200).send(result); // Send the Base64-encoded PDF data
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send({ error: error.message });
     }
 });
 

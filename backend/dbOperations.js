@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const pdf = require('pdf-poppler');
 const fs = require('fs').promises;
 const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 dotenv.config(); // read from .env file
 
 // create a connection to the database
@@ -149,7 +150,68 @@ const dbOperations = {
         } catch (error) {
             console.log(error);
         }
-    }
+    },
+    getAllKeyRequestForms: async function () {
+        try {
+            const sql = 'SELECT form_id, first_name, last_name, access_id, date_signed, assigned_key_number FROM key_request_form';
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    addKeyRequestForm: async function (first_name, last_name, access_id, date_signed, file_buffer) {
+        try {
+            const form_id = uuidv4();
+            const sql = `INSERT INTO key_request_form (form_id, first_name, last_name, access_id, date_signed, image_data) VALUES (?, ?, ?, ?, ?, ?)`;
+            const values = [form_id, first_name, last_name, access_id, date_signed, file_buffer];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    getKeyRequestFormImage: async function (form_id) {
+        try {
+            const sql = 'SELECT image_data FROM key_request_form WHERE form_id = ?';
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, [form_id], (err, result) => {
+                    if (err) {
+                        console.error(err);
+                        reject(new Error('Internal Server Error')); // Reject the Promise with an error
+                    } else if (result.length === 0) {
+                        reject(new Error('No image found for this form ID')); // Reject if no data found
+                    } else {
+                        // Encode the PDF buffer as Base64
+                        const base64PDF = result[0].image_data.toString('base64');
+                        resolve({
+                            image_data: `data:application/pdf;base64,${base64PDF}`, // Use the correct MIME type
+                        });
+                    }
+                });
+            });
+            return response
+        } catch (error) {
+            console.error(error);
+            throw error; // Throw the error to the calling function
+        }
+    },    
 }
 
 module.exports = dbOperations

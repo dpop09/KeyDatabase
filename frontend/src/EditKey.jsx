@@ -5,7 +5,7 @@ import NavBar from "./NavBar";
 
 function EditKey() {
 
-    const [keyRequestForm, setKeyRequestForm] = useState(null);
+    const [pdfData, setPdfData] = useState(null);
     
     const { keyData } = useContext(AuthContext);
 
@@ -14,26 +14,25 @@ function EditKey() {
         navigate('/keyinfo');
     }
 
-    const getKeyRequestForm = async () => {
-        try {
-            const response = await fetch('http://localhost:8081/getKeyRequestForm', { // send a POST request to the backend route
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify({ key_number: keyData.key_number })
-            })
-            if (response.ok) { // if the response is successful
-                const data = await response.json();
-                setKeyRequestForm(`data:image/jpeg;base64,${data.image_data}`);
-            } else if (response.status === 404) { // if the response is unsuccessful
-                console.log("Error 404: The corresponding key request form pdf file was not found.");
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            if (file.type === 'application/pdf') {
+                const fileReader = new FileReader();
+                fileReader.onload = (e) => {
+                    setPdfData(e.target.result);
+                };
+                fileReader.readAsDataURL(file);
             } else {
-                console.log("Internal Server Error. Please try again later.");
+                alert('Only PDF files are allowed');
             }
-        } catch (error) {
-            console.log(error);
+        } else {
+            setPdfData(null);
         }
+    }
+
+    const getKeyRequestForm = async () => {
+        return
     }
 
     useEffect(() => {
@@ -202,7 +201,7 @@ function EditKey() {
                         </div>
                         <div id="EditKey-div-row-flex-box-even">
                             <h2>Key Request Form:</h2>
-                            <input type="file" id="EditKey-input-key_request_form" accept="application/pdf" />
+                            <input type="file" id="EditKey-input-key_request_form" accept="application/pdf" onChange={handleFileChange}/>
                         </div>
                         <div id="EditKey-div-row-flex-box-title">
                             <h2>QUICK ACTIONS</h2>
@@ -217,10 +216,10 @@ function EditKey() {
                         </div>
                     </form>
                     <div id="EditKey-div-image-container">
-                        {keyRequestForm ? (
-                            <img id="EditKey-image-key-request-form" src={keyRequestForm} alt="Key Request Form" />
+                        {pdfData ? (
+                            <iframe id="EditKey-iframe-key-request-form" src={pdfData} alt="Key Request Form" />
                         ) : (
-                            <h1 id="EditKey-h1-no-request-form">No request form was found for this key :(</h1>
+                            <h1 id="EditKey-h1-no-request-form">Upload a PDF file of the key request form.</h1>
                         )}
                     </div>
                 </div>

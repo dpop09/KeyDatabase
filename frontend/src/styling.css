@@ -113,7 +113,7 @@ NavBar.jsx component styling
 }
 
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Home.jsx component styling
+Keys.jsx component styling
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 #Keys-div-container {
@@ -199,20 +199,6 @@ Home.jsx component styling
   outline: none;
   cursor: pointer;
   transition: .3s;
-}
-
-#Keys-button-logout {
-  background-color: rgb(215, 215, 215);
-  font-size: medium;
-  width: 5rem;
-  height: 2.3rem;
-  border-radius: 5px;
-  border: none;
-}
-#Keys-button-logout:hover {
-  background-color: rgb(198, 198, 198);
-  cursor: pointer;
-  transition: 0.3s;
 }
 
 #Keys-table-container {
@@ -396,10 +382,6 @@ EditKey.jsx component styling
   color: rgb(255, 204, 51, 1);
 }
 
-#EditKey-label-row {
-  font-size: medium;
-}
-
 #EditKey-input-tag_number,
 #EditKey-input-tag_color,
 #EditKey-input-core_number,
@@ -415,7 +397,7 @@ EditKey.jsx component styling
 #EditKey-input-last_edited_by,
 #EditKey-input-date_last_edited,
 #EditKey-input-key_request_form {
-  font-size: large;
+  font-size: larger;
   width: 50%;
   height: 80%;
   border: 2px black solid;
@@ -470,9 +452,9 @@ EditKey.jsx component styling
   border: 2px black solid;
   border-radius: 5px;
 }
-#EditKey-image-key-request-form {
+#EditKey-iframe-key-request-form {
   width: 100%;
-  height: auto;
+  height: 100%;
 }
 #EditKey-h1-no-request-form {
   padding-top: 45%;
@@ -509,6 +491,242 @@ EditKey.jsx component styling
   border: none;
 }
 #EditKey-button-submit:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+RequestForms.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#RequestForms-div-container {
+  text-align: center;
+  width: auto;
+  padding: 2rem;
+  padding-top: 0;
+}
+
+#RequestForms-div-top-flex-box {
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+#RequestForms-div-search-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+#RequestForms-label-search-column,
+#RequestForms-label-search-row {
+  font-size: large;
+  margin-right: auto;
+}
+
+#RequestForms-select-column {
+  font-size: medium;
+  width: 12rem;
+  height: 2.35rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+}
+
+#RequestForms-input-search-row {
+  font-size: medium;
+  width: 20rem;
+  height: 2rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+}
+  
+#RequestForms-button-search-row {
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#RequestForms-button-search-row:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#RequestForms-div-create-key-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+#RequestForms-button-create-key {
+  width: 52px;
+  height: 52px;
+  background-color: transparent;
+  background-image: url('./assets/add_key_request_form_icon_default.png');
+  background-size: cover;
+  border: none;
+  outline: none;
+  margin-right: 1rem;
+}
+#RequestForms-button-create-key:hover {
+  background-color: transparent;
+  background-image: url('./assets/add_key_request_form_icon_hover.png');
+  background-size: cover;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: .3s;
+}
+
+#RequestForms-div-flex-box {
+  height: 1080px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#RequestForms-div-table-container {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border: black solid 2px;
+  border-radius: 5px;
+}
+
+#RequestForms-table {
+  border-collapse: collapse;
+  overflow-y: auto;
+}
+
+#RequestForms-div-image-container {
+  width: 50%;
+  border: 2px black solid;
+  border-radius: 5px;
+}
+#RequestForms-iframe-key-request-form {
+  width: 100%;
+  height: 100%;
+}
+#RequestForms-h1-no-request-form {
+  padding-top: 45%;
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+AddRequestForm.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#AddRequestForm-div-container {
+  text-align: center;
+  width: auto;
+  padding: 2rem;
+  padding-top: 0;
+}
+
+#AddRequestForm-div-flex-box {
+  height: 1080px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#AddRequestForm-div-info-container {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border: black solid 2px;
+  border-radius: 5px;
+}
+
+#AddRequestForm-div-row-flex-box,
+#AddRequestForm-div-row-flex-box-even,
+#AddRequestForm-div-row-flex-box-title {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: black solid 2px;
+}
+#AddRequestForm-div-row-flex-box-even {
+  background-color: #e2e2e2;
+}
+#AddRequestForm-div-row-flex-box-title {
+  justify-content: center;
+  background-color: rgb(9, 64, 56, 1);
+}
+#AddRequestForm-div-row-flex-box-title h2 {
+  color: rgb(255, 204, 51, 1);
+}
+
+#AddRequestForm-input-first-name,
+#AddRequestForm-input-last-name,
+#AddRequestForm-input-access-id,
+#AddRequestForm-input-date-signed,
+#AddRequestForm-input-file {
+  font-size: larger;
+  width: 50%;
+  height: 80%;
+  border: 2px black solid;
+  border-radius: 5px;
+}
+
+#AddRequestForm-div-image-container {
+  width: 50%;
+  border: 2px black solid;
+  border-radius: 5px;
+}
+#AddRequestForm-iframe-key-request-form {
+  width: 100%;
+  height: 100%;
+}
+#AddRequestForm-h1-no-request-form {
+  padding-top: 45%;
+}
+
+#AddRequestForm-div-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+#AddRequestForm-button-cancel {
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#AddRequestForm-button-cancel:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#AddRequestForm-button-submit {
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#AddRequestForm-button-submit:hover {
   background-color: rgb(255, 224, 133, 1);
   cursor: pointer;
   transition: 0.3s;

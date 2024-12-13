@@ -4,11 +4,100 @@ import { Link, useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 
 function RequestForms() {
+
+    const [data, setData] = useState([]);
+    const [imageData, setImageData] = useState(null);
+
+    const navigate = useNavigate();
+    const handleAddRequestForm = () => {
+        navigate('/addrequestform');
+    }
+
+    const getImageData = async (form_id) => {
+        if (imageData && imageData.form_id === form_id) 
+            return; // Skip if the same image is already loaded
+        try {
+            const response = await fetch(`http://localhost:8081/get-key-request-form-image`, { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ form_id }),
+            });
+            if (response.ok) { // if the response is successful
+                const data = await response.json();
+                setImageData(data.image_data);
+            } else {
+                console.log('Internal Server Error. Please try again later.'); // log an error message
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        fetch('http://localhost:8081/get-all-key-request-forms')
+        .then(response => response.json())
+        .then(data => setData(data))
+        .catch(err => console.log(err));
+    }, []);
+
     return (
         <>
             <NavBar />
             <div id="RequestForms-div-container">
-                <h1>REQUEST FORMS</h1>
+                <div id="RequestForms-div-top-flex-box">
+                    <div id="RequestForms-div-search-container">
+                        <label id="RequestForms-label-search-column">Column:</label>
+                        <select id="RequestForms-select-column">
+                            <option value="form_id">Form ID</option>
+                            <option value="first_name">First Name</option>
+                            <option value="last_name">Last Name</option>
+                            <option value="access_id">Access ID</option>
+                            <option value="date_signed">Date Signed</option>
+                            <option value="assigned_key_number">Assigned Key Number</option>
+                        </select>
+                        <label id="RequestForms-label-search-row">Search:</label>
+                        <input id="RequestForms-input-search-row" type="text" />
+                        <button id="RequestForms-button-search-row">Search</button>
+                    </div>
+                    <div id="RequestForms-div-create-key-container">
+                        <button id="RequestForms-button-create-key" onClick={handleAddRequestForm}/>
+                    </div>
+                </div>
+                <div id="RequestForms-div-flex-box">
+                    <div id="RequestForms-div-table-container">
+                        <table id="RequestForms-table">
+                            <tbody>
+                                <tr>
+                                    <th>Form ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Access ID</th>
+                                    <th>Date Signed</th>
+                                    <th>Assigned Key Number</th>
+                                </tr>
+                                {data.map((d, i) => ( 
+                                    <tr key={i} onMouseEnter={() => getImageData(d.form_id)} >
+                                        <td>{d.form_id}</td>
+                                        <td>{d.first_name}</td>
+                                        <td>{d.last_name}</td>
+                                        <td>{d.access_id}</td>
+                                        <td>{d.date_signed}</td>
+                                        <td>{d.assigned_key_number}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="RequestForms-div-image-container">
+                        {imageData ? (
+                            <iframe id="RequestForms-iframe-key-request-form" src={imageData} alt="Key Request Form" />
+                        ) : (
+                            <h1 id="RequestForms-h1-no-request-form">No PDF associated with this form ID was found.</h1>
+                        )}
+                    </div>
+                </div>
             </div>
         </>
     )
