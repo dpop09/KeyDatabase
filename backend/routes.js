@@ -66,9 +66,15 @@ router.post('/edit-key', async (request, response) => {
             key_holder_access_id,
             date_assigned,
             comments,
-            form_id
+            old_form_id,
+            new_form_id
             } = request.body;
-        const update_form_result = await dbOperations.updateKeyNumberInRequestForm(key_number, form_id);
+        if (new_form_id != null) { // if a form is provided
+            if (old_form_id != null && old_form_id != new_form_id) { // if a new_form_id is provided, remove the key holder from the old form
+                const update_old_form_result = await dbOperations.setKeyNumberInRequestFormToNull(null, old_form_id);
+            }
+            const update_new_form_result = await dbOperations.updateKeyNumberInRequestForm(key_number, new_form_id);
+        }
         const result = await dbOperations.editKey(tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments);
         response.status(200).send(result);
     } catch (error) {
@@ -79,7 +85,10 @@ router.post('/edit-key', async (request, response) => {
 
 router.post('/remove-key-holder', async (request, response) => {
     try {
-        const { key_number } = request.body;
+        const { key_number, form_id } = request.body;
+        if (form_id != null) { // if a form_id is provided, remove the key holder from the form
+            const update_form_result = await dbOperations.setKeyNumberInRequestFormToNull(null, form_id);
+        }
         const result = await dbOperations.removeKeyHolder(key_number);
         response.status(200).send(result);
     } catch (error) {
@@ -125,6 +134,28 @@ router.post('/get-key-request-form-image', async (req, res) => {
     const { form_id } = req.body;
     try {
         const result = await dbOperations.getKeyRequestFormImage(form_id);
+        res.status(200).send(result); // Send the Base64-encoded PDF data
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send({ error: error.message });
+    }
+});
+
+router.post('/get-key-request-form-id-from-key-number', async (req, res) => {
+    const { key_number } = req.body;
+    try {
+        const form_id_result = await dbOperations.getKeyRequestFormIdFromKeyNumber(key_number);
+        res.status(200).send({form_id_result}); // Send the Base64-encoded PDF data
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send({ error: error.message });
+    }
+});
+
+router.post('/get-key-request-form-image-with-key-number', async (req, res) => {
+    const { key_number } = req.body;
+    try {
+        const result = await dbOperations.getKeyRequestFormImageWithKeyNumber(key_number);
         res.status(200).send(result); // Send the Base64-encoded PDF data
     } catch (error) {
         console.error(error.message);

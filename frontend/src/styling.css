@@ -284,15 +284,15 @@ KeyInfo.jsx component styling
   color: rgb(255, 204, 51, 1);
 }
 
-#KeyInfo-div-image-container {
+#KeyInfo-div-request-form-container {
   width: 50%;
   height: auto;
   border: 2px black solid;
   border-radius: 5px;
 }
-#KeyInfo-image-key-request-form {
+#KeyInfo-iframe-key-request-form {
   width: 100%;
-  height: auto;
+  height: 100%;
 }
 #KeyInfo-h1-no-request-form {
   padding-top: 45%;

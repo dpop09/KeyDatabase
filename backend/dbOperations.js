@@ -229,7 +229,73 @@ const dbOperations = {
         } catch (error) {
             console.log(error);
         }
-    }  
+    },
+    getKeyRequestFormIdFromKeyNumber: async function (key_number) {
+        try {
+            const sql = 'SELECT form_id FROM key_request_form WHERE assigned_key_number = ?';
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, [key_number], (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        // Check if the result is not empty and contains form_id
+                        if (result.length > 0 && result[0].form_id !== undefined) {
+                            resolve(result[0].form_id);
+                        } else {
+                            resolve(null); // Return null if no form_id is found
+                        }
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+            return null; // Return null if an error occurs
+        }
+    },    
+    setKeyNumberInRequestFormToNull: async function (key_number, form_id) {
+        try {
+            const sql = 'UPDATE key_request_form SET assigned_key_number = ? WHERE form_id = ?';
+            const values = [key_number, form_id];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    getKeyRequestFormImageWithKeyNumber: async function (key_number) {
+        try {
+            const sql = 'SELECT image_data FROM key_request_form WHERE assigned_key_number = ?';
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, [key_number], (err, result) => {
+                    if (err) {
+                        console.error(err);
+                        reject(new Error('Internal Server Error')); // Reject the Promise with an error
+                    } else if (result.length === 0) {
+                        resolve(null); // return null if no data found
+                    } else {
+                        // Encode the PDF buffer as Base64
+                        const base64PDF = result[0].image_data.toString('base64');
+                        resolve({
+                            image_data: `data:application/pdf;base64,${base64PDF}`, // Use the correct MIME type
+                        });
+                    }
+                });
+            });
+            return response
+        } catch (error) {
+            console.error(error);
+            throw error; // Throw the error to the calling function
+        }
+    },
 }
 
 module.exports = dbOperations

@@ -6,6 +6,7 @@ import NavBar from "./NavBar";
 function EditKey() {
 
     const [requestForms, setRequestForms] = useState([]);
+    const [originalFormId, setOriginalFormId] = useState(null);
     const [selectedForm, setSelectedForm] = useState(null);
     const [pdfData, setPdfData] = useState(null);
 
@@ -23,8 +24,29 @@ function EditKey() {
         .catch(err => console.log(err));
     }
 
+    const getKeyRquestFormIdFromKeyNumber = async () => {
+        try {
+            const response = await fetch(`http://localhost:8081/get-key-request-form-id-from-key-number`, { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ key_number: keyData.key_number }),
+            });
+            if (response.ok) { // if the response is successful
+                const data = await response.json();
+                setOriginalFormId(data.form_id_result);
+            } else {
+                console.log('Internal Server Error. Please try again later.'); // log an error message
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         getKeyRequestForms();
+        getKeyRquestFormIdFromKeyNumber();
     }, []);
 
     const handleSelectForm = (form) => {
@@ -108,7 +130,8 @@ function EditKey() {
                     key_holder_access_id: key_holder_access_id,
                     date_assigned: date_assigned,
                     comments: comments,
-                    form_id: selectedForm.form_id
+                    old_form_id: originalFormId != null ? originalFormId : null, // if there is a form already associated with the key, send its form_id, else send null
+                    new_form_id: selectedForm != null ? selectedForm.form_id : null // if a form is selected, send its form_id, else send null
                 })
             })
             if (response.ok) { // if the response is successful
@@ -129,7 +152,10 @@ function EditKey() {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({ key_number: keyData.key_number })
+                body: JSON.stringify({ 
+                    key_number: keyData.key_number,
+                    form_id: originalFormId != null ? originalFormId : null // if there is a form associated with the key, send its form_id, else send null
+                })
             })
             if (response.ok) { // if the response is successful
                 navigate('/keyinfo');

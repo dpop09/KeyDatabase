@@ -6,6 +6,7 @@ import NavBar from "./NavBar";
 function KeyInfo() {
 
     const [keyRequestForm, setKeyRequestForm] = useState(null);
+    const [pdfData, setPdfData] = useState(null);
 
     const navigate = useNavigate();
     const handleGoBack = () => {
@@ -17,22 +18,20 @@ function KeyInfo() {
 
     const { keyData } = useContext(AuthContext);
 
-    const getKeyRequestForm = async () => {
+    const getPdfData = async () => {
         try {
-            const response = await fetch('http://localhost:8081/getKeyRequestForm', { // send a POST request to the backend route
+            const response = await fetch(`http://localhost:8081/get-key-request-form-image-with-key-number`, { // send a POST request to the backend route
                 method: 'POST',
                 headers: {
-                    'Content-type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ key_number: keyData.key_number })
-            })
+                body: JSON.stringify({ key_number: keyData.key_number }),
+            });
             if (response.ok) { // if the response is successful
                 const data = await response.json();
-                setKeyRequestForm(`data:image/jpeg;base64,${data.image_data}`);
-            } else if (response.status === 404) { // if the response is unsuccessful
-                console.log("Error 404: The corresponding key request form pdf file was not found.");
+                setPdfData(data.image_data);
             } else {
-                console.log("Internal Server Error. Please try again later.");
+                console.log('Internal Server Error. Please try again later.'); // log an error message
             }
         } catch (error) {
             console.log(error);
@@ -44,6 +43,7 @@ function KeyInfo() {
             await getKeyRequestForm();
         };
         fetchKeyRequestForm();
+        getPdfData();
     }, []);
 
     const displayDateAssigned = keyData.date_assigned 
@@ -72,79 +72,79 @@ function KeyInfo() {
                             <h2>KEY INFO</h2>
                         </div>
                         <div id="KeyInfo-div-row-flex-box">
-                            <h2>Tag Number:</h2>
-                            <h2>{keyData.tag_number}</h2>
+                            <h3>Tag Number:</h3>
+                            <h3>{keyData.tag_number}</h3>
                         </div>
                         <div id="KeyInfo-div-row-flex-box-even">
-                            <h2>Tag Color:</h2>
-                            <h2>{keyData.tag_color}</h2>
+                            <h3>Tag Color:</h3>
+                            <h3>{keyData.tag_color}</h3>
                         </div>
                         <div id="KeyInfo-div-row-flex-box">
-                            <h2>Core Number:</h2>
-                            <h2>{keyData.core_number}</h2>
+                            <h3>Core Number:</h3>
+                            <h3>{keyData.core_number}</h3>
                         </div>
                         <div id="KeyInfo-div-row-flex-box-even">
-                            <h2>Room Number:</h2>
-                            <h2>{keyData.room_number}</h2>
+                            <h3>Room Number:</h3>
+                            <h3>{keyData.room_number}</h3>
                         </div>
                         <div id="KeyInfo-div-row-flex-box">
-                            <h2>Room Type:</h2>
-                            <h2>{keyData.room_type}</h2>
+                            <h3>Room Type:</h3>
+                            <h3>{keyData.room_type}</h3>
                         </div>
                         <div id="KeyInfo-div-row-flex-box-even">
-                            <h2>Key Number:</h2>
-                            <h2>{keyData.key_number}</h2>
+                            <h3>Key Number:</h3>
+                            <h3>{keyData.key_number}</h3>
                         </div>
                         <div id="KeyInfo-div-row-flex-box">
-                            <h2>Available:</h2>
-                            <h2>{keyData.key_holder_fname && keyData.key_holder_lname && keyData.key_holder_access_id && keyData.date_assigned ? "No" : "Yes"}</h2>
+                            <h3>Available:</h3>
+                            <h3>{keyData.key_holder_fname && keyData.key_holder_lname && keyData.key_holder_access_id && keyData.date_assigned ? "No" : "Yes"}</h3>
                         </div>
                         <div id="KeyInfo-div-row-flex-box-title">
                             <h2>KEY HOLDER INFO</h2>
                         </div>
                         <div id="KeyInfo-div-row-flex-box-even">
-                            <h2>Key Holder's First Name:</h2>
-                            <h2>{keyData.key_holder_fname}</h2>
+                            <h3>Key Holder's First Name:</h3>
+                            <h3>{keyData.key_holder_fname}</h3>
                         </div>
                         <div id="KeyInfo-div-row-flex-box">
-                            <h2>Key Holder's Last Name:</h2>
-                            <h2>{keyData.key_holder_lname}</h2>
+                            <h3>Key Holder's Last Name:</h3>
+                            <h3>{keyData.key_holder_lname}</h3>
                         </div>
                         <div id="KeyInfo-div-row-flex-box-even">
-                            <h2>Key Holder's Access ID:</h2>
-                            <h2>{keyData.key_holder_access_id}</h2>
+                            <h3>Key Holder's Access ID:</h3>
+                            <h3>{keyData.key_holder_access_id}</h3>
                         </div>
                         <div id="KeyInfo-div-row-flex-box">
-                            <h2>Date Assigned:</h2>
-                            <h2>{displayDateAssigned}</h2>
+                            <h3>Date Assigned:</h3>
+                            <h3>{displayDateAssigned}</h3>
                         </div>
                         <div id="KeyInfo-div-row-flex-box-even">
-                            <h2>Comments:</h2>
-                            <h2>{keyData.comments}</h2>
+                            <h3>Comments:</h3>
+                            <h3>{keyData.comments}</h3>
                         </div>
                         <div id="KeyInfo-div-row-flex-box-title">
                             <h2>METADATA</h2>
                         </div>
                         <div id="KeyInfo-div-row-flex-box">
-                            <h2>Last Edited By:</h2>
-                            <h2>{keyData.last_edited_by}</h2>
+                            <h3>Last Edited By:</h3>
+                            <h3>{keyData.last_edited_by}</h3>
                         </div>
                         <div id="KeyInfo-div-row-flex-box">
-                            <h2>Last Action Made:</h2>
-                            <h2>{keyData.last_action_made}</h2>
+                            <h3>Last Action Made:</h3>
+                            <h3>{keyData.last_action_made}</h3>
                         </div>
                         <div id="KeyInfo-div-row-flex-box-even">
-                            <h2>Date Last Edited:</h2>
-                            <h2>{displayDateLastEdited}</h2>
+                            <h3>Date Last Edited:</h3>
+                            <h3>{displayDateLastEdited}</h3>
                         </div>
                     </div>
-                    <div id="KeyInfo-div-image-container">
-                        {keyRequestForm ? (
-                            <img id="KeyInfo-image-key-request-form" src={keyRequestForm} alt="Key Request Form" />
-                        ) : (
-                            <h1 id="KeyInfo-h1-no-request-form">No request form was found for this key.</h1>
-                        )}
-                    </div>
+                    <div id="KeyInfo-div-request-form-container">
+                            {pdfData ? (
+                                <iframe id="KeyInfo-iframe-key-request-form" src={pdfData} alt="Key Request Form" />
+                            ) : (
+                                <h1 id="KeyInfo-h1-no-request-form">No request form associated with this key is found.</h1>
+                            )}
+                        </div>
                 </div>
                 <div id="KeyInfo-div-button-container">
                     <button id="KeyInfo-button-back" onClick={handleGoBack}>Go Back</button>
