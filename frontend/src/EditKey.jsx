@@ -28,7 +28,11 @@ function EditKey() {
     }, []);
 
     const handleSelectForm = (form) => {
-        setSelectedForm(form);
+        if (selectedForm === form) { // if the form is already selected
+            setSelectedForm(null); // deselect the form
+            return;
+        }
+        setSelectedForm(form); // else select the form
     }
 
     const displayDateAssigned = keyData.date_assigned 
@@ -40,6 +44,8 @@ function EditKey() {
         : "";
 
     const getPdfData = async (form_id) => {
+        if (selectedForm != null) // if a form is already selected, do nothing
+            return;
         if (pdfData && pdfData.form_id === form_id) 
             return; // Skip if the same image is already loaded
         try {
@@ -159,8 +165,8 @@ function EditKey() {
         <>
             <NavBar />
             <div id="EditKey-div-container">
-                <div id="EditKey-div-flex-box">
-                    <div id="EditKey-form-container">
+                <div id="EditKey-div-top-container">
+                    <div id="EditKey-div-form-container">
                         <div id="EditKey-div-row-flex-box-title">
                             <h2>EDIT KEY *BLOCKED* </h2>
                         </div>
@@ -189,7 +195,7 @@ function EditKey() {
                             <input type="text" id="EditKey-input-key_number" placeholder={keyData.key_number} disabled />
                         </div>
                     </div>
-                    <div id="EditKey-form-container">
+                    <div id="EditKey-div-form-container">
                         <div id="EditKey-div-row-flex-box-title">
                             <h2>EDIT KEY HOLDER</h2>
                         </div>
@@ -215,13 +221,13 @@ function EditKey() {
                         </div>
                     </div>
                 </div>
-                <div id="EditKey-div-flex-box">
-                    <form id="EditKey-form-container">
-                        <div id="EditKey-div-row-flex-box-title">
-                            <h2>ASSIGN REQUEST FORM TO KEY</h2>
-                        </div>
-                        <div id="EditKey-div-table-container">
-                            <table id="EditKey-table">
+                <div id="EditKey-div-assign-form-container">
+                    <div id="EditKey-div-assign-form-title">
+                        <h2>ASSIGN REQUEST FORM TO KEY</h2>
+                    </div>
+                    <div id="EditKey-div-assgin-form-lower-container">
+                        <div id="EditKey-div-assign-form-table-container">
+                            <table id="EditKey-table-assign-form">
                                 <tbody>
                                     <tr>
                                         <th>Form ID</th>
@@ -248,33 +254,52 @@ function EditKey() {
                                     ))}
                                 </tbody>
                             </table>
+                            <div id="EditKey-div-selected-form-container">
+                                {selectedForm ? (
+                                    <>
+                                        <div id="EditKey-div-selected-form-row-even">
+                                            <h3>Form ID:</h3>
+                                            <h3>{selectedForm.form_id}</h3>
+                                        </div>
+                                        <div id="EditKey-div-selected-form-row">
+                                            <h3>First Name:</h3>
+                                            <h3>{selectedForm.first_name}</h3>
+                                        </div>
+                                        <div id="EditKey-div-selected-form-row-even">
+                                            <h3>Last Name:</h3>
+                                            <h3>{selectedForm.last_name}</h3>
+                                        </div>
+                                        <div id="EditKey-div-selected-form-row">
+                                            <h3>Access ID:</h3>
+                                            <h3>{selectedForm.access_id}</h3>
+                                        </div>
+                                        <div id="EditKey-div-selected-form-row-even">
+                                            <h3>Date Signed:</h3>
+                                            <h3>{selectedForm.date_signed}</h3>
+                                        </div>
+                                        <div id="EditKey-div-selected-form-row">    
+                                            <h3>Assigned Key Number:</h3>
+                                            <h3>{selectedForm.assigned_key_number}</h3>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div id="EditKey-div-no-selected-form">
+                                        <h3>Click on a form to select it.</h3>
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                        <div id="EditKey-div-row-flex-box">
-                            <h3>Selected Form</h3>
-                            {selectedForm ? (
-                                <div id="EditKey-div-selected-form">
-                                    <h3>Form ID: {selectedForm.form_id}</h3>
-                                    <h3>First Name: {selectedForm.first_name}</h3>
-                                    <h3>Last Name: {selectedForm.last_name}</h3>
-                                    <h3>Access ID: {selectedForm.access_id}</h3>
-                                    <h3>Date Signed: {selectedForm.date_signed}</h3>
-                                    <h3>Assigned Key Number: {selectedForm.assigned_key_number}</h3>
-                                </div>
+                        <div id="EditKey-div-request-form-container">
+                            {pdfData ? (
+                                <iframe id="EditKey-iframe-key-request-form" src={pdfData} alt="Key Request Form" />
                             ) : (
-                                <h3>No form selected.</h3>
+                                <h1 id="EditKey-h1-no-request-form">Assign a request form to this key.</h1>
                             )}
                         </div>
-                    </form>
-                    <div id="EditKey-div-request-form-container">
-                        {pdfData ? (
-                            <iframe id="EditKey-iframe-key-request-form" src={pdfData} alt="Key Request Form" />
-                        ) : (
-                            <h1 id="EditKey-h1-no-request-form">Assign a request form to this key.</h1>
-                        )}
                     </div>
                 </div>
-                <div id="EditKey-div-quick-actions">
-                    <div id="EditKey-div-row-flex-box-title">
+                <div id="EditKey-div-quick-actions-container">
+                    <div id="EditKey-div-quick-actions-title">
                         <h2>QUICK ACTIONS</h2>
                     </div>
                     <div id="EditKey-div-row-flex-box">
