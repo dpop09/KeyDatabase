@@ -332,6 +332,42 @@ const dbOperations = {
             console.log(error);
         }
     },
+    updateKeyRequestForm: async function (form_id, first_name, last_name, access_id, date_signed, file_buffer) {
+        try {
+            const sql = 'UPDATE key_request_form SET first_name = ?, last_name = ?, access_id = ?, date_signed = ?, image_data = ? WHERE form_id = ?';
+            const values = [first_name, last_name, access_id, date_signed, file_buffer, form_id];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    deleteKeyRequestForm: async function (form_id) {
+        try {
+            const sql = 'DELETE FROM key_request_form WHERE form_id = ?';
+            const values = [form_id];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
 }
 
 module.exports = dbOperations

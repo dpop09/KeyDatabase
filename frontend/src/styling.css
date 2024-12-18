@@ -969,3 +969,127 @@ AddRequestForm.jsx component styling
   cursor: pointer;
   transition: 0.3s;
 }
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+EditRequestForm.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#EditRequestForm-div-container {
+  text-align: center;
+  width: auto;
+  padding: 2rem;
+  padding-top: 0;
+}
+
+#EditRequestForm-div-flex-box {
+  height: 1080px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#EditRequestForm-div-left-box {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border: black solid 2px;
+  border-radius: 5px;
+}
+
+#EditRequestForm-div-row-flex-box-title {
+  background-color: rgb(9, 64, 56, 1);
+  display: flex;
+  flex-direction: row;
+  justify-content: center; 
+}
+#EditRequestForm-div-row-flex-box-title h2 {
+  color: rgb(255, 204, 51, 1);
+}
+#EditRequestForm-div-row-flex-box,
+#EditRequestForm-div-row-flex-box-even {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: black solid 2px;
+}
+#EditRequestForm-div-row-flex-box-even {
+  background-color: #e2e2e2;
+}
+#EditRequestForm-input-form-id,
+#EditRequestForm-input-first-name,
+#EditRequestForm-input-last-name,
+#EditRequestForm-input-access-id,
+#EditRequestForm-input-date-signed,
+#EditRequestForm-input-key-number,
+#EditRequestForm-input-file {
+  font-size: larger;
+  width: 50%;
+  height: 80%;
+  border: 2px black solid;
+  border-radius: 5px;
+}
+#EditRequestForm-button-delete {
+  background-color: #dc4c64;
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#EditRequestForm-button-delete:hover {
+  background-color:  #e27b8e;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#EditRequestForm-div-right-box {
+  width: 50%;
+  border: black solid 2px;
+  border-radius: 5px;
+}
+#EditRequestForm-iframe-key-request-form {
+  width: 100%;
+  height: 100%;
+}
+#EditRequestForm-h1-no-request-form {
+  padding-top: 45%;
+}
+
+#EditRequestForm-div-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1rem;
+}
+#EditRequestForm-button-cancel {
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#EditRequestForm-button-cancel:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#EditRequestForm-button-submit {
+  background-color: rgb(255, 204, 51, 1);  
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#EditRequestForm-button-submit:hover {  
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}

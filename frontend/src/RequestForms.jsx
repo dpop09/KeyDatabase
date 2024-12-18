@@ -8,6 +8,8 @@ function RequestForms() {
     const [data, setData] = useState([]);
     const [imageData, setImageData] = useState(null);
 
+    const { setRequestFormData } = useContext(AuthContext)
+
     const navigate = useNavigate();
     const handleAddRequestForm = () => {
         navigate('/addrequestform');
@@ -70,6 +72,11 @@ function RequestForms() {
         return
     }
 
+    const handleRowClick = (d) => {
+        setRequestFormData(d);
+        navigate('/editrequestform');
+    }
+
     return (
         <>
             <NavBar />
@@ -106,7 +113,7 @@ function RequestForms() {
                                     <th>Assigned Key Number</th>
                                 </tr>
                                 {data.map((d, i) => ( 
-                                    <tr key={i} onMouseEnter={() => getImageData(d.form_id)} >
+                                    <tr key={i} onMouseEnter={() => getImageData(d.form_id)} onClick={() => handleRowClick(d)} >
                                         <td>{d.form_id}</td>
                                         <td>{d.first_name}</td>
                                         <td>{d.last_name}</td>

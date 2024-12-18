@@ -185,4 +185,27 @@ router.post('/search-request-form', async (request, response) => {
     }
 });
 
+router.post('/update-key-request-form', upload.single('file'), async (request, response) => {
+    try {
+        const {form_id, first_name, last_name, access_id, date_signed} = request.body;
+        const file_buffer = request.file.buffer;
+        const result = await dbOperations.updateKeyRequestForm(form_id, first_name, last_name, access_id, date_signed, file_buffer);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.post('/delete-key-request-form', async (request, response) => {
+    try {
+        const { form_id } = request.body;
+        const result = await dbOperations.deleteKeyRequestForm(form_id);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
 module.exports = router;

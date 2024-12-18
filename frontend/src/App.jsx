@@ -7,6 +7,7 @@ import KeyInfo from './KeyInfo.jsx'
 import EditKey from './EditKey.jsx'
 import RequestForms from './RequestForms.jsx'
 import AddRequestForm from './AddRequestForm.jsx'
+import EditRequestForm from './EditRequestForm.jsx'
 
 function App() {
 
@@ -28,6 +29,11 @@ function App() {
             exact
             path='/requestforms'
             element={<RequestForms />}
+          />
+          <Route
+            exact
+            path='/editrequestform'
+            element={<EditRequestForm />}
           />
           <Route
             exact
