@@ -187,6 +187,38 @@ function EditKey() {
         }
     }
 
+    const handleSearchForm = async (event) => {
+        event.preventDefault();
+        const column = document.getElementById('EditKey-select-assign-form-search').value;
+        const row = document.getElementById('EditKey-input-assign-form-search').value;
+        if (!column || !row) {
+            alert("Please fill out all required fields.");
+            return
+        }
+        try {
+            const response = await fetch('http://localhost:8081/search-request-form', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ column, row })
+            })
+            if (response.ok) { // if the response is successful
+                const data = await response.json();
+                setRequestForms(data);
+            } else { // if the response is unsuccessful
+                console.log("Internal Server Error. Please try again later.");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleClearSearch = async (event) => {
+        event.preventDefault();
+        getKeyRequestForms();
+    }
+
     return (
         <>
             <NavBar />
@@ -253,6 +285,25 @@ function EditKey() {
                     </div>
                     <div id="EditKey-div-assgin-form-lower-container">
                         <div id="EditKey-div-assign-form-table-container">
+                            <div id="EditKey-div-assign-form-search">
+                                <div id="EditKey-div-assign-form-search-column">
+                                    <h3>Column:</h3>
+                                    <select id="EditKey-select-assign-form-search">
+                                        <option value="form_id">Form ID</option>
+                                        <option value="first_name">First Name</option>
+                                        <option value="last_name">Last Name</option>
+                                        <option value="access_id">Access ID</option>
+                                        <option value="date_signed">Date Signed</option>
+                                        <option value="assigned_key_number">Assigned Key Number</option>
+                                    </select>
+                                </div>
+                                <div id="EditKey-div-assign-form-search-row">
+                                    <h3>Search:</h3>
+                                    <input type="text" id="EditKey-input-assign-form-search" placeholder="Search..."/>
+                                </div>
+                                <button id="EditKey-button-assign-form-search" onClick={handleSearchForm}>Search</button>
+                                <button id="EditKey-button-assign-form-clear-search" onClick={handleClearSearch}>Clear</button>
+                            </div>
                             <table id="EditKey-table-assign-form">
                                 <tbody>
                                     <tr>

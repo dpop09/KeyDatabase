@@ -537,15 +537,64 @@ EditKey.jsx component styling
 #EditKey-div-assign-form-table-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 50%;
 }
 
+#EditKey-div-assign-form-search {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+#EditKey-div-assign-form-search-column {
+  padding-left: 1rem;
+  width: 40%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+#EditKey-div-assign-form-search-row {
+  padding-right: 1rem;
+  width: 60%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+#EditKey-select-assign-form-search {
+  font-size: medium;
+  width: 100%;
+  height: 2.35rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+}
+#EditKey-input-assign-form-search {
+  font-size: medium;
+  width: 100%;
+  height: 2.35rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+}
+#EditKey-button-assign-form-search,
+#EditKey-button-assign-form-clear-search {
+  margin-right: 1rem;
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#EditKey-button-assign-form-search:hover,
+#EditKey-button-assign-form-clear-search:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
 #EditKey-table-assign-form {
   border-collapse: collapse;
   overflow-y: auto;
   max-height: 80%;
-
 }
 #EditKey-div-selected-form-container {
   width: 100%;
@@ -554,7 +603,10 @@ EditKey.jsx component styling
   justify-content: space-between;
 }
 .selected-form {
-  font-weight: bold;
+  border: 3px black solid;
+}
+.selected-form > td {
+  background-color: #d2d2d2;
 }
 
 #EditKey-div-selected-form-row {
