@@ -42,6 +42,34 @@ function RequestForms() {
         .catch(err => console.log(err));
     }, []);
 
+    const handleSearch = async (event) => {
+        event.preventDefault();
+        const column = document.getElementById('RequestForms-select-column').value;
+        const row = document.getElementById('RequestForms-input-search-row').value;
+        if (!column || !row) { // if the column or row is empty
+            alert('Please enter a column and row to search.');
+            return
+        }
+        try {
+            const response = await fetch('http://localhost:8081/search-request-form', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ column: column, row: row })
+            })
+            const data = await response.json();
+            if (data) { // if the response is successful
+                setData(data);
+            } else { // if the response is unsuccessful
+                alert("Internal Server Error. Please try again later.");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        return
+    }
+
     return (
         <>
             <NavBar />
@@ -59,7 +87,7 @@ function RequestForms() {
                         </select>
                         <label id="RequestForms-label-search-row">Search:</label>
                         <input id="RequestForms-input-search-row" type="text" />
-                        <button id="RequestForms-button-search-row">Search</button>
+                        <button id="RequestForms-button-search-row" onClick={handleSearch}>Search</button>
                     </div>
                     <div id="RequestForms-div-create-key-container">
                         <button id="RequestForms-button-create-key" onClick={handleAddRequestForm}/>

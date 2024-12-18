@@ -237,6 +237,93 @@ tr:hover {
 }
 
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+CreateKey.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#CreateKey-div-container {
+  text-align: center;
+  padding: 2rem;
+  padding-top: 0;
+}
+
+#CreateKey-div-input-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border: black solid 2px;
+  border-bottom: none;
+  border-radius: 5px;
+}
+#CreateKey-div-row-flex-box-title {
+  background-color: rgb(9, 64, 56, 1);
+  display: flex;
+  flex-direction: row;
+  justify-content: center; 
+}
+#CreateKey-div-row-flex-box-title h2 {
+  color: rgb(255, 204, 51, 1);
+}
+#CreateKey-div-row-flex-box,
+#CreateKey-div-row-flex-box-even {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: black solid 2px;
+}
+#CreateKey-div-row-flex-box-even {
+  background-color: #e2e2e2;
+}
+#CreateKey-input-tag-number,
+#CreateKey-input-tag-color,
+#CreateKey-input-core-number,
+#CreateKey-input-room-number,
+#CreateKey-input-room-type,
+#CreateKey-input-key-number {
+  font-size: larger;
+  width: 25%;
+  height: 80%;
+  border: 2px black solid;
+  border-radius: 5px;
+}
+
+
+#CreateKey-div-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1rem;
+}
+#CreateKey-button-go-back {
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#CreateKey-button-go-back:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+#CreateKey-button-create-key {
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#CreateKey-button-create-key:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 KeyInfo.jsx component styling
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 

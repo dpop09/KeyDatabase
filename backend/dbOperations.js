@@ -296,6 +296,42 @@ const dbOperations = {
             throw error; // Throw the error to the calling function
         }
     },
+    createKey: async function (tag_number, tag_color, core_number, room_number, room_type, key_number) {
+        try {
+            const sql = 'INSERT INTO `keys` (tag_number, tag_color, core_number, room_number, room_type, key_number) VALUES (?, ?, ?, ?, ?, ?)';
+            const values = [tag_number, tag_color, core_number, room_number, room_type, key_number];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    searchRequestForm: async function (column, row) {
+        try {
+            const sql = 'SELECT * FROM `key_request_form` WHERE ?? = ?';
+            const values = [column, row];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
 }
 
 module.exports = dbOperations

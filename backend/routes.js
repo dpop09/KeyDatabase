@@ -163,4 +163,26 @@ router.post('/get-key-request-form-image-with-key-number', async (req, res) => {
     }
 });
 
+router.post('/create-key', async (request, response) => {
+    try {
+        const { tag_number, tag_color, core_number, room_number, room_type, key_number } = request.body;
+        const result = await dbOperations.createKey(tag_number, tag_color, core_number, room_number, room_type, key_number);
+        response.status(200).send(result);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send({ error: error.message });
+    }
+});
+
+router.post('/search-request-form', async (request, response) => {
+    try {
+        const { column, row } = request.body;
+        const result = await dbOperations.searchRequestForm(column, row);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
 module.exports = router;
