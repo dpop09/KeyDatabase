@@ -6,7 +6,7 @@ function CreateKey() {
 
     const navigate = useNavigate();
     const handleGoBack = () => {
-        navigate('/keys');
+        navigate('/');
     }
 
     const handleCreateKey = (event) => {

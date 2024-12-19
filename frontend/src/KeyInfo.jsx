@@ -10,7 +10,7 @@ function KeyInfo() {
 
     const navigate = useNavigate();
     const handleGoBack = () => {
-        navigate('/keys');
+        navigate('/');
     }
     const handleEdit = () => {
         navigate('/editkey');

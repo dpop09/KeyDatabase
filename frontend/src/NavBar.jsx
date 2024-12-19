@@ -6,13 +6,10 @@ function NavBar() {
 
     const navigate = useNavigate();
     const gotoKeys = () => {
-        navigate('/keys');
+        navigate('/');
     }
     const gotoRequestForms = () => {
         navigate('/requestforms');
-    }
-    const handleLogout = () => {
-        navigate('/');
     }
 
     return (
@@ -21,7 +18,6 @@ function NavBar() {
             <div id="NavBar-div-links">
                 <button id="NavBar-button-link" onClick={gotoKeys}>KEYS</button>
                 <button id="NavBar-button-link" onClick={gotoRequestForms}>REQUEST FORMS</button>
-                <button id="NavBar-button-link" onClick={handleLogout}>LOGOUT</button>
             </div>
         </div>
     )

@@ -1,7 +1,6 @@
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom'
 import { AuthContext, AuthProvider } from './AuthContext'
 import Keys from './Keys.jsx'
-import Signin from './Signin.jsx'
 import CreateKey from './CreateKey.jsx'
 import KeyInfo from './KeyInfo.jsx'
 import EditKey from './EditKey.jsx'
@@ -18,11 +17,6 @@ function App() {
           <Route
             exact
             path='/'
-            element={<Signin />}
-          />
-          <Route
-            exact
-            path='/keys'
             element={<Keys />}
           />
           <Route
