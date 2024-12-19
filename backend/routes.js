@@ -70,7 +70,7 @@ router.post('/edit-key', async (request, response) => {
             new_form_id
             } = request.body;
         if (new_form_id != null) { // if a form is provided
-            if (old_form_id != null && old_form_id != new_form_id) { // if a new_form_id is provided, remove the key holder from the old form
+            if (old_form_id != null && old_form_id != new_form_id) { // if there is an old form and it is not the same as the new form
                 const update_old_form_result = await dbOperations.setKeyNumberInRequestFormToNull(null, old_form_id);
             }
             const update_new_form_result = await dbOperations.updateKeyNumberInRequestForm(key_number, new_form_id);

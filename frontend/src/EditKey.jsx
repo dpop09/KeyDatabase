@@ -10,7 +10,7 @@ function EditKey() {
     const [selectedForm, setSelectedForm] = useState(null);
     const [pdfData, setPdfData] = useState(null);
 
-    const { keyData } = useContext(AuthContext);
+    const { keyData, setKeyData } = useContext(AuthContext);
 
     const navigate = useNavigate();
     const handleCancel = () => {
@@ -102,15 +102,9 @@ function EditKey() {
         const key_holder_access_id = document.getElementById('EditKey-input-key_holder_access_id').value || document.getElementById('EditKey-input-key_holder_access_id').placeholder;
         const date_assigned = document.getElementById('EditKey-input-date_assigned').value || document.getElementById('EditKey-input-date_assigned').placeholder;
         const comments = document.getElementById('EditKey-textarea-comments').value || document.getElementById('EditKey-textarea-comments').placeholder;
-        if (!tag_number || !tag_color || !core_number || !room_number || !room_type || !key_number ) {// check if any of the key fields are empty
+        if (!tag_number || !tag_color || !core_number || !room_number || !room_type || !key_number ) { // check if any of the core key fields are empty
             alert("Please fill out all required fields.");
             return
-        }
-        if (key_holder_fname || key_holder_lname || key_holder_access_id || date_assigned) { // check if any of the key holder fields are empty
-            if (!key_holder_fname || !key_holder_lname || !key_holder_access_id || !date_assigned) {
-                alert("If you want to edit or add a key holder to this key, you must fill out all of the required fields.");
-                return
-            }
         }
         try {
             const response = await fetch('http://localhost:8081/edit-key', { // send a POST request to the backend route
@@ -135,6 +129,8 @@ function EditKey() {
                 })
             })
             if (response.ok) { // if the response is successful
+                const data = await response.json();
+                setKeyData(data); // update the key data before navigating to the key info page
                 navigate('/keyinfo');
             } else { // if the response is unsuccessful
                 console.log("Internal Server Error. Please try again later.");
@@ -158,6 +154,8 @@ function EditKey() {
                 })
             })
             if (response.ok) { // if the response is successful
+                const data = await response.json();
+                setKeyData(data); // update the key data before navigating to the key info page
                 navigate('/keyinfo');
             } else { // if the response is unsuccessful
                 console.log("Internal Server Error. Please try again later.");
@@ -226,30 +224,30 @@ function EditKey() {
                 <div id="EditKey-div-top-container">
                     <div id="EditKey-div-form-container">
                         <div id="EditKey-div-row-flex-box-title">
-                            <h2>EDIT KEY *BLOCKED* </h2>
+                            <h2>EDIT KEY INFO</h2>
                         </div>
                         <div id="EditKey-div-row-flex-box">
-                            <h3>Tag Number:</h3>
+                            <h3>*Tag Number:</h3>
                             <input type="text" id="EditKey-input-tag_number" placeholder={keyData.tag_number} disabled/>
                         </div>
                         <div id ="EditKey-div-row-flex-box-even">
-                            <h3>Tag Color:</h3>
+                            <h3>*Tag Color:</h3>
                             <input type="text" id="EditKey-input-tag_color" placeholder={keyData.tag_color} disabled/>
                         </div>
                         <div id="EditKey-div-row-flex-box">
-                            <h3>Core Number:</h3>
+                            <h3>*Core Number:</h3>
                             <input type="text" id="EditKey-input-core_number" placeholder={keyData.core_number} disabled />
                         </div>
                         <div id="EditKey-div-row-flex-box-even">
-                            <h3>Room Number:</h3>
+                            <h3>*Room Number:</h3>
                             <input type="text" id="EditKey-input-room_number" placeholder={keyData.room_number} disabled />
                         </div>
                         <div id="EditKey-div-row-flex-box">
-                            <h3>Room Type:</h3>
+                            <h3>*Room Type:</h3>
                             <input type="text" id="EditKey-input-room_type" placeholder={keyData.room_type} disabled />
                         </div>
                         <div id="EditKey-div-row-flex-box-even">
-                            <h3>Key Number:</h3>
+                            <h3>*Key Number:</h3>
                             <input type="text" id="EditKey-input-key_number" placeholder={keyData.key_number} disabled />
                         </div>
                     </div>
@@ -385,7 +383,7 @@ function EditKey() {
                     </div>
                     <div id="EditKey-div-row-flex-box-even">
                         <h3>DELETE KEY:</h3>
-                        <button id="EditKey-button-remove-key" onClick={handleDeleteKey} disabled={false}>Delete Key</button>
+                        <button id="EditKey-button-remove-key" onClick={handleDeleteKey} disabled={true}>Delete Key</button>
                     </div>
                 </div>
                 <div id="EditKey-div-button-container">

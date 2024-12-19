@@ -98,7 +98,8 @@ const dbOperations = {
             const formatted_date_last_edited = current_date.toISOString().slice(0, 19).replace('T', ' '); // Format date
             const sql = 'UPDATE `Keys` SET tag_number = ?, tag_color = ?, core_number = ?, room_number = ?, room_type = ?, key_holder_fname = ?, key_holder_lname = ?, key_holder_access_id = ?, date_assigned = ?, comments = ?, date_last_edited = ? WHERE key_number = ?';
             const values = [tag_number, tag_color, core_number, room_number, room_type, key_holder_fname, key_holder_lname, key_holder_access_id, formatted_date_assigned, comments, formatted_date_last_edited, key_number];
-            const response = await new Promise((resolve, reject) => {
+            // Perform the update to the key
+            await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {
                         reject(err);
@@ -107,7 +108,21 @@ const dbOperations = {
                     }
                 });
             });
-            return response; 
+            
+            // Now fetch the updated key
+            const select_sql = 'SELECT * FROM `Keys` WHERE key_number = ?';
+            const select_values = [key_number];
+            const response = await new Promise((resolve, reject) => {
+                db.query(select_sql, select_values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result[0]);
+                    }
+                });
+            });
+
+            return response; // Return the updated key
         } catch (error) {
             console.log(error);
         }
@@ -119,7 +134,8 @@ const dbOperations = {
             const last_action_made = 'Removed key holder';
             const sql = 'UPDATE `Keys` SET key_holder_fname = NULL, key_holder_lname = NULL, key_holder_access_id = NULL, date_assigned = NULL, last_action_made = ?, date_last_edited = ? WHERE key_number = ?';
             const values = [last_action_made, formatted_date_last_edited, key_number];
-            const response = await new Promise((resolve, reject) => {
+            // Perform the update
+            await new Promise((resolve, reject) => { 
                 db.query(sql, values, (err, result) => {
                     if (err) {
                         reject(err);
@@ -128,7 +144,20 @@ const dbOperations = {
                     }
                 });
             });
-            return response;
+
+            // Now fetch the updated row
+            const select_sql = 'SELECT * FROM `Keys` WHERE key_number = ?';
+            const row = await new Promise((resolve, reject) => {
+                db.query(select_sql, [key_number], (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result[0]);
+                    }
+                });
+            });
+
+            return row; // Return the updated row
         } catch (error) {
             console.log(error);
         }
