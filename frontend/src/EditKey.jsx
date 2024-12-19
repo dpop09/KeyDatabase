@@ -217,6 +217,34 @@ function EditKey() {
         getKeyRequestForms();
     }
 
+    const getReadableDateSigned = (d) => {
+        if (!d.date_signed) {
+            return
+        }
+        // Create a Date object from the ISO date string
+        const date = new Date(d.date_signed);
+    
+        const options = { month: 'short' }; // Get the short month name (e.g., Oct)
+        const day = date.getDate();
+        const year = date.getFullYear();
+    
+        // Get the correct ordinal suffix (st, nd, rd, th) for the day
+        const getOrdinal = (n) => {
+            if (n > 3 && n < 21) return 'th'; // Covers 4th-20th
+            switch (n % 10) {
+                case 1: return 'st';
+                case 2: return 'nd';
+                case 3: return 'rd';
+                default: return 'th';
+            }
+        };
+    
+        const dayWithOrdinal = `${day}${getOrdinal(day)}`;
+        const month = new Intl.DateTimeFormat('en-US', options).format(date);
+    
+        return `${month} ${dayWithOrdinal}, ${year}`;
+    }
+
     return (
         <>
             <NavBar />
@@ -302,33 +330,36 @@ function EditKey() {
                                 <button id="EditKey-button-assign-form-search" onClick={handleSearchForm}>Search</button>
                                 <button id="EditKey-button-assign-form-clear-search" onClick={handleClearSearch}>Clear</button>
                             </div>
-                            <table id="EditKey-table-assign-form">
-                                <tbody>
-                                    <tr>
-                                        <th>Form ID</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Access ID</th>
-                                        <th>Date Signed</th>
-                                        <th>Assigned Key Number</th>
-                                    </tr>
-                                    {requestForms.map((d, i) => ( 
-                                        <tr 
-                                            key={i} 
-                                            onMouseOver={() => getPdfData(d.form_id)} 
-                                            onClick={() => handleSelectForm(d)}
-                                            className={selectedForm && selectedForm.form_id === d.form_id ? 'selected-form' : ''}
-                                        >
-                                            <td>{d.form_id}</td>
-                                            <td>{d.first_name}</td>
-                                            <td>{d.last_name}</td>
-                                            <td>{d.access_id}</td>
-                                            <td>{d.date_signed}</td>
-                                            <td>{d.assigned_key_number}</td>
+                            <div id="EditKey-div-table-container">
+                                <table id="EditKey-table">
+                                    <tbody>
+                                        <tr id="EditKey-tr-header">
+                                            <th id="EditKey-th">Form ID</th>
+                                            <th id="EditKey-th">First Name</th>
+                                            <th id="EditKey-th">Last Name</th>
+                                            <th id="EditKey-th">Access ID</th>
+                                            <th id="EditKey-th">Date Signed</th>
+                                            <th id="EditKey-th">Assigned Key Number</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                        {requestForms.map((d, i) => ( 
+                                            <tr
+                                                id="EditKey-tr" 
+                                                key={i} 
+                                                onMouseOver={() => getPdfData(d.form_id)} 
+                                                onClick={() => handleSelectForm(d)}
+                                                className={selectedForm && selectedForm.form_id === d.form_id ? 'selected-form' : ''}
+                                            >
+                                                <td id="EditKey-td">{d.form_id}</td>
+                                                <td id="EditKey-td">{d.first_name}</td>
+                                                <td id="EditKey-td">{d.last_name}</td>
+                                                <td id="EditKey-td">{d.access_id}</td>
+                                                <td id="EditKey-td">{getReadableDateSigned(d)}</td>
+                                                <td id="EditKey-td">{d.assigned_key_number}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                             <div id="EditKey-div-selected-form-container">
                                 {selectedForm ? (
                                     <>

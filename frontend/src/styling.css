@@ -127,7 +127,7 @@ Keys.jsx component styling
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 #Keys-div-search-container {
@@ -135,50 +135,35 @@ Keys.jsx component styling
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin-left: 1rem;
 }
 
-#Keys-label-search-column,
-#Keys-label-search-row {
-  font-size: large;
-  margin-right: auto;
-}
-
-#Keys-select-column {
-  font-size: medium;
-  width: 12rem;
+#Keys-select-column,
+#Keys-input-search-row {
+  font-size: larger;
+  width: 50%;
   height: 2.35rem;
   border-radius: 5px;
   margin: 0.5rem;
 }
-
 #Keys-input-search-row {
-  font-size: medium;
-  width: 20rem;
-  height: 2rem;
-  border-radius: 5px;
-  margin: 0.5rem;
+  height: 2.1rem;
 }
-  
-#Keys-button-search-row {
+
+#Keys-button-search,
+#Keys-button-clear-search{
+  margin-left: .5rem;
+  margin-right: .5rem;
   background-color: rgb(255, 204, 51, 1);
   font-size: medium;
   height: 2.3rem;
   border-radius: 5px;
   border: none;
 }
-#Keys-button-search-row:hover {
+#Keys-button-search:hover,
+#Keys-button-clear-search:hover {
   background-color: rgb(255, 224, 133, 1);
   cursor: pointer;
   transition: 0.3s;
-}
-
-#Keys-div-create-key-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  margin-right: 1rem;
 }
 
 #Keys-button-create-key {
@@ -189,14 +174,9 @@ Keys.jsx component styling
   background-size: cover;
   border: none;
   outline: none;
-  margin-right: 1rem;
 }
 #Keys-button-create-key:hover {
-  background-color: transparent;
   background-image: url('./assets/add_key_icon_hover.png');
-  background-size: cover;
-  border: none;
-  outline: none;
   cursor: pointer;
   transition: .3s;
 }
@@ -204,34 +184,34 @@ Keys.jsx component styling
 #Keys-table-container {
   overflow-y: auto;
   margin-bottom: 1.25rem;
+  border: 2px solid black;
+  border-radius: 5px;
 }
-
-#Keys-table-main {
+#Keys-table {
   width: 100%;
-  margin-top: 1rem;
   border-collapse: collapse;
 }
-td, th {
+#Keys-td, #Keys-th {
   border: 1px solid #ddd;
   padding: 8px;
 }
-th {
+#Keys-th {
   color: white;
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
   background-color: rgb(9, 64, 56, 1);
 }
-tr {
+#Keys-tr {
   text-align: left;
 }
-tr:nth-child(odd) {
+#Keys-tr:nth-child(odd) {
   background-color: #e2e2e2;
 }
-tr:nth-child(even) {
+#Keys-tr:nth-child(even) {
   background-color: #f2f2f2;
 }
-tr:hover {
+#Keys-tr:hover {
   background-color: #d2d2d2;
   cursor: pointer;
 }
@@ -591,11 +571,40 @@ EditKey.jsx component styling
   cursor: pointer;
   transition: 0.3s;
 }
-#EditKey-table-assign-form {
-  border-collapse: collapse;
+
+#EditKey-div-table-container {
   overflow-y: auto;
-  max-height: 80%;
 }
+
+#EditKey-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+#EditKey-td, #EditKey-th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+#EditKey-th {
+  color: white;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgb(9, 64, 56, 1);
+}
+#EditKey-tr {
+  text-align: left;
+}
+#EditKey-tr:nth-child(odd) {
+  background-color: #e2e2e2;
+}
+#EditKey-tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+#EditKey-tr:hover {
+  background-color: #d2d2d2;
+  cursor: pointer;
+}
+
 #EditKey-div-selected-form-container {
   width: 100%;
   display: flex;
@@ -746,7 +755,6 @@ RequestForms.jsx component styling
 }
 
 #RequestForms-div-top-flex-box {
-
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -760,53 +768,38 @@ RequestForms.jsx component styling
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin-left: 1rem;
 }
 
-#RequestForms-label-search-column,
-#RequestForms-label-search-row {
-  font-size: large;
-  margin-right: auto;
-}
-
-#RequestForms-select-column {
-  font-size: medium;
-  width: 12rem;
+#RequestForms-select-column,
+#RequestForms-input-search-row {
+  font-size: larger;
+  width: 50%;
   height: 2.35rem;
   border-radius: 5px;
   margin: 0.5rem;
 }
-
 #RequestForms-input-search-row {
-  font-size: medium;
-  width: 20rem;
-  height: 2rem;
-  border-radius: 5px;
-  margin: 0.5rem;
+  height: 2.1rem;
 }
   
-#RequestForms-button-search-row {
+#RequestForms-button-search,
+#RequestForms-button-clear-search {
+  margin-left: .5rem;
+  margin-right: .5rem;
   background-color: rgb(255, 204, 51, 1);
   font-size: medium;
   height: 2.3rem;
   border-radius: 5px;
   border: none;
 }
-#RequestForms-button-search-row:hover {
+#RequestForms-button-search:hover,
+#RequestForms-button-clear-search:hover {
   background-color: rgb(255, 224, 133, 1);
   cursor: pointer;
   transition: 0.3s;
 }
 
-#RequestForms-div-create-key-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  margin-right: 1rem;
-}
-
-#RequestForms-button-create-key {
+#RequestForms-button-add-form {
   width: 52px;
   height: 52px;
   background-color: transparent;
@@ -814,14 +807,9 @@ RequestForms.jsx component styling
   background-size: cover;
   border: none;
   outline: none;
-  margin-right: 1rem;
 }
-#RequestForms-button-create-key:hover {
-  background-color: transparent;
+#RequestForms-button-add-form:hover {
   background-image: url('./assets/add_key_request_form_icon_hover.png');
-  background-size: cover;
-  border: none;
-  outline: none;
   cursor: pointer;
   transition: .3s;
 }
@@ -834,17 +822,38 @@ RequestForms.jsx component styling
 }
 
 #RequestForms-div-table-container {
+  overflow-y: auto;
   width: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
   border: black solid 2px;
   border-radius: 5px;
 }
-
 #RequestForms-table {
+  width: 100%;
   border-collapse: collapse;
-  overflow-y: auto;
+}
+#RequestForms-td, #RequestForms-th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+#RequestForms-th {
+  color: white;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgb(9, 64, 56, 1);
+}
+#RequestForms-tr {
+  text-align: left;
+}
+#RequestForms-tr:nth-child(odd) {
+  background-color: #e2e2e2;
+}
+#RequestForms-tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+#RequestForms-tr:hover {
+  background-color: #d2d2d2;
+  cursor: pointer;
 }
 
 #RequestForms-div-image-container {

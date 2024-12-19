@@ -37,11 +37,18 @@ function RequestForms() {
         }
     }
 
+    const getAllRequestForms = async () => {
+        try {
+            const response = await fetch('http://localhost:8081/get-all-key-request-forms');
+            const data = await response.json();
+            setData(data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
-        fetch('http://localhost:8081/get-all-key-request-forms')
-        .then(response => response.json())
-        .then(data => setData(data))
-        .catch(err => console.log(err));
+        getAllRequestForms();
     }, []);
 
     const handleSearch = async (event) => {
@@ -72,9 +79,42 @@ function RequestForms() {
         return
     }
 
+    const handleClearSearch = async (event) => {
+        event.preventDefault();
+        getAllRequestForms();
+    }
+
     const handleRowClick = (d) => {
         setRequestFormData(d);
         navigate('/editrequestform');
+    }
+
+    const getReadableDateSigned = (d) => {
+        if (!d.date_signed) {
+            return
+        }
+        // Create a Date object from the ISO date string
+        const date = new Date(d.date_signed);
+    
+        const options = { month: 'short' }; // Get the short month name (e.g., Oct)
+        const day = date.getDate();
+        const year = date.getFullYear();
+    
+        // Get the correct ordinal suffix (st, nd, rd, th) for the day
+        const getOrdinal = (n) => {
+            if (n > 3 && n < 21) return 'th'; // Covers 4th-20th
+            switch (n % 10) {
+                case 1: return 'st';
+                case 2: return 'nd';
+                case 3: return 'rd';
+                default: return 'th';
+            }
+        };
+    
+        const dayWithOrdinal = `${day}${getOrdinal(day)}`;
+        const month = new Intl.DateTimeFormat('en-US', options).format(date);
+    
+        return `${month} ${dayWithOrdinal}, ${year}`;
     }
 
     return (
@@ -83,7 +123,7 @@ function RequestForms() {
             <div id="RequestForms-div-container">
                 <div id="RequestForms-div-top-flex-box">
                     <div id="RequestForms-div-search-container">
-                        <label id="RequestForms-label-search-column">Column:</label>
+                        <h3>Column:</h3>
                         <select id="RequestForms-select-column">
                             <option value="form_id">Form ID</option>
                             <option value="first_name">First Name</option>
@@ -92,34 +132,37 @@ function RequestForms() {
                             <option value="date_signed">Date Signed</option>
                             <option value="assigned_key_number">Assigned Key Number</option>
                         </select>
-                        <label id="RequestForms-label-search-row">Search:</label>
+                        <h3>Search:</h3>
                         <input id="RequestForms-input-search-row" type="text" />
-                        <button id="RequestForms-button-search-row" onClick={handleSearch}>Search</button>
+                        <button id="RequestForms-button-search" onClick={handleSearch}>Search</button>
+                        <button id="RequestForms-button-clear-search" onClick={handleClearSearch}>Clear</button>
                     </div>
-                    <div id="RequestForms-div-create-key-container">
-                        <button id="RequestForms-button-create-key" onClick={handleAddRequestForm}/>
-                    </div>
+                    <button id="RequestForms-button-add-form" onClick={handleAddRequestForm}/>
                 </div>
                 <div id="RequestForms-div-flex-box">
                     <div id="RequestForms-div-table-container">
                         <table id="RequestForms-table">
                             <tbody>
-                                <tr>
-                                    <th>Form ID</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Access ID</th>
-                                    <th>Date Signed</th>
-                                    <th>Assigned Key Number</th>
+                                <tr id="RequestForms-tr-header">
+                                    <th id="RequestForms-th">Form ID</th>
+                                    <th id="RequestForms-th">First Name</th>
+                                    <th id="RequestForms-th">Last Name</th>
+                                    <th id="RequestForms-th">Access ID</th>
+                                    <th id="RequestForms-th">Date Signed</th>
+                                    <th id="RequestForms-th">Assigned Key Number</th>
                                 </tr>
                                 {data.map((d, i) => ( 
-                                    <tr key={i} onMouseEnter={() => getImageData(d.form_id)} onClick={() => handleRowClick(d)} >
-                                        <td>{d.form_id}</td>
-                                        <td>{d.first_name}</td>
-                                        <td>{d.last_name}</td>
-                                        <td>{d.access_id}</td>
-                                        <td>{d.date_signed}</td>
-                                        <td>{d.assigned_key_number}</td>
+                                    <tr 
+                                        id="RequestForms-tr"
+                                        key={i} onMouseEnter={() => getImageData(d.form_id)} 
+                                        onClick={() => handleRowClick(d)} 
+                                    >
+                                        <td id="RequestForms-td">{d.form_id}</td>
+                                        <td id="RequestForms-td">{d.first_name}</td>
+                                        <td id="RequestForms-td">{d.last_name}</td>
+                                        <td id="RequestForms-td">{d.access_id}</td>
+                                        <td id="RequestForms-td">{getReadableDateSigned(d)}</td>
+                                        <td id="RequestForms-td">{d.assigned_key_number}</td>
                                     </tr>
                                 ))}
                             </tbody>

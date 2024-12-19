@@ -14,11 +14,18 @@ function Home() {
         navigate('/createkey');
     }
 
+    const getAllKeys = async () => {
+        try {
+            const response = await fetch('http://localhost:8081/getall');
+            const data = await response.json();
+            setData(data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
-        fetch('http://localhost:8081/getall')
-       .then(response => response.json())
-       .then(data => setData(data))
-       .catch(err => console.log(err));
+        getAllKeys();
     }, []);
 
     const handleSearch = async (event) => {
@@ -46,6 +53,11 @@ function Home() {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    const handleClearSearch = async (event) => {
+        event.preventDefault();
+        getAllKeys();
     }
 
     const handleRowClick = (d) => {
@@ -87,65 +99,63 @@ function Home() {
             <div id="Keys-div-container">
                 <div id="Keys-div-top-flex-box">
                     <div id="Keys-div-search-container">
-                        <label id="Keys-label-search-column">Column:</label>
+                        <h3>Column:</h3>
                         <select id="Keys-select-column">
                             <option value="tag_number">Tag Number</option>
                             <option value="core_number">Core Number</option>
                             <option value="room_number">Room Number</option>
                             <option value="room_type">Room Type</option>
                             <option value="key_number">Key Number</option>
-                            <option value="key_holder_fname">Key Holder's First Name</option>
-                            <option value="key_holder_lname">Key Holder's Last Name</option>
-                            <option value="key_holder_access_id">Key Holder's Access ID</option>
-                            <option value="date_assigned">Date Key was Assigned</option>
-                            <option value="last_edited_by">Last Edited By</option>
-                            <option value="date_last_edited">Date Last Edited</option>
+                            <option value="key_holder_fname">Holder's First Name</option>
+                            <option value="key_holder_lname">Holder's Last Name</option>
+                            <option value="key_holder_access_id">Holder's Access ID</option>
+                            <option value="date_assigned">Date Assigned</option>
                         </select>
-                        <label id="Keys-label-search-row">Search:</label>
+                        <h3>Search:</h3>
                         <input id="Keys-input-search-row" type="text" />
-                        <button id="Keys-button-search-row" onClick={handleSearch}>Search</button>
+                        <button id="Keys-button-search" onClick={handleSearch}>Search</button>
+                        <button id="Keys-button-clear-search" onClick={handleClearSearch}>Clear</button>
                     </div>
-                    <div id="Keys-div-create-key-container">
-                        <button id="Keys-button-create-key" onClick={handleCreateKey}/>
-                    </div>
+                    <button id="Keys-button-create-key" onClick={handleCreateKey}/>
                 </div>
                 <div id="Keys-table-container">
-                    <table id="Keys-table-main">
+                    <table id="Keys-table">
                         <tbody>
-                            <tr>
-                                <th>Tag Number</th>
-                                <th>Core</th>
-                                <th>Room Number</th>
-                                <th>Room Type</th>
-                                <th>Key Number</th>
-                                <th>Avaliable</th>
-                                <th>Key Holder's First Name</th>
-                                <th>Key Holder's Last Name</th>
-                                <th>Key Holder's Access ID</th>
-                                <th>Date Assigned</th>
-                                <th>Comments</th>
+                            <tr id="Keys-tr-header">
+                                <th id="Keys-th">Tag Number</th>
+                                <th id="Keys-th">Core</th>
+                                <th id="Keys-th">Room Number</th>
+                                <th id="Keys-th">Room Type</th>
+                                <th id="Keys-th">Key Number</th>
+                                <th id="Keys-th">Avaliable</th>
+                                <th id="Keys-th">Key Holder's First Name</th>
+                                <th id="Keys-th">Key Holder's Last Name</th>
+                                <th id="Keys-th">Key Holder's Access ID</th>
+                                <th id="Keys-th">Date Assigned</th>
+                                <th id="Keys-th">Comments</th>
                             </tr>
                             {data.map((d, i) => ( // Maps over the data array to create a table row (<tr>) for each item d in data. The index i is used as a unique key for each row.
-                                <tr key={i} onClick={() => handleRowClick(d)}>
+                                <tr id="Keys-tr" key={i} onClick={() => handleRowClick(d)}>
                                     <td 
-                                        id="Keys-table-td-tag_number" 
+                                        id="Keys-td"
                                         style={{ backgroundColor: d.tag_color || 'transparent' }} // Set background color or default to transparent
                                     >{d.tag_number}
                                     </td>
-                                    <td>{d.core_number}</td>
-                                    <td>{d.room_number}</td>
-                                    <td>{d.room_type}</td>
-                                    <td>{d.key_number}</td>
+                                    <td id="Keys-td">{d.core_number}</td>
+                                    <td id="Keys-td">{d.room_number}</td>
+                                    <td id="Keys-td">{d.room_type}</td>
+                                    <td id="Keys-td">{d.key_number}</td>
                                     <td 
+                                        id="Keys-td"
                                         style={{ backgroundColor: d.key_holder_fname && d.key_holder_lname && d.key_holder_access_id && d.date_assigned ? 'lightcoral' : 'lightgreen' }}
                                     >
                                         {d.key_holder_fname && d.key_holder_lname && d.key_holder_access_id && d.date_assigned ? 'No' : 'Yes'}
                                     </td>
-                                    <td>{d.key_holder_fname}</td>
-                                    <td>{d.key_holder_lname}</td>         
-                                    <td>{d.key_holder_access_id}</td>       
-                                    <td>{getReadableDateAssigned(d)}</td>
-                                    <td>{d.comments}</td>
+                                    <td id="Keys-td">{d.key_holder_fname}</td>
+                                    <td id="Keys-td">{d.key_holder_lname}</td>         
+                                    <td id="Keys-td">{d.key_holder_access_id}</td>       
+                                    <td id="Keys-td">{getReadableDateAssigned(d)}</td>
+                                    <td id="Keys-td">{d.comments}</td>
                                 </tr>
                             ))}
                         </tbody>
