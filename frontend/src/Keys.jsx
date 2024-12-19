@@ -1,6 +1,6 @@
 import React, { useContext,useEffect, useState } from "react";
 import { AuthContext } from './AuthContext'
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 
 function Home() {
@@ -53,48 +53,12 @@ function Home() {
         navigate('/keyinfo');
     }
 
-    const getKeyNumber = (d) => {
-        return d.key_number.split('-')[0];
-    }
-
-    const getKeySequence = (d) => {
-        return d.key_number.split('-')[1];
-    }
-
     const getReadableDateAssigned = (d) => {
         if (!d.date_assigned) {
             return
         }
         // Create a Date object from the ISO date string
         const date = new Date(d.date_assigned);
-    
-        const options = { month: 'short' }; // Get the short month name (e.g., Oct)
-        const day = date.getDate();
-        const year = date.getFullYear();
-    
-        // Get the correct ordinal suffix (st, nd, rd, th) for the day
-        const getOrdinal = (n) => {
-            if (n > 3 && n < 21) return 'th'; // Covers 4th-20th
-            switch (n % 10) {
-                case 1: return 'st';
-                case 2: return 'nd';
-                case 3: return 'rd';
-                default: return 'th';
-            }
-        };
-    
-        const dayWithOrdinal = `${day}${getOrdinal(day)}`;
-        const month = new Intl.DateTimeFormat('en-US', options).format(date);
-    
-        return `${month} ${dayWithOrdinal}, ${year}`;
-    }
-
-    const getReadableDateEdited = (d) => {
-        if (!d.date_last_edited) {
-            return    
-        }
-        // Create a Date object from the ISO date string
-        const date = new Date(d.date_last_edited);
     
         const options = { month: 'short' }; // Get the short month name (e.g., Oct)
         const day = date.getDate();
@@ -154,7 +118,6 @@ function Home() {
                                 <th>Room Number</th>
                                 <th>Room Type</th>
                                 <th>Key Number</th>
-                                <th>Sequence</th>
                                 <th>Avaliable</th>
                                 <th>Key Holder's First Name</th>
                                 <th>Key Holder's Last Name</th>
@@ -162,7 +125,7 @@ function Home() {
                                 <th>Date Assigned</th>
                                 <th>Comments</th>
                             </tr>
-                            {data.map((d, i) => (                 // Maps over the data array to create a table row (<tr>) for each item d in data. The index i is used as a unique key for each row.
+                            {data.map((d, i) => ( // Maps over the data array to create a table row (<tr>) for each item d in data. The index i is used as a unique key for each row.
                                 <tr key={i} onClick={() => handleRowClick(d)}>
                                     <td 
                                         id="Keys-table-td-tag_number" 
@@ -172,8 +135,7 @@ function Home() {
                                     <td>{d.core_number}</td>
                                     <td>{d.room_number}</td>
                                     <td>{d.room_type}</td>
-                                    <td>{getKeyNumber(d)}</td>
-                                    <td>{getKeySequence(d)}</td>
+                                    <td>{d.key_number}</td>
                                     <td 
                                         style={{ backgroundColor: d.key_holder_fname && d.key_holder_lname && d.key_holder_access_id && d.date_assigned ? 'lightcoral' : 'lightgreen' }}
                                     >
