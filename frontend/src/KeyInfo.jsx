@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from './AuthContext';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 
 function KeyInfo() {
 
-    const [keyRequestForm, setKeyRequestForm] = useState(null);
     const [pdfData, setPdfData] = useState(null);
 
     const navigate = useNavigate();
@@ -39,10 +38,6 @@ function KeyInfo() {
     }
 
     useEffect(() => {
-        const fetchKeyRequestForm = async () => {
-            await getKeyRequestForm();
-        };
-        fetchKeyRequestForm();
         getPdfData();
     }, []);
 

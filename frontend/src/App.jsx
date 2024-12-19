@@ -1,5 +1,5 @@
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom'
-import { AuthContext, AuthProvider } from './AuthContext'
+import { AuthProvider } from './AuthContext'
 import Keys from './Keys.jsx'
 import CreateKey from './CreateKey.jsx'
 import KeyInfo from './KeyInfo.jsx'
