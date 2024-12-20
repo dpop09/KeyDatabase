@@ -125,12 +125,14 @@ function RequestForms() {
                     <div id="RequestForms-div-search-container">
                         <h3>Column:</h3>
                         <select id="RequestForms-select-column">
-                            <option value="form_id">Form ID</option>
                             <option value="first_name">First Name</option>
                             <option value="last_name">Last Name</option>
                             <option value="access_id">Access ID</option>
                             <option value="date_signed">Date Signed</option>
-                            <option value="assigned_key_number">Assigned Key Number</option>
+                            <option value="assigned_key_1">Assigned Key 1</option>
+                            <option value="assigned_key_2">Assigned Key 2</option>
+                            <option value="assigned_key_3">Assigned Key 3</option>
+                            <option value="assigned_key_4">Assigned Key 4</option>
                         </select>
                         <h3>Search:</h3>
                         <input id="RequestForms-input-search-row" type="text" />
@@ -144,12 +146,14 @@ function RequestForms() {
                         <table id="RequestForms-table">
                             <tbody>
                                 <tr id="RequestForms-tr-header">
-                                    <th id="RequestForms-th">Form ID</th>
                                     <th id="RequestForms-th">First Name</th>
                                     <th id="RequestForms-th">Last Name</th>
                                     <th id="RequestForms-th">Access ID</th>
                                     <th id="RequestForms-th">Date Signed</th>
-                                    <th id="RequestForms-th">Assigned Key Number</th>
+                                    <th id="RequestForms-th">Assigned Key 1</th>
+                                    <th id="RequestForms-th">Assigned Key 2</th>
+                                    <th id="RequestForms-th">Assigned Key 3</th>
+                                    <th id="RequestForms-th">Assigned Key 4</th>
                                 </tr>
                                 {data.map((d, i) => ( 
                                     <tr 
@@ -157,12 +161,14 @@ function RequestForms() {
                                         key={i} onMouseEnter={() => getImageData(d.form_id)} 
                                         onClick={() => handleRowClick(d)} 
                                     >
-                                        <td id="RequestForms-td">{d.form_id}</td>
                                         <td id="RequestForms-td">{d.first_name}</td>
                                         <td id="RequestForms-td">{d.last_name}</td>
                                         <td id="RequestForms-td">{d.access_id}</td>
                                         <td id="RequestForms-td">{getReadableDateSigned(d)}</td>
-                                        <td id="RequestForms-td">{d.assigned_key_number}</td>
+                                        <td id="RequestForms-td">{d.assigned_key_1}</td>
+                                        <td id="RequestForms-td">{d.assigned_key_2}</td>
+                                        <td id="RequestForms-td">{d.assigned_key_3}</td>
+                                        <td id="RequestForms-td">{d.assigned_key_4}</td>
                                     </tr>
                                 ))}
                             </tbody>

@@ -6,7 +6,6 @@ import NavBar from "./NavBar";
 function EditKey() {
 
     const [requestForms, setRequestForms] = useState([]);
-    const [originalFormId, setOriginalFormId] = useState(null);
     const [selectedForm, setSelectedForm] = useState(null);
     const [pdfData, setPdfData] = useState(null);
 
@@ -24,29 +23,8 @@ function EditKey() {
         .catch(err => console.log(err));
     }
 
-    const getKeyRquestFormIdFromKeyNumber = async () => {
-        try {
-            const response = await fetch(`http://localhost:8081/get-key-request-form-id-from-key-number`, { // send a POST request to the backend route
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ key_number: keyData.key_number }),
-            });
-            if (response.ok) { // if the response is successful
-                const data = await response.json();
-                setOriginalFormId(data.form_id_result);
-            } else {
-                console.log('Internal Server Error. Please try again later.'); // log an error message
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     useEffect(() => {
         getKeyRequestForms();
-        getKeyRquestFormIdFromKeyNumber();
     }, []);
 
     const handleSelectForm = (form) => {
@@ -102,8 +80,15 @@ function EditKey() {
         const key_holder_access_id = document.getElementById('EditKey-input-key_holder_access_id').value || document.getElementById('EditKey-input-key_holder_access_id').placeholder;
         const date_assigned = document.getElementById('EditKey-input-date_assigned').value || document.getElementById('EditKey-input-date_assigned').placeholder;
         const comments = document.getElementById('EditKey-textarea-comments').value || document.getElementById('EditKey-textarea-comments').placeholder;
+        // get value of the selected radio button
+        const assigned_key_value = document.querySelector('input[name="assignedKey"]:checked');
+        const assigned_key = assigned_key_value ? assigned_key_value.value : null;
         if (!tag_number || !tag_color || !core_number || !room_number || !room_type || !key_number ) { // check if any of the core key fields are empty
             alert("Please fill out all required fields.");
+            return
+        }
+        if (selectedForm != null && assigned_key == null) { // if a form is selected and the assigned key is not selected, show an alert
+            alert("Please select an assigned key.");
             return
         }
         try {
@@ -124,8 +109,9 @@ function EditKey() {
                     key_holder_access_id: key_holder_access_id,
                     date_assigned: date_assigned,
                     comments: comments,
-                    old_form_id: originalFormId != null ? originalFormId : null, // if there is a form already associated with the key, send its form_id, else send null
-                    new_form_id: selectedForm != null ? selectedForm.form_id : null // if a form is selected, send its form_id, else send null
+                    old_form_id: keyData.form_id != null ? keyData.form_id : null, // if there is a form already associated with the key, send its form_id, else send null
+                    new_form_id: selectedForm != null ? selectedForm.form_id : null, // if a form is selected, send its form_id, else send null
+                    assigned_key: assigned_key
                 })
             })
             if (response.ok) { // if the response is successful
@@ -150,7 +136,7 @@ function EditKey() {
                 },
                 body: JSON.stringify({ 
                     key_number: keyData.key_number,
-                    form_id: originalFormId != null ? originalFormId : null // if there is a form associated with the key, send its form_id, else send null
+                    form_id: keyData.form_id != null ? keyData.form_id : null // if there is a form associated with the key, send its form_id, else send null
                 })
             })
             if (response.ok) { // if the response is successful
@@ -173,7 +159,7 @@ function EditKey() {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({ key_number: keyData.key_number })
+                body: JSON.stringify({ key_number: keyData.key_number, form_id: keyData.form_id != null ? keyData.form_id : null })
             })
             if (response.ok) { // if the response is successful
                 navigate('/keys');
@@ -315,12 +301,14 @@ function EditKey() {
                                 <div id="EditKey-div-assign-form-search-column">
                                     <h3>Column:</h3>
                                     <select id="EditKey-select-assign-form-search">
-                                        <option value="form_id">Form ID</option>
                                         <option value="first_name">First Name</option>
                                         <option value="last_name">Last Name</option>
                                         <option value="access_id">Access ID</option>
                                         <option value="date_signed">Date Signed</option>
-                                        <option value="assigned_key_number">Assigned Key Number</option>
+                                        <option value="assigned_key_1">Assigned Key 1</option>
+                                        <option value="assigned_key_2">Assigned Key 2</option>
+                                        <option value="assigned_key_3">Assigned Key 3</option>
+                                        <option value="assigned_key_4">Assigned Key 4</option>
                                     </select>
                                 </div>
                                 <div id="EditKey-div-assign-form-search-row">
@@ -334,12 +322,14 @@ function EditKey() {
                                 <table id="EditKey-table">
                                     <tbody>
                                         <tr id="EditKey-tr-header">
-                                            <th id="EditKey-th">Form ID</th>
                                             <th id="EditKey-th">First Name</th>
                                             <th id="EditKey-th">Last Name</th>
                                             <th id="EditKey-th">Access ID</th>
                                             <th id="EditKey-th">Date Signed</th>
-                                            <th id="EditKey-th">Assigned Key Number</th>
+                                            <th id="EditKey-th">Assigned Key 1</th>
+                                            <th id="EditKey-th">Assigned Key 2</th>
+                                            <th id="EditKey-th">Assigned Key 3</th>
+                                            <th id="EditKey-th">Assigned Key 4</th>
                                         </tr>
                                         {requestForms.map((d, i) => ( 
                                             <tr
@@ -349,49 +339,82 @@ function EditKey() {
                                                 onClick={() => handleSelectForm(d)}
                                                 className={selectedForm && selectedForm.form_id === d.form_id ? 'selected-form' : ''}
                                             >
-                                                <td id="EditKey-td">{d.form_id}</td>
                                                 <td id="EditKey-td">{d.first_name}</td>
                                                 <td id="EditKey-td">{d.last_name}</td>
                                                 <td id="EditKey-td">{d.access_id}</td>
                                                 <td id="EditKey-td">{getReadableDateSigned(d)}</td>
-                                                <td id="EditKey-td">{d.assigned_key_number}</td>
+                                                <td id="EditKey-td">{d.assigned_key_1}</td>
+                                                <td id="EditKey-td">{d.assigned_key_2}</td>
+                                                <td id="EditKey-td">{d.assigned_key_3}</td>
+                                                <td id="EditKey-td">{d.assigned_key_4}</td>
+
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
                             </div>
                             <div id="EditKey-div-selected-form-container">
+                                <div id="EditKey-div-assign-form-title">
+                                    <h2>SELECTED FORM</h2>
+                                </div>
                                 {selectedForm ? (
                                     <>
                                         <div id="EditKey-div-selected-form-row-even">
-                                            <h3>Form ID:</h3>
-                                            <h3>{selectedForm.form_id}</h3>
-                                        </div>
-                                        <div id="EditKey-div-selected-form-row">
                                             <h3>First Name:</h3>
                                             <h3>{selectedForm.first_name}</h3>
                                         </div>
-                                        <div id="EditKey-div-selected-form-row-even">
+                                        <div id="EditKey-div-selected-form-row">
                                             <h3>Last Name:</h3>
                                             <h3>{selectedForm.last_name}</h3>
                                         </div>
-                                        <div id="EditKey-div-selected-form-row">
+                                        <div id="EditKey-div-selected-form-row-even">
                                             <h3>Access ID:</h3>
                                             <h3>{selectedForm.access_id}</h3>
                                         </div>
-                                        <div id="EditKey-div-selected-form-row-even">
+                                        <div id="EditKey-div-selected-form-row">
                                             <h3>Date Signed:</h3>
-                                            <h3>{selectedForm.date_signed}</h3>
+                                            <h3>{getReadableDateSigned(selectedForm)}</h3>
+                                        </div>
+                                        <div id="EditKey-div-selected-form-row-even">    
+                                            <h3>Assigned Key 1:</h3>
+                                            <h3>{selectedForm.assigned_key_1}</h3>
                                         </div>
                                         <div id="EditKey-div-selected-form-row">    
-                                            <h3>Assigned Key Number:</h3>
-                                            <h3>{selectedForm.assigned_key_number}</h3>
+                                            <h3>Assigned Key 2:</h3>
+                                            <h3>{selectedForm.assigned_key_2}</h3>
+                                        </div>
+                                        <div id="EditKey-div-selected-form-row-even">    
+                                            <h3>Assigned Key 3:</h3>
+                                            <h3>{selectedForm.assigned_key_3}</h3>
+                                        </div>
+                                        <div id="EditKey-div-selected-form-row-bottom">    
+                                            <h3>Assigned Key 4:</h3>
+                                            <h3>{selectedForm.assigned_key_4}</h3>
+                                        </div>
+                                        <div>
+                                            <h2>Select which column key {keyData.key_number} should be assigned to:</h2>
+                                            <form id="EditKey-form-assigned-key">
+                                                <label>
+                                                    <input type="radio" name="assignedKey" value="assigned_key_1" />
+                                                    Assigned Key 1
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="assignedKey" value="assigned_key_2" />
+                                                    Assigned Key 2
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="assignedKey" value="assigned_key_3" />
+                                                    Assigned Key 3
+                                                </label>
+                                                <label>
+                                                    <input type="radio" name="assignedKey" value="assigned_key_4" />
+                                                    Assigned Key 4
+                                                </label>
+                                            </form>
                                         </div>
                                     </>
                                 ) : (
-                                    <div id="EditKey-div-no-selected-form">
-                                        <h3>Click on a form to select it.</h3>
-                                    </div>
+                                    <h3>Click on a form to select it.</h3>
                                 )}
                             </div>
                         </div>
@@ -414,7 +437,7 @@ function EditKey() {
                     </div>
                     <div id="EditKey-div-row-flex-box-even">
                         <h3>DELETE KEY:</h3>
-                        <button id="EditKey-button-remove-key" onClick={handleDeleteKey} disabled={true}>Delete Key</button>
+                        <button id="EditKey-button-remove-key" onClick={handleDeleteKey} disabled={false}>Delete Key</button>
                     </div>
                 </div>
                 <div id="EditKey-div-button-container">

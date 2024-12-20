@@ -89,14 +89,14 @@ const dbOperations = {
             return null;
         }
     },
-    editKey: async function (tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments) {
+    editKey: async function (tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id) {
         try {
             const date_assigned_parts = date_assigned.split(/[-\/]/); // Split date
             const formatted_date_assigned = `${date_assigned_parts[2]}-${date_assigned_parts[0]}-${date_assigned_parts[1]}`; // Rebuild date
             const current_date = new Date() // Get current date
             const formatted_date_last_edited = current_date.toISOString().slice(0, 19).replace('T', ' '); // Format date
-            const sql = 'UPDATE `Keys` SET tag_number = ?, tag_color = ?, core_number = ?, room_number = ?, room_type = ?, key_holder_fname = ?, key_holder_lname = ?, key_holder_access_id = ?, date_assigned = ?, comments = ?, date_last_edited = ? WHERE key_number = ?';
-            const values = [tag_number, tag_color, core_number, room_number, room_type, key_holder_fname, key_holder_lname, key_holder_access_id, formatted_date_assigned, comments, formatted_date_last_edited, key_number];
+            const sql = 'UPDATE `Keys` SET tag_number = ?, tag_color = ?, core_number = ?, room_number = ?, room_type = ?, key_holder_fname = ?, key_holder_lname = ?, key_holder_access_id = ?, date_assigned = ?, comments = ?, date_last_edited = ?, form_id = ? WHERE key_number = ?';
+            const values = [tag_number, tag_color, core_number, room_number, room_type, key_holder_fname, key_holder_lname, key_holder_access_id, formatted_date_assigned, comments, formatted_date_last_edited, new_form_id, key_number];
             // Perform the update to the key
             await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
@@ -181,7 +181,7 @@ const dbOperations = {
     },
     getAllKeyRequestForms: async function () {
         try {
-            const sql = 'SELECT form_id, first_name, last_name, access_id, date_signed, assigned_key_number FROM key_request_form';
+            const sql = 'SELECT form_id, first_name, last_name, access_id, date_signed, assigned_key_1, assigned_key_2, assigned_key_3, assigned_key_4 FROM key_request_form';
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, (err, result) => {
                     if (err) {
@@ -240,10 +240,10 @@ const dbOperations = {
             throw error; // Throw the error to the calling function
         }
     },  
-    updateKeyNumberInRequestForm: async function (key_number, form_id) {
+    updateKeyNumberInRequestForm: async function (key_number, form_id, assigned_key) {
         try {
-            const sql = 'UPDATE key_request_form SET assigned_key_number = ? WHERE form_id = ?';
-            const values = [key_number, form_id];
+            const sql = `UPDATE key_request_form SET assigned_key_1 = CASE WHEN assigned_key_1 = ? THEN NULL ELSE assigned_key_1 END, assigned_key_2 = CASE WHEN assigned_key_2 = ? THEN NULL ELSE assigned_key_2 END, assigned_key_3 = CASE WHEN assigned_key_3 = ? THEN NULL ELSE assigned_key_3 END, assigned_key_4 = CASE WHEN assigned_key_4 = ? THEN NULL ELSE assigned_key_4 END, ${assigned_key} = ? WHERE form_id = ?`;
+            const values = [key_number, key_number, key_number, key_number, key_number, form_id];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {
@@ -257,34 +257,11 @@ const dbOperations = {
         } catch (error) {
             console.log(error);
         }
-    },
-    getKeyRequestFormIdFromKeyNumber: async function (key_number) {
-        try {
-            const sql = 'SELECT form_id FROM key_request_form WHERE assigned_key_number = ?';
-            const response = await new Promise((resolve, reject) => {
-                db.query(sql, [key_number], (err, result) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        // Check if the result is not empty and contains form_id
-                        if (result.length > 0 && result[0].form_id !== undefined) {
-                            resolve(result[0].form_id);
-                        } else {
-                            resolve(null); // Return null if no form_id is found
-                        }
-                    }
-                });
-            });
-            return response;
-        } catch (error) {
-            console.log(error);
-            return null; // Return null if an error occurs
-        }
-    },    
+    },  
     setKeyNumberInRequestFormToNull: async function (key_number, form_id) {
         try {
-            const sql = 'UPDATE key_request_form SET assigned_key_number = ? WHERE form_id = ?';
-            const values = [key_number, form_id];
+            const sql = 'UPDATE key_request_form SET assigned_key_1 = CASE WHEN assigned_key_1 = ? THEN NULL ELSE assigned_key_1 END, assigned_key_2 = CASE WHEN assigned_key_2 = ? THEN NULL ELSE assigned_key_2 END, assigned_key_3 = CASE WHEN assigned_key_3 = ? THEN NULL ELSE assigned_key_3 END, assigned_key_4 = CASE WHEN assigned_key_4 = ? THEN NULL ELSE assigned_key_4 END WHERE form_id = ?';
+            const values = [key_number, key_number, key_number, key_number, form_id];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {
@@ -301,9 +278,9 @@ const dbOperations = {
     },
     getKeyRequestFormImageWithKeyNumber: async function (key_number) {
         try {
-            const sql = 'SELECT image_data FROM key_request_form WHERE assigned_key_number = ?';
+            const sql = 'SELECT image_data FROM key_request_form WHERE assigned_key_1 = ? || assigned_key_2 = ? || assigned_key_3 = ? || assigned_key_4 = ?';
             const response = await new Promise((resolve, reject) => {
-                db.query(sql, [key_number], (err, result) => {
+                db.query(sql, [key_number, key_number, key_number, key_number], (err, result) => {
                     if (err) {
                         console.error(err);
                         reject(new Error('Internal Server Error')); // Reject the Promise with an error
@@ -396,6 +373,24 @@ const dbOperations = {
             console.log(error);
         }
     },
+    deleteFormIdFromKeys: async function (form_id) {
+        try {
+            const sql = 'UPDATE `keys` SET form_id = NULL WHERE form_id = ?';
+            const values = [form_id];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 module.exports = dbOperations

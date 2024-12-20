@@ -124,11 +124,11 @@ function KeyInfo() {
                             <h3>Last Edited By:</h3>
                             <h3>{keyData.last_edited_by}</h3>
                         </div>
-                        <div id="KeyInfo-div-row-flex-box">
+                        <div id="KeyInfo-div-row-flex-box-even">
                             <h3>Last Action Made:</h3>
                             <h3>{keyData.last_action_made}</h3>
                         </div>
-                        <div id="KeyInfo-div-row-flex-box-even">
+                        <div id="KeyInfo-div-row-flex-box">
                             <h3>Date Last Edited:</h3>
                             <h3>{displayDateLastEdited}</h3>
                         </div>

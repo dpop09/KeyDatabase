@@ -519,6 +519,7 @@ EditKey.jsx component styling
   flex-direction: column;
   justify-content: flex-start;
   width: 50%;
+  max-height: 1080px;
 }
 
 #EditKey-div-assign-form-search {
@@ -573,12 +574,19 @@ EditKey.jsx component styling
 }
 
 #EditKey-div-table-container {
+  height: 1000px;
   overflow-y: auto;
 }
 
 #EditKey-table {
   width: 100%;
   border-collapse: collapse;
+}
+#EditKey-th {
+  position: sticky;
+  top: 0;
+  background-color: rgb(9, 64, 56, 1);
+  z-index: 10; /* Make sure the header stays above the table rows */
 }
 #EditKey-td, #EditKey-th {
   border: 1px solid #ddd;
@@ -637,9 +645,25 @@ EditKey.jsx component styling
   border-top: black solid 2px;
   background-color: #e2e2e2;
 }
-#EditKey-div-no-selected-form {
-  background-color: #e2e2e2;
-  border-top: 2px black solid;
+#EditKey-div-selected-form-row-bottom {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-top: black solid 2px;
+  border-bottom: black solid 2px;
+}
+#EditKey-form-assigned-key {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+#EditKey-form-assigned-key > label {
+  font-size: large;
 }
 
 #EditKey-button-remove-holder {

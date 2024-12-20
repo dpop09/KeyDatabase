@@ -129,10 +129,22 @@ function EditRequestForm() {
                             <input id="EditRequestForm-input-date-signed" type="date" placeholder={requestFormData.date_signed} />
                         </div>
                         <div id="EditRequestForm-div-row-flex-box-even">
-                            <h3>Assigned Key Number:</h3>
-                            <input id="EditRequestForm-input-key-number" type="text" placeholder={requestFormData.assigned_key_number} disabled/>
+                            <h3>Assigned Key 1:</h3>
+                            <input id="EditRequestForm-input-key-number" type="text" placeholder={requestFormData.assigned_key_1} disabled/>
                         </div>
                         <div id="EditRequestForm-div-row-flex-box">
+                            <h3>Assigned Key 2:</h3>
+                            <input id="EditRequestForm-input-key-number" type="text" placeholder={requestFormData.assigned_key_2} disabled/>
+                        </div>
+                        <div id="EditRequestForm-div-row-flex-box-even">
+                            <h3>Assigned Key 3:</h3>
+                            <input id="EditRequestForm-input-key-number" type="text" placeholder={requestFormData.assigned_key_3} disabled/>
+                        </div>
+                        <div id="EditRequestForm-div-row-flex-box">
+                            <h3>Assigned Key 4:</h3>
+                            <input id="EditRequestForm-input-key-number" type="text" placeholder={requestFormData.assigned_key_4} disabled/>
+                        </div>
+                        <div id="EditRequestForm-div-row-flex-box-even">
                             <h3>PDF File:</h3>
                             <input id="EditRequestForm-input-file" type="file" accept=".pdf" onChange={handleFileChange} />
                         </div>
