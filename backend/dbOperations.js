@@ -301,10 +301,10 @@ const dbOperations = {
             throw error; // Throw the error to the calling function
         }
     },
-    createKey: async function (tag_number, tag_color, core_number, room_number, room_type, key_number) {
+    createKey: async function (tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments) {
         try {
-            const sql = 'INSERT INTO `keys` (tag_number, tag_color, core_number, room_number, room_type, key_number) VALUES (?, ?, ?, ?, ?, ?)';
-            const values = [tag_number, tag_color, core_number, room_number, room_type, key_number];
+            const sql = 'INSERT INTO `keys` (tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            const values = [tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {

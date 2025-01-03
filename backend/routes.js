@@ -160,8 +160,24 @@ router.post('/get-key-request-form-image-with-key-number', async (req, res) => {
 
 router.post('/create-key', async (request, response) => {
     try {
-        const { tag_number, tag_color, core_number, room_number, room_type, key_number } = request.body;
-        const result = await dbOperations.createKey(tag_number, tag_color, core_number, room_number, room_type, key_number);
+        const { 
+            tag_number, 
+            tag_color, 
+            core_number, 
+            room_number, 
+            room_type, 
+            key_number,
+            key_holder_fname, 
+            key_holder_lname, 
+            key_holder_access_id, 
+            date_assigned, 
+            comments, 
+            new_form_id, 
+            assigned_key } = request.body;
+        const result = await dbOperations.createKey(tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments);
+        if (new_form_id != null) { // if a form is provided
+            const update_new_form_result = await dbOperations.updateKeyNumberInRequestForm(key_number, new_form_id, assigned_key); 
+        }
         response.status(200).send(result);
     } catch (error) {
         console.error(error.message);

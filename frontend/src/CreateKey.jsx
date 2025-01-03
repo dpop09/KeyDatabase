@@ -56,7 +56,7 @@ function CreateKey() {
         }
     }
 
-    const handleSubmitEdit = async (event) => {
+    const handleCreateKey = async (event) => {
         event.preventDefault();
         const tag_number = document.getElementById('CreateKey-input-tag_number').value;
         const tag_color = document.getElementById('CreateKey-input-tag_color').value;
@@ -81,7 +81,7 @@ function CreateKey() {
             return
         }
         try {
-            const response = await fetch('http://localhost:8081/edit-key', { // send a POST request to the backend route
+            const response = await fetch('http://localhost:8081/create-key', { // send a POST request to the backend route
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
@@ -98,13 +98,12 @@ function CreateKey() {
                     key_holder_access_id: key_holder_access_id,
                     date_assigned: date_assigned,
                     comments: comments,
-                    old_form_id: null, // if there is a form already associated with the key, send its form_id, else send null
                     new_form_id: selectedForm != null ? selectedForm.form_id : null, // if a form is selected, send its form_id, else send null
                     assigned_key: assigned_key
                 })
             })
             if (response.ok) { // if the response is successful
-                navigate('/keyinfo');
+                navigate('/keys');
             } else { // if the response is unsuccessful
                 console.log("Internal Server Error. Please try again later.");
             }
@@ -225,7 +224,7 @@ function CreateKey() {
                         </div>
                         <div id="CreateKey-div-row-flex-box-even">
                             <h3>Date Assigned:</h3>
-                            <input type="text" id="CreateKey-input-date_assigned" />
+                            <input type="date" id="CreateKey-input-date_assigned" />
                         </div>
                         <div id="CreateKey-div-row-flex-box">
                             <h3>Comments:</h3>
@@ -371,7 +370,7 @@ function CreateKey() {
                 </div>
                 <div id="CreateKey-div-button-container">
                     <button id="CreateKey-button-cancel" onClick={handleCancel}>Cancel</button>
-                    <button id="CreateKey-button-submit" onClick={handleSubmitEdit}>Submit</button>
+                    <button id="CreateKey-button-submit" onClick={handleCreateKey}>Submit</button>
                 </div>
             </div>
         </> 
