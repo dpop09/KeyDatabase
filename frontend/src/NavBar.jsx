@@ -10,6 +10,12 @@ function NavBar() {
     const gotoRequestForms = () => {
         navigate('/requestforms');
     }
+    const gotoHistoryLog = () => {
+        navigate('/historylog');
+    }
+    const gotoSettings = () => {
+        navigate('/settings');
+    }
 
     return (
         <div id="NavBar-div-container">
@@ -17,6 +23,8 @@ function NavBar() {
             <div id="NavBar-div-links">
                 <button id="NavBar-button-link" onClick={gotoKeys}>KEYS</button>
                 <button id="NavBar-button-link" onClick={gotoRequestForms}>REQUEST FORMS</button>
+                <button id="NavBar-button-link" onClick={gotoHistoryLog}>HISTORY LOG</button>
+                <button id="NavBar-button-link" onClick={gotoSettings}>SETTINGS</button>
             </div>
         </div>
     )

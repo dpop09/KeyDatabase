@@ -432,11 +432,11 @@ function EditKey() {
                         <h2>QUICK ACTIONS</h2>
                     </div>
                     <div id="EditKey-div-row-flex-box">
-                        <h3>REMOVE HOLDER AND SUBMIT:</h3>
+                        <h3>Remove Holder:</h3>
                         <button id="EditKey-button-remove-holder" onClick={handleRemoveHolder}>Remove Holder</button>
                     </div>
                     <div id="EditKey-div-row-flex-box-even">
-                        <h3>DELETE KEY:</h3>
+                        <h3>Delete Key:</h3>
                         <button id="EditKey-button-remove-key" onClick={handleDeleteKey} disabled={false}>Delete Key</button>
                     </div>
                 </div>

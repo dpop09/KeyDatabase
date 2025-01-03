@@ -7,6 +7,8 @@ import EditKey from './EditKey.jsx'
 import RequestForms from './RequestForms.jsx'
 import AddRequestForm from './AddRequestForm.jsx'
 import EditRequestForm from './EditRequestForm.jsx'
+import HistoryLog from './HistoryLog.jsx'
+import Settings from './Settings.jsx'
 
 function App() {
 
@@ -23,6 +25,16 @@ function App() {
             exact
             path='/requestforms'
             element={<RequestForms />}
+          />
+          <Route 
+            exact
+            path='/historylog'
+            element={<HistoryLog />}
+          />
+          <Route
+            exact
+            path='/settings'
+            element={<Settings />}
           />
           <Route
             exact
