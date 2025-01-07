@@ -4,15 +4,19 @@ import NavBar from "./NavBar";
 
 function CreateKey() {
 
+    // state variables to hold all of the request forms and the selected form
     const [requestForms, setRequestForms] = useState([]);
     const [selectedForm, setSelectedForm] = useState(null);
+    // state variable to hold PDF data
     const [pdfData, setPdfData] = useState(null);
 
+    // navigation back to the keys page
     const navigate = useNavigate();
     const handleCancel = () => {
         navigate('/keys');
     }
 
+    // function to get all of the request forms
     const getKeyRequestForms = async () => {
         fetch('http://localhost:8081/get-all-key-request-forms')
         .then(response => response.json())
@@ -20,11 +24,12 @@ function CreateKey() {
         .catch(err => console.log(err));
     }
 
-    useEffect(() => {
+    useEffect(() => { // load all of the request forms on page load
         getKeyRequestForms();
     }, []);
 
-    const handleSelectForm = (form) => {
+    // function to store the selected form in the state variable
+    const handleSelectForm = (form) => { 
         if (selectedForm === form) { // if the form is already selected
             setSelectedForm(null); // deselect the form
             return;
@@ -32,6 +37,7 @@ function CreateKey() {
         setSelectedForm(form); // else select the form
     }
 
+    // function to get the PDF data from the server
     const getPdfData = async (form_id) => {
         if (selectedForm != null) // if a form is already selected, do nothing
             return;
@@ -56,8 +62,10 @@ function CreateKey() {
         }
     }
 
+    // function to create a new key
     const handleCreateKey = async (event) => {
         event.preventDefault();
+        // get values from the input fields
         const tag_number = document.getElementById('CreateKey-input-tag_number').value;
         const tag_color = document.getElementById('CreateKey-input-tag_color').value;
         const core_number = document.getElementById('CreateKey-input-core_number').value;
@@ -71,7 +79,7 @@ function CreateKey() {
         const comments = document.getElementById('CreateKey-textarea-comments').value;
         // get value of the selected radio button
         const assigned_key_value = document.querySelector('input[name="assignedKey"]:checked');
-        const assigned_key = assigned_key_value ? assigned_key_value.value : null;
+        const assigned_key = assigned_key_value ? assigned_key_value.value : null; // if no radio button is selected, assigned_key will be null
         if (!tag_number || !tag_color || !core_number || !room_number || !room_type || !key_number ) { // check if any of the core key fields are empty
             alert("Please fill out all required fields.");
             return
@@ -112,16 +120,20 @@ function CreateKey() {
         }
     }
 
+    // function to search for a request form
     const handleSearchForm = async (event) => {
         event.preventDefault();
+        // get values from the input fields
         const column = document.getElementById('CreateKey-select-assign-form-search').value;
         const row = document.getElementById('CreateKey-input-assign-form-search').value;
+        // if any of the input fields are empty, show an alert
         if (!column || !row) {
             alert("Please fill out all required fields.");
             return
         }
+        // send a POST request to the backend route
         try {
-            const response = await fetch('http://localhost:8081/search-request-form', { // send a POST request to the backend route
+            const response = await fetch('http://localhost:8081/search-request-form', {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
@@ -139,22 +151,22 @@ function CreateKey() {
         }
     }
 
+    // function to clear the search
     const handleClearSearch = async (event) => {
         event.preventDefault();
         getKeyRequestForms();
     }
 
+    // function to get the readable signed date
     const getReadableDateSigned = (d) => {
         if (!d.date_signed) {
             return
         }
         // Create a Date object from the ISO date string
         const date = new Date(d.date_signed);
-    
         const options = { month: 'short' }; // Get the short month name (e.g., Oct)
         const day = date.getDate();
         const year = date.getFullYear();
-    
         // Get the correct ordinal suffix (st, nd, rd, th) for the day
         const getOrdinal = (n) => {
             if (n > 3 && n < 21) return 'th'; // Covers 4th-20th
@@ -165,10 +177,8 @@ function CreateKey() {
                 default: return 'th';
             }
         };
-    
         const dayWithOrdinal = `${day}${getOrdinal(day)}`;
         const month = new Intl.DateTimeFormat('en-US', options).format(date);
-    
         return `${month} ${dayWithOrdinal}, ${year}`;
     }
 
@@ -272,7 +282,7 @@ function CreateKey() {
                                             <th id="CreateKey-th">Assigned Key 3</th>
                                             <th id="CreateKey-th">Assigned Key 4</th>
                                         </tr>
-                                        {requestForms.map((d, i) => ( 
+                                        {requestForms.map((d, i) => ( /* display each request form */
                                             <tr
                                                 id="CreateKey-tr" 
                                                 key={i} 
@@ -298,7 +308,7 @@ function CreateKey() {
                                 <div id="CreateKey-div-assign-form-title">
                                     <h2>SELECTED FORM</h2>
                                 </div>
-                                {selectedForm ? (
+                                {selectedForm ? ( // if a form is selected
                                     <>
                                         <div id="CreateKey-div-selected-form-row-even">
                                             <h3>First Name:</h3>
@@ -354,15 +364,15 @@ function CreateKey() {
                                             </form>
                                         </div>
                                     </>
-                                ) : (
+                                ) : ( // if no form is selected
                                     <h3>Click on a form to select it.</h3>
                                 )}
                             </div>
                         </div>
                         <div id="CreateKey-div-request-form-container">
-                            {pdfData ? (
+                            {pdfData ? ( /* display the request form */
                                 <iframe id="CreateKey-iframe-key-request-form" src={pdfData} alt="Key Request Form" />
-                            ) : (
+                            ) : ( /* display a message if no request form is selected */
                                 <h1 id="CreateKey-h1-no-request-form">Assign a request form to this key.</h1>
                             )}
                         </div>

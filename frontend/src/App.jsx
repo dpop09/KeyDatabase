@@ -61,7 +61,7 @@ function App() {
             path='/addrequestform'
             element={<AddRequestForm />}
           />
-          <Route
+          <Route /* default route */
             path='*'
             element={<Navigate to='/' />}
           />

@@ -4,14 +4,16 @@ import NavBar from "./NavBar";
 
 function AddRequestForm() {
 
-    const navigate = useNavigate();
-
+    // state variable for the PDF data of the request form
     const [pdfData, setPdfData] = useState(null);
 
+    // navigation back to the request forms page
+    const navigate = useNavigate();
     const handleGoBack = () => {
         navigate('/requestforms');
     }
 
+    // function to handle the file upload
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -29,24 +31,29 @@ function AddRequestForm() {
         }
     }
 
+    // function to handle the form submission
     const handleSubmit = () => {
+        // get the values of the input fields
         const first_name = document.getElementById('AddRequestForm-input-first-name').value;
         const last_name = document.getElementById('AddRequestForm-input-last-name').value;
         const access_id = document.getElementById('AddRequestForm-input-access-id').value;
         const date_signed = document.getElementById('AddRequestForm-input-date-signed').value;
         const file = document.getElementById('AddRequestForm-input-file').files[0];
+        // check if all required fields are filled
         if (!first_name || !last_name || !access_id || !date_signed || !file) {
             alert("Please fill out all required fields.");
             return;
         }
+        // append the form data to a FormData object
         const formData = new FormData();
         formData.append('first_name', first_name);
         formData.append('last_name', last_name);
         formData.append('access_id', access_id);
         formData.append('date_signed', date_signed);
         formData.append('file', file);
+        // send a POST request to the backend route
         try {
-            fetch('http://localhost:8081/add-key-request-form', { // send a POST request to the backend route
+            fetch('http://localhost:8081/add-key-request-form', {
                 method: 'POST',
                 body: formData,
             }).then(response => {
@@ -92,9 +99,9 @@ function AddRequestForm() {
                         </div>
                     </div>
                     <div id="AddRequestForm-div-image-container">
-                        {pdfData ? (
+                        {pdfData ? ( /* display the PDF file */
                             <iframe id="AddRequestForm-iframe-key-request-form" src={pdfData} alt="Key Request Form" />
-                        ) : (
+                        ) : ( /* display a message if no PDF file is provided */
                             <h1 id="AddRequestForm-h1-no-request-form">No PDF file provided.</h1>
                         )}
                     </div>
