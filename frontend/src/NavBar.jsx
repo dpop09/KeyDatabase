@@ -19,7 +19,7 @@ function NavBar() {
 
     return (
         <div id="NavBar-div-container">
-            <h1 id="NavBar-h1-title">ENGINEERING BUILDING KEY DATABASE</h1>
+            <h1 id="NavBar-h1-title">ENGINEERING BUILDING KEY DATABASE Alpha 1.0.0</h1>
             <div id="NavBar-div-links">
                 <button id="NavBar-button-link" onClick={gotoKeys}>KEYS</button>
                 <button id="NavBar-button-link" onClick={gotoRequestForms}>REQUEST FORMS</button>
