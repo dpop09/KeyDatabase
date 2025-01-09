@@ -1,0 +1,33 @@
+use keysdb;
+create table `keys`(
+    tag_number int(11),
+    tag_color varchar(50),
+    core_number varchar(50),
+    room_number float,
+    room_type varchar(50),
+    key_number varchar(50),
+    key_holder_fname varchar(50),
+    key_holder_lname varchar(50),
+    date_assigned date,
+    comments text,
+    last_edited_by varchar(100),
+    date_last_edited date,
+    key_holder_access_id varchar(6),
+    last_action_made text,
+    form_id varchar(100),
+    PRIMARY KEY(key_number)
+);
+
+create table key_request_form(
+    form_id varchar(100),
+    first_name varchar(50),
+    last_name varchar(50),
+    access_id varchar(6),
+    date_signed date,
+    assigned_key_1 varchar(10),
+    assigned_key_2 varchar(10),
+    assigned_key_3 varchar(10),
+    assigned_key_4 varchar(10),
+    image_data longblob,
+    PRIMARY KEY(form_id)
+);
