@@ -9,6 +9,7 @@ import AddRequestForm from './AddRequestForm.jsx'
 import EditRequestForm from './EditRequestForm.jsx'
 import HistoryLog from './HistoryLog.jsx'
 import Settings from './Settings.jsx'
+import NavBar from './NavBar.jsx'
 
 function App() {
 
@@ -60,6 +61,11 @@ function App() {
             exact
             path='/addrequestform'
             element={<AddRequestForm />}
+          />
+          <Route
+            exact
+            path='/navbar'
+            element={<NavBar />}
           />
           <Route /* default route */
             path='*'
