@@ -31,3 +31,16 @@ create table key_request_form(
     image_data longblob,
     PRIMARY KEY(form_id)
 );
+
+create table users(
+    access_id varchar(6),
+    permission varchar(20),
+    PRIMARY KEY(access_id)
+)
+
+create table history(
+    id SERIAL PRIMARY KEY,
+    access_id varchar(6),
+    action text,
+    date DATE
+)
