@@ -18,11 +18,17 @@ const upload = multer({
     }
 })
 
-router.get('/get-username', async (request, response) => {
+router.get('/get-access-id', async (request, response) => {
     try {
-        //const username = process.env['USERPROFILE'].split(path.sep)[2];
-        const username = os.userInfo().username; // get the logged in username from the operating system
-        response.status(200).send({username});
+        // get the logged in username (accessID) from the operating system
+        var access_id = os.userInfo().username;
+        
+        // check if the accessID is listed in the database
+        const isAccessIdWhiteListed = await dbOperations.isAccessIdWhiteListed(access_id);
+        if (!isAccessIdWhiteListed) { // if the accessID does not exist in the database, set access_id to "Unauthorized"
+            access_id = 'Unauthorized';
+        }
+        response.status(200).send({access_id});
     } catch (error) {
         console.log(error)
         response.status(500).send(error);

@@ -116,6 +116,22 @@ NavBar.jsx component styling
 Keys.jsx component styling
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
+#Keys-div-unauthorized {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 98vh;
+  text-align: center;
+  flex-direction: column;
+}
+#Keys-h1-unauthorized {
+  font-size: 50px;
+  font-weight: bold;
+}
+#Keys-p-unauthorized {
+  font-size: 25px;
+}
+
 #Keys-div-container {
   text-align: center;
   padding: 2rem;

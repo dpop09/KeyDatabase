@@ -391,6 +391,24 @@ const dbOperations = {
             console.log(error);
         }
     },
+    isAccessIdWhiteListed: async function (access_id) {
+        try {
+            const sql = 'SELECT * FROM users WHERE access_id = ?';
+            const values = [access_id];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result.length > 0 ? true : false);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
 }
 
 module.exports = dbOperations
