@@ -1,6 +1,8 @@
 const express = require('express');
 const multer = require('multer');
 const dbOperations = require('./dbOperations');
+const os = require('os');
+//const path = require('path');
 
 const router = express.Router();
 
@@ -13,6 +15,17 @@ const upload = multer({
         } else {
             cb(new Error('Only PDF files are allowed'), false);
         }
+    }
+})
+
+router.get('/get-username', async (request, response) => {
+    try {
+        //const username = process.env['USERPROFILE'].split(path.sep)[2];
+        const username = os.userInfo().username; // get the logged in username from the operating system
+        response.status(200).send({username});
+    } catch (error) {
+        console.log(error)
+        response.status(500).send(error);
     }
 })
 
