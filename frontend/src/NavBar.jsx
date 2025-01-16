@@ -6,19 +6,20 @@ function NavBar() {
     
     const { accessId, setAccessId } = useContext(AuthContext);
 
-    const getUsername = async () => {
-        try {
-            const response = await fetch('http://localhost:8081/get-username');
-            const data = await response.json();
-            setAccessId(data.username);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(async () => {
-        await getUsername();
+    useEffect(() => {
+        // fetch the username currently logged in the windows operating system
+        const getWindowsUsername = async () => {
+            try {
+                const response = await fetch('http://localhost:8081/get-username');
+                const data = await response.json();
+                setAccessId(data.username);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getWindowsUsername();
     }, []);
+    
 
     const navigate = useNavigate();
     const gotoKeys = () => {
