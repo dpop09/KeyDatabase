@@ -5,11 +5,25 @@ import NavBar from "./NavBar";
 
 function EditRequestForm() {
 
-    const { requestFormData } = useContext(AuthContext)
+    // global state variables
+    const { accessId, requestFormData } = useContext(AuthContext)
+
+    // display an unauthorized page if the accessID is not found in the database
+    if (accessId === "Unauthorized") {
+        return (
+            <div id="unauthorized-div-container">
+                <h1 id="unauthorized-h1-title">Unauthorized Access</h1>
+                <p id="unauthorized-p-subtitle">Contact the building manager to request access.</p>
+            </div>
+        )
+    }
 
     const [pdfData, setPdfData] = useState(null);
 
     const navigate = useNavigate();
+    const handleCancel = () => {
+        navigate('/requestforms');
+    }
 
     const getPdfData = async () => {
         try {
@@ -50,10 +64,6 @@ function EditRequestForm() {
         } else {
             setPdfData(null);
         }
-    }
-
-    const handleCancel = () => {
-        navigate('/requestforms');
     }
 
     const handleSubmit = (event) => {

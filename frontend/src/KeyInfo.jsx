@@ -5,6 +5,19 @@ import NavBar from "./NavBar";
 
 function KeyInfo() {
 
+    // global state variables
+    const { accessId, keyData } = useContext(AuthContext);
+
+    // display an unauthorized page if the accessID is not found in the database
+    if (accessId === "Unauthorized") {
+        return (
+            <div id="unauthorized-div-container">
+                <h1 id="unauthorized-h1-title">Unauthorized Access</h1>
+                <p id="unauthorized-p-subtitle">Contact the building manager to request access.</p>
+            </div>
+        )
+    }
+
     const [pdfData, setPdfData] = useState(null);
 
     const navigate = useNavigate();
@@ -14,8 +27,6 @@ function KeyInfo() {
     const handleEdit = () => {
         navigate('/editkey');
     }
-
-    const { keyData } = useContext(AuthContext);
 
     const getPdfData = async () => {
         try {

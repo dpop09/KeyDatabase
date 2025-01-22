@@ -1,8 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { AuthContext } from './AuthContext'
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 
 function CreateKey() {
+
+    // global state variables
+    const { accessId } = useContext(AuthContext)
+
+    // display an unauthorized page if the accessID is not found in the database
+    if (accessId === "Unauthorized") {
+        return (
+            <div id="unauthorized-div-container">
+                <h1 id="unauthorized-h1-title">Unauthorized Access</h1>
+                <p id="unauthorized-p-subtitle">Contact the building manager to request access.</p>
+            </div>
+        )
+    }
 
     // state variables to hold all of the request forms and the selected form
     const [requestForms, setRequestForms] = useState([]);

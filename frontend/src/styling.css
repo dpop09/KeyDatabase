@@ -17,59 +17,23 @@ body {
 }
 
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Signin.jsx component styling
+Unauthorized page styling
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-  
-#Signin-h1-page-title {
-  text-align: center;
-  font-size: 3rem;
-  padding-top: 1rem;
-}
 
-#Signin-div-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-  padding: 3rem;
-  border: 25px outset rgb(12, 84, 73);
-}
-  
-#Signin-h1-title {
-  text-align: center;
-  font-size: 2rem;
-  margin-bottom: 2rem;
-}
-  
-#Signin-input-username,
-#Signin-input-password {
-  font-size: medium;
-  height: 2rem;
-  margin-left: 5px;
-  border-radius: 5px;
-}
-  
-#Signin-div-row-flex-box {
+#unauthorized-div-container {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  height: 98vh;
+  text-align: center;
+  flex-direction: column;
 }
-  
-#Signin-button-signin {
-  background-color: rgb(255, 204, 51, 1);
-  font-size: medium;
-  width: 100%;
-  height: 2rem;
-  border: none;
-  border-radius: 5px;
-  margin-bottom: 1rem;
+#unauthorized-h1-title {
+  font-size: 50px;
+  font-weight: bold;
 }
-#Signin-button-signin:hover {
-  background-color: rgb(255, 224, 133, 1);
-  cursor: pointer;
-  transition: 0.3s;
+#unauthorized-p-subtitle {
+  font-size: 25px;
 }
 
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,22 +79,6 @@ NavBar.jsx component styling
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Keys.jsx component styling
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-
-#Keys-div-unauthorized {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 98vh;
-  text-align: center;
-  flex-direction: column;
-}
-#Keys-h1-unauthorized {
-  font-size: 50px;
-  font-weight: bold;
-}
-#Keys-p-unauthorized {
-  font-size: 25px;
-}
 
 #Keys-div-container {
   text-align: center;
