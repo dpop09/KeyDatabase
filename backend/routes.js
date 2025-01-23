@@ -266,4 +266,15 @@ router.post('/add-user', async (request, response) => {
     }
 });
 
+router.post('/search-user', async (request, response) => {
+    try {
+        const { column, row } = request.body;
+        const result = await dbOperations.searchUser(column, row);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
 module.exports = router;

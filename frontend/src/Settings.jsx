@@ -38,12 +38,36 @@ function Settings() {
         getAllUserData();
     }, []);
 
-    const handleSearch = () => {
-        return
+    const handleSearch = async (event) => {
+        event.preventDefault();
+        const column = document.getElementById('Settings-select-column').value;
+        const row = document.getElementById('Settings-input-search-row').value;
+        if (!column || !row) {
+            alert('Please fill both column and row');
+            return
+        }
+        try {
+            const response = await fetch('http://localhost:8081/search-user', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ column: column, row: row })
+            });
+            const data = await response.json();
+            if (data) { // if the response is successful
+                setUserData(data);
+            } else { // if the response is unsuccessful
+                alert("Internal Server Error. Please try again later.");
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
-    const handleClearSearch = () => {
-        return
+    const handleClearSearch = async (event) => {
+        event.preventDefault();
+        getAllUserData();
     }
 
     const handleAddUser = () => {
