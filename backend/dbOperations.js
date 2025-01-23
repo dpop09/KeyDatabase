@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const fs = require('fs').promises;
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const { scrapeWayneData } = require('./scrape');
 dotenv.config(); // read from .env file
 
 // create a connection to the database
@@ -405,6 +406,42 @@ const dbOperations = {
                 });
             });
             return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    getAllUserData: async function () {
+        try {
+            const sql = 'SELECT * FROM users';
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    addUser: async function (access_id, permissions) {
+        try {
+            const results = await scrapeWayneData(access_id);
+            const sql = 'INSERT INTO users (access_id, first_name, last_name, title, permission) VALUES (?, ?, ?, ?, ?)';
+            const values = [access_id, results[0].firstName, results[0].lastName, results[0].title, permissions];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return true
         } catch (error) {
             console.log(error);
         }

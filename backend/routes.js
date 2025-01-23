@@ -2,7 +2,6 @@ const express = require('express');
 const multer = require('multer');
 const dbOperations = require('./dbOperations');
 const os = require('os');
-//const path = require('path');
 
 const router = express.Router();
 
@@ -234,6 +233,32 @@ router.post('/delete-key-request-form', async (request, response) => {
         const delete_form_id_from_keys_result = await dbOperations.deleteFormIdFromKeys(form_id);
         // delete the form
         const result = await dbOperations.deleteKeyRequestForm(form_id);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.get('/get-all-user-data', async (request, response) => {
+    try {
+        const result = await dbOperations.getAllUserData();
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.post('/add-user', async (request, response) => {
+    try {
+        const { accessId, permissions } = request.body;
+        const doesUserAlreadyExist = await dbOperations.isAccessIdWhiteListed(accessId);
+        if (doesUserAlreadyExist) {
+            response.status(400).send('User already exists');
+            return;
+        }
+        const result = await dbOperations.addUser(accessId, permissions);
         response.status(200).send(result);
     } catch (error) {
         console.log(error);

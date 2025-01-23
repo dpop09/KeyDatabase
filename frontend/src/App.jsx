@@ -10,6 +10,7 @@ import EditRequestForm from './EditRequestForm.jsx'
 import HistoryLog from './HistoryLog.jsx'
 import Settings from './Settings.jsx'
 import NavBar from './NavBar.jsx'
+import AddUser from './AddUser.jsx'
 
 function App() {
 
@@ -36,6 +37,11 @@ function App() {
             exact
             path='/settings'
             element={<Settings />}
+          />
+          <Route
+            exact
+            path='/adduser'
+            element={<AddUser />}
           />
           <Route
             exact

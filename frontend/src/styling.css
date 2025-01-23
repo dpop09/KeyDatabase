@@ -1369,3 +1369,174 @@ EditRequestForm.jsx component styling
   cursor: pointer;
   transition: 0.3s;
 }
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Settings.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#Settings-div-container {
+  text-align: center;
+  width: auto;
+  padding: 2rem;
+  padding-top: 0;
+}
+
+#Settings-div-top-flex-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+#Settings-div-search-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#Settings-select-column,
+#Settings-input-search-row {
+  font-size: larger;
+  width: 50%;
+  height: 2.35rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+}
+#Settings-input-search-row {
+  height: 2.1rem;
+}
+
+#Settings-button-search,
+#Settings-button-clear-search{
+  margin-left: .5rem;
+  margin-right: .5rem;
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#Settings-button-search:hover,
+#Settings-button-clear-search:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#Settings-button-add-user {
+  width: 64px;
+  height: 64px;
+  background-color: transparent;
+  background-image: url('./assets/add_user_icon_default.png');
+  background-size: cover;
+  border: none;
+  outline: none;
+}
+#Settings-button-add-user:hover {
+  background-image: url('./assets/add_user_icon_hover.png');
+  cursor: pointer;
+  transition: .3s;
+}
+
+#Settings-div-table-container {
+  overflow-y: auto;
+}
+
+#Settings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+#Settings-td, #Settings-th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+#Settings-th {
+  color: white;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgb(9, 64, 56, 1);
+}
+#Settings-tr {
+  text-align: left;
+}
+#Settings-tr:nth-child(odd) {
+  background-color: #e2e2e2;
+}
+#Settings-tr:nth-child(even) {
+  background-color: white;
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+AddUser.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#AddUser-div-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  width: 25%;
+}
+
+#AddUser-h1-title {
+  text-align: center;
+  font-size: 2rem;
+}
+
+#AddUser-div-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#AddUser-div-input-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#AddUser-label-name,
+#AddUser-label-permissions {
+  font-size: 25px;
+  margin: 0.5rem;
+}
+
+#AddUser-input-access-id,
+#AddUser-select-permissions {
+  font-size: larger;
+  width: 50%;
+  height: 2.35rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+}
+
+#AddUser-div-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+#AddUser-button-submit,
+#AddUser-button-cancel {
+  background-color: rgb(255, 204, 51, 1);  
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#AddUser-button-submit:hover,
+#AddUser-button-cancel:hover {  
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
