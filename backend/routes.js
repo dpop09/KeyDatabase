@@ -277,4 +277,26 @@ router.post('/search-user', async (request, response) => {
     }
 });
 
+router.post('/edit-user', async (request, response) => {
+    try {
+        const { fname, lname, access_id, title, permissions } = request.body;
+        const result = await dbOperations.editUser(fname, lname, access_id, title, permissions);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.post('/delete-user', async (request, response) => {
+    try {
+        const { access_id } = request.body;
+        const result = await dbOperations.deleteUser(access_id);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
 module.exports = router;

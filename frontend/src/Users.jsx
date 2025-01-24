@@ -3,10 +3,10 @@ import { AuthContext } from './AuthContext'
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 
-function Settings() {
+function Users() {
 
     // global state variables
-    const { accessId } = useContext(AuthContext)
+    const { accessId, setSelectedUser } = useContext(AuthContext)
 
     // display an unauthorized page if the accessID is not found in the database
     if (accessId === "Unauthorized") {
@@ -40,8 +40,8 @@ function Settings() {
 
     const handleSearch = async (event) => {
         event.preventDefault();
-        const column = document.getElementById('Settings-select-column').value;
-        const row = document.getElementById('Settings-input-search-row').value;
+        const column = document.getElementById('Users-select-column').value;
+        const row = document.getElementById('Users-input-search-row').value;
         if (!column || !row) {
             alert('Please fill both column and row');
             return
@@ -74,14 +74,19 @@ function Settings() {
         navigate('/adduser');
     }
 
+    const handleRowClick = (user) => {
+        setSelectedUser(user);
+        navigate('/edituser');
+    }
+
     return (
         <>
             <NavBar />
-            <div id="Settings-div-container">
-                <div id="Settings-div-top-flex-box">
-                    <div id="Settings-div-search-container">
+            <div id="Users-div-container">
+                <div id="Users-div-top-flex-box">
+                    <div id="Users-div-search-container">
                         <h3>Column:</h3>
-                        <select id="Settings-select-column">
+                        <select id="Users-select-column">
                             <option value="first_name">First Name</option>
                             <option value="last_name">Last Name</option>
                             <option value="access_id">Access ID</option>
@@ -89,29 +94,29 @@ function Settings() {
                             <option value="permission">Permissions</option>
                         </select>
                         <h3>Search:</h3>
-                        <input id="Settings-input-search-row" type="text" />
-                        <button id="Settings-button-search" onClick={handleSearch}>Search</button>
-                        <button id="Settings-button-clear-search" onClick={handleClearSearch}>Clear</button>
+                        <input id="Users-input-search-row" type="text" />
+                        <button id="Users-button-search" onClick={handleSearch}>Search</button>
+                        <button id="Users-button-clear-search" onClick={handleClearSearch}>Clear</button>
                     </div>
-                    <button id="Settings-button-add-user" onClick={handleAddUser}></button>
+                    <button id="Users-button-add-user" onClick={handleAddUser}></button>
                 </div>
-                <div id="Settings-div-table-container">
-                    <table id="Settings-table">
+                <div id="Users-div-table-container">
+                    <table id="Users-table">
                         <tbody>
-                            <tr id="Settings-tr">
-                                <th id="Settings-th">First Name</th>
-                                <th id="Settings-th">Last Name</th>
-                                <th id="Settings-th">Access ID</th>
-                                <th id="Settings-th">Title</th>
-                                <th id="Settings-th">Permissions</th>
+                            <tr id="Users-tr">
+                                <th id="Users-th">First Name</th>
+                                <th id="Users-th">Last Name</th>
+                                <th id="Users-th">Access ID</th>
+                                <th id="Users-th">Title</th>
+                                <th id="Users-th">Permissions</th>
                             </tr>
                             {userData.map((user, i) => (
-                                <tr id="Settings-tr" key={i}>
-                                    <td id="Settings-td">{user.first_name}</td>
-                                    <td id="Settings-td">{user.last_name}</td>
-                                    <td id="Settings-td">{user.access_id}</td>
-                                    <td id="Settings-td">{user.title}</td>
-                                    <td id="Settings-td">{user.permission}</td>
+                                <tr id="Users-tr" key={i} onClick={() => handleRowClick(user)}>
+                                    <td id="Users-td">{user.first_name}</td>
+                                    <td id="Users-td">{user.last_name}</td>
+                                    <td id="Users-td">{user.access_id}</td>
+                                    <td id="Users-td">{user.title}</td>
+                                    <td id="Users-td">{user.permission}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -122,4 +127,4 @@ function Settings() {
     )
 }
 
-export default Settings
+export default Users

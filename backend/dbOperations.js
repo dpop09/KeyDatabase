@@ -464,6 +464,42 @@ const dbOperations = {
             console.log(error);
         }
     },
+    editUser: async function (fname, lname, access_id, title, permissions) {
+        try {
+            const sql = 'UPDATE users SET first_name = ?, last_name = ?, title = ?, permission = ? WHERE access_id = ?';
+            const values = [fname, lname, title, permissions, access_id];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    deleteUser: async function (access_id) {
+        try {
+            const sql = 'DELETE FROM users WHERE access_id = ?';
+            const values = [access_id];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 module.exports = dbOperations

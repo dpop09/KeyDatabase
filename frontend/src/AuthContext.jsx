@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [keyData, setKeyData] = useState(null);
     const [requestFormData, setRequestFormData] = useState(null);
     const [accessId, setAccessId] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
     
     // fetch the accessid currently logged in the windows operating system
     const getAccessIdFromOS = async () => {
@@ -28,7 +29,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ keyData, setKeyData, requestFormData, setRequestFormData, accessId, setAccessId }}>
+        <AuthContext.Provider value={{ keyData, setKeyData, requestFormData, setRequestFormData, accessId, setAccessId, selectedUser, setSelectedUser }}>
             {children}
         </AuthContext.Provider>
     );
