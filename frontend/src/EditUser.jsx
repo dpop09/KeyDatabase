@@ -6,10 +6,10 @@ import NavBar from "./NavBar";
 function EditUser() {
 
     // global state variables
-    const { accessId, selectedUser } = useContext(AuthContext)
+    const { permissions, selectedUser } = useContext(AuthContext)
 
-    // display an unauthorized page if the accessID is not found in the database
-    if (accessId === "Unauthorized") {
+    // display an unauthorized page if the permissions is not found in the database
+    if (permissions === "Unauthorized") {
         return (
             <div id="unauthorized-div-container">
                 <h1 id="unauthorized-h1-title">Unauthorized Access</h1>
@@ -42,7 +42,7 @@ function EditUser() {
                 body: JSON.stringify({ fname, lname, access_id, title, permissions }),
             });
             if (response.status === 200) {
-                navigate('/settings');
+                navigate('/users');
             } else {
                 alert('Internal Server Error. Please try again later.');
             }

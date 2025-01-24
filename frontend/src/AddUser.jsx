@@ -6,10 +6,10 @@ import NavBar from "./NavBar";
 function AddUser() {
 
     // global state variables
-    const { accessId } = useContext(AuthContext)
+    const { permissions } = useContext(AuthContext)
 
     // display an unauthorized page if the accessID is not found in the database
-    if (accessId === "Unauthorized") {
+    if (permissions !== "Admin") {
         return (
             <div id="unauthorized-div-container">
                 <h1 id="unauthorized-h1-title">Unauthorized Access</h1>
@@ -24,9 +24,9 @@ function AddUser() {
     }
 
     const handleSubmit = async () => {
-        const accessId = document.getElementById('AddUser-input-access-id').value;
-        const permissions = document.getElementById('AddUser-select-permissions').value;
-        if (!accessId || !permissions) { // check if all required fields are filled
+        const accessId_input = document.getElementById('AddUser-input-access-id').value;
+        const permissions_input = document.getElementById('AddUser-select-permissions').value;
+        if (!accessId_input || !permissions_input) { // check if all required fields are filled
             alert('Please fill out all required fields.');
             return;
         }
@@ -36,10 +36,10 @@ function AddUser() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ accessId, permissions }),
+                body: JSON.stringify({ accessId: accessId_input, permissions: permissions_input }),
             });
             if (response.status === 200) {
-                navigate('/settings');
+                navigate('/users');
             } else if (response.status === 400) {
                 alert('User already exists');
             } else {

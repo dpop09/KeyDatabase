@@ -499,6 +499,24 @@ const dbOperations = {
         } catch (error) {
             console.log(error);
         }
+    },
+    getPermission: async function (access_id) {
+        try {
+            const sql = 'SELECT permission FROM users WHERE access_id = ?';
+            const values = [access_id];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result[0].permission);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 

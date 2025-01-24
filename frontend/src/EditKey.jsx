@@ -6,10 +6,10 @@ import NavBar from "./NavBar";
 function EditKey() {
 
     // global state variables
-    const { accessId, keyData, setKeyData } = useContext(AuthContext);
+    const { permissions, keyData, setKeyData } = useContext(AuthContext);
 
-    // display an unauthorized page if the accessID is not found in the database
-    if (accessId === "Unauthorized") {
+    // display an unauthorized page if the permissions is not found in the database
+    if (permissions === "Unauthorized") {
         return (
             <div id="unauthorized-div-container">
                 <h1 id="unauthorized-h1-title">Unauthorized Access</h1>
@@ -163,6 +163,10 @@ function EditKey() {
     }
 
     const handleDeleteKey = async (event) => {
+        if (permissions !== "Admin") {
+            alert("This action can only be performed by an admin.");
+            return
+        }
         event.preventDefault();
         try {
             const response = await fetch('http://localhost:8081/delete-key', { // send a POST request to the backend route
@@ -253,27 +257,63 @@ function EditKey() {
                         </div>
                         <div id="EditKey-div-row-flex-box">
                             <h3>*Tag Number:</h3>
-                            <input type="text" id="EditKey-input-tag_number" placeholder={keyData.tag_number} disabled/>
+                            <input 
+                                type="text" 
+                                id="EditKey-input-tag_number" 
+                                placeholder={keyData.tag_number} 
+                                disabled={permissions !== "Admin"} 
+                                className={permissions === "Admin" ? "admin-input" : "non-admin-input"}
+                            />
                         </div>
                         <div id ="EditKey-div-row-flex-box-even">
                             <h3>*Tag Color:</h3>
-                            <input type="text" id="EditKey-input-tag_color" placeholder={keyData.tag_color} disabled/>
+                            <input 
+                                type="text" 
+                                id="EditKey-input-tag_color" 
+                                placeholder={keyData.tag_color} 
+                                disabled={permissions !== "Admin"} 
+                                className={permissions === "Admin" ? "admin-input" : "non-admin-input"}
+                            />
                         </div>
                         <div id="EditKey-div-row-flex-box">
                             <h3>*Core Number:</h3>
-                            <input type="text" id="EditKey-input-core_number" placeholder={keyData.core_number} disabled />
+                            <input 
+                                type="text" 
+                                id="EditKey-input-core_number" 
+                                placeholder={keyData.core_number} 
+                                disabled={permissions !== "Admin"} 
+                                className={permissions === "Admin" ? "admin-input" : "non-admin-input"}
+                            />
                         </div>
                         <div id="EditKey-div-row-flex-box-even">
                             <h3>*Room Number:</h3>
-                            <input type="text" id="EditKey-input-room_number" placeholder={keyData.room_number} disabled />
+                            <input 
+                                type="text" 
+                                id="EditKey-input-room_number" 
+                                placeholder={keyData.room_number} 
+                                disabled={permissions !== "Admin"} 
+                                className={permissions === "Admin" ? "admin-input" : "non-admin-input"}
+                            />
                         </div>
                         <div id="EditKey-div-row-flex-box">
                             <h3>*Room Type:</h3>
-                            <input type="text" id="EditKey-input-room_type" placeholder={keyData.room_type} disabled />
+                            <input 
+                                type="text" 
+                                id="EditKey-input-room_type" 
+                                placeholder={keyData.room_type} 
+                                disabled={permissions !== "Admin"} 
+                                className={permissions === "Admin" ? "admin-input" : "non-admin-input"}
+                            />
                         </div>
                         <div id="EditKey-div-row-flex-box-even">
                             <h3>*Key Number:</h3>
-                            <input type="text" id="EditKey-input-key_number" placeholder={keyData.key_number} disabled />
+                            <input 
+                                type="text" 
+                                id="EditKey-input-key_number" 
+                                placeholder={keyData.key_number} 
+                                disabled={permissions !== "Admin"} 
+                                className={permissions === "Admin" ? "admin-input" : "non-admin-input"}
+                            />
                         </div>
                     </div>
                     <div id="EditKey-div-form-container">

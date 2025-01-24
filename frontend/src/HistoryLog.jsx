@@ -5,10 +5,10 @@ import NavBar from "./NavBar";
 function HistoryLog() {
 
     // global state variables
-    const { accessId } = useContext(AuthContext)
+    const { permissions } = useContext(AuthContext)
 
-    // display an unauthorized page if the accessID is not found in the database
-    if (accessId === "Unauthorized") {
+    // display an unauthorized page if the permissions is not found in the database
+    if (permissions === "Unauthorized") {
         return (
             <div id="unauthorized-div-container">
                 <h1 id="unauthorized-h1-title">Unauthorized Access</h1>

@@ -6,10 +6,10 @@ import NavBar from "./NavBar";
 function Users() {
 
     // global state variables
-    const { accessId, setSelectedUser } = useContext(AuthContext)
+    const { permissions, setSelectedUser } = useContext(AuthContext)
 
-    // display an unauthorized page if the accessID is not found in the database
-    if (accessId === "Unauthorized") {
+    // display an unauthorized page if the permissions is not found in the database
+    if (permissions === "Unauthorized") {
         return (
             <div id="unauthorized-div-container">
                 <h1 id="unauthorized-h1-title">Unauthorized Access</h1>
@@ -71,12 +71,21 @@ function Users() {
     }
 
     const handleAddUser = () => {
-        navigate('/adduser');
+        if (permissions === "Admin") {
+            navigate('/adduser');
+        }
+        else {
+            alert('This action can only be performed by an admin.');
+        }
     }
 
     const handleRowClick = (user) => {
-        setSelectedUser(user);
-        navigate('/edituser');
+        if (permissions === "Admin") {
+            setSelectedUser(user);
+            navigate('/edituser');
+        } else {
+            alert('This action can only be performed by an admin.');
+        }
     }
 
     return (

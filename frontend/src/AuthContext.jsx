@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
     const [keyData, setKeyData] = useState(null);
     const [requestFormData, setRequestFormData] = useState(null);
     const [accessId, setAccessId] = useState(null);
+    const [permissions, setPermissions] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
     
     // fetch the accessid currently logged in the windows operating system
@@ -19,6 +20,7 @@ export const AuthProvider = ({ children }) => {
             const response = await fetch('http://localhost:8081/get-access-id');
             const data = await response.json();
             setAccessId(data.access_id);
+            setPermissions(data.permission);
         } catch (error) {
             console.log(error);
         }
@@ -29,7 +31,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ keyData, setKeyData, requestFormData, setRequestFormData, accessId, setAccessId, selectedUser, setSelectedUser }}>
+        <AuthContext.Provider value={{ keyData, setKeyData, requestFormData, setRequestFormData, accessId, setAccessId, permissions, selectedUser, setSelectedUser }}>
             {children}
         </AuthContext.Provider>
     );

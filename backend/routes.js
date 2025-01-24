@@ -21,13 +21,16 @@ router.get('/get-access-id', async (request, response) => {
     try {
         // get the logged in username (accessID) from the operating system
         var access_id = os.userInfo().username;
-        access_id = "hc7822"
-        // check if the accessID is listed in the database
+        var permission = "Unauthorized";
+
+        access_id = "hc7822" // for testing
+
+        // check if the detected accessID is listed in the database
         const isAccessIdWhiteListed = await dbOperations.isAccessIdWhiteListed(access_id);
-        if (!isAccessIdWhiteListed) { // if the accessID does not exist in the database, set access_id to "Unauthorized"
-            access_id = 'Unauthorized';
+        if (isAccessIdWhiteListed) { // if the accessID does not exist in the database, set permission to "Unauthorized"
+            permission = await dbOperations.getPermission(access_id); // get the permission corresponding to the accessID from the database
         }
-        response.status(200).send({access_id});
+        response.status(200).send({access_id: access_id, permission: permission});
     } catch (error) {
         console.log(error)
         response.status(500).send(error);

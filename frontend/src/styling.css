@@ -253,17 +253,6 @@ CreateKey.jsx component styling
   resize: none;
 }
 
-#CreateKey-input-tag_number:hover,
-#CreateKey-input-tag_color:hover,
-#CreateKey-input-core_number:hover,
-#CreateKey-input-room_number:hover,
-#CreateKey-input-room_type:hover,
-#CreateKey-input-key_number:hover,
-#CreateKey-input-last_edited_by:hover,
-#CreateKey-input-date_last_edited:hover {
-  cursor: not-allowed;
-}
-
 #CreateKey-div-assign-form-container {
   width: 100%;
   display: flex;
@@ -717,15 +706,11 @@ EditKey.jsx component styling
   resize: none;
 }
 
-#EditKey-input-tag_number:hover,
-#EditKey-input-tag_color:hover,
-#EditKey-input-core_number:hover,
-#EditKey-input-room_number:hover,
-#EditKey-input-room_type:hover,
-#EditKey-input-key_number:hover,
-#EditKey-input-last_edited_by:hover,
-#EditKey-input-date_last_edited:hover {
+.non-admin-input:hover {
   cursor: not-allowed;
+}
+.admin-input:hover {
+  cursor: text;
 }
 
 #EditKey-div-assign-form-container {

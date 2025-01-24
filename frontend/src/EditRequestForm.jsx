@@ -6,10 +6,10 @@ import NavBar from "./NavBar";
 function EditRequestForm() {
 
     // global state variables
-    const { accessId, requestFormData } = useContext(AuthContext)
+    const { permissions, requestFormData } = useContext(AuthContext)
 
-    // display an unauthorized page if the accessID is not found in the database
-    if (accessId === "Unauthorized") {
+    // display an unauthorized page if the permissions is not found in the database
+    if (permissions === "Unauthorized") {
         return (
             <div id="unauthorized-div-container">
                 <h1 id="unauthorized-h1-title">Unauthorized Access</h1>
