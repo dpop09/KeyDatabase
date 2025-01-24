@@ -4,6 +4,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const { scrapeWayneData } = require('./scrape');
+const errorLogOperations = require('./errorLogOperations');
 dotenv.config(); // read from .env file
 
 // create a connection to the database
@@ -39,6 +40,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -57,6 +59,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -124,6 +127,7 @@ const dbOperations = {
 
             return response; // Return the updated key
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -159,6 +163,7 @@ const dbOperations = {
 
             return row; // Return the updated row
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -177,6 +182,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -194,6 +200,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -213,6 +220,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -237,8 +245,8 @@ const dbOperations = {
             });
             return response
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.error(error);
-            throw error; // Throw the error to the calling function
         }
     },  
     updateKeyNumberInRequestForm: async function (key_number, form_id, assigned_key) {
@@ -256,6 +264,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },  
@@ -274,6 +283,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -298,8 +308,8 @@ const dbOperations = {
             });
             return response
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.error(error);
-            throw error; // Throw the error to the calling function
         }
     },
     createKey: async function (tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, form_id) {
@@ -317,6 +327,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -335,6 +346,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -353,6 +365,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -371,6 +384,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -389,6 +403,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -407,6 +422,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -424,6 +440,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -443,6 +460,7 @@ const dbOperations = {
             });
             return true
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -461,6 +479,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -479,6 +498,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -497,6 +517,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     },
@@ -515,6 +536,7 @@ const dbOperations = {
             });
             return response;
         } catch (error) {
+            errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
     }

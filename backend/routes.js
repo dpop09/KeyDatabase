@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const dbOperations = require('./dbOperations');
+const errorLogOperations = require('./errorLogOperations');
 const os = require('os');
 
 const router = express.Router();
@@ -32,6 +33,7 @@ router.get('/get-access-id', async (request, response) => {
         }
         response.status(200).send({access_id: access_id, permission: permission});
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error)
         response.status(500).send(error);
     }
@@ -42,6 +44,7 @@ router.get('/getall', async (request, response) => {
         const result = await dbOperations.getAll();
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -53,6 +56,7 @@ router.post('/search', async (request, response) => {
         const result = await dbOperations.search(column, row);
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -68,6 +72,7 @@ router.post('/getKeyRequestForm' , async (request, response) => {
             response.status(404).send('Key Request Form not found');
         }
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -102,6 +107,7 @@ router.post('/edit-key', async (request, response) => {
         const result = await dbOperations.editKey(tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id);
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -116,6 +122,7 @@ router.post('/remove-key-holder', async (request, response) => {
         const result = await dbOperations.removeKeyHolder(key_number);
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -130,6 +137,7 @@ router.post('/delete-key', async (request, response) => {
         const result = await dbOperations.deleteKey(key_number);
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -140,6 +148,7 @@ router.get('/get-all-key-request-forms', async (request, response) => {
         const result = await dbOperations.getAllKeyRequestForms();
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -152,6 +161,7 @@ router.post('/add-key-request-form', upload.single('file'), async (request, resp
         const result = await dbOperations.addKeyRequestForm(first_name, last_name, access_id, date_signed, file_buffer);
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -163,6 +173,7 @@ router.post('/get-key-request-form-image', async (req, res) => {
         const result = await dbOperations.getKeyRequestFormImage(form_id);
         res.status(200).send(result); // Send the Base64-encoded PDF data
     } catch (error) {
+        errorLogOperations.logError(error);
         console.error(error.message);
         res.status(500).send({ error: error.message });
     }
@@ -174,6 +185,7 @@ router.post('/get-key-request-form-image-with-key-number', async (req, res) => {
         const result = await dbOperations.getKeyRequestFormImageWithKeyNumber(key_number);
         res.status(200).send(result); // Send the Base64-encoded PDF data
     } catch (error) {
+        errorLogOperations.logError(error);
         console.error(error.message);
         res.status(500).send({ error: error.message });
     }
@@ -201,6 +213,7 @@ router.post('/create-key', async (request, response) => {
         }
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.error(error.message);
         res.status(500).send({ error: error.message });
     }
@@ -212,6 +225,7 @@ router.post('/search-request-form', async (request, response) => {
         const result = await dbOperations.searchRequestForm(column, row);
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -224,6 +238,7 @@ router.post('/update-key-request-form', upload.single('file'), async (request, r
         const result = await dbOperations.updateKeyRequestForm(form_id, first_name, last_name, access_id, date_signed, file_buffer);
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -238,6 +253,7 @@ router.post('/delete-key-request-form', async (request, response) => {
         const result = await dbOperations.deleteKeyRequestForm(form_id);
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -248,6 +264,7 @@ router.get('/get-all-user-data', async (request, response) => {
         const result = await dbOperations.getAllUserData();
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -264,6 +281,7 @@ router.post('/add-user', async (request, response) => {
         const result = await dbOperations.addUser(accessId, permissions);
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -275,6 +293,7 @@ router.post('/search-user', async (request, response) => {
         const result = await dbOperations.searchUser(column, row);
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -286,6 +305,7 @@ router.post('/edit-user', async (request, response) => {
         const result = await dbOperations.editUser(fname, lname, access_id, title, permissions);
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }
@@ -297,6 +317,7 @@ router.post('/delete-user', async (request, response) => {
         const result = await dbOperations.deleteUser(access_id);
         response.status(200).send(result);
     } catch (error) {
+        errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
     }

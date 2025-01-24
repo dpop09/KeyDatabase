@@ -1,5 +1,6 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
+const errorLogOperations = require('./errorLogOperations');
 
 async function scrapeWayneData(access_id) {
   const url = `https://wayne.edu/search-advanced?accessid=${access_id}`;
@@ -43,6 +44,7 @@ async function scrapeWayneData(access_id) {
 
     return results;
   } catch (error) {
+    errorLogOperations.logError(error);
     console.error('Error occurred while scraping:', error);
     return null;
   }
