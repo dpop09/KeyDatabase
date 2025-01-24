@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 
 export const AuthContext = createContext();
 
@@ -8,9 +8,30 @@ export const AuthProvider = ({ children }) => {
     const [keyData, setKeyData] = useState(null);
     const [requestFormData, setRequestFormData] = useState(null);
     const [accessId, setAccessId] = useState(null);
+    const [permissions, setPermissions] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
     
+    // fetch the accessid currently logged in the windows operating system
+    const getAccessIdFromOS = async () => {
+        if (accessId != null) { // do nothing if the accessid is already set
+            return
+        }
+        try {
+            const response = await fetch('http://localhost:8081/get-access-id');
+            const data = await response.json();
+            setAccessId(data.access_id);
+            setPermissions(data.permission);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getAccessIdFromOS();
+    }, []);
+
     return (
-        <AuthContext.Provider value={{ keyData, setKeyData, requestFormData, setRequestFormData, accessId, setAccessId }}>
+        <AuthContext.Provider value={{ keyData, setKeyData, requestFormData, setRequestFormData, accessId, setAccessId, permissions, selectedUser, setSelectedUser }}>
             {children}
         </AuthContext.Provider>
     );

@@ -2,7 +2,6 @@ const express = require('express');
 const multer = require('multer');
 const dbOperations = require('./dbOperations');
 const os = require('os');
-//const path = require('path');
 
 const router = express.Router();
 
@@ -22,13 +21,16 @@ router.get('/get-access-id', async (request, response) => {
     try {
         // get the logged in username (accessID) from the operating system
         var access_id = os.userInfo().username;
-        
-        // check if the accessID is listed in the database
+        var permission = "Unauthorized";
+
+        access_id = "hc7822" // for testing
+
+        // check if the detected accessID is listed in the database
         const isAccessIdWhiteListed = await dbOperations.isAccessIdWhiteListed(access_id);
-        if (!isAccessIdWhiteListed) { // if the accessID does not exist in the database, set access_id to "Unauthorized"
-            access_id = 'Unauthorized';
+        if (isAccessIdWhiteListed) { // if the accessID does not exist in the database, set permission to "Unauthorized"
+            permission = await dbOperations.getPermission(access_id); // get the permission corresponding to the accessID from the database
         }
-        response.status(200).send({access_id});
+        response.status(200).send({access_id: access_id, permission: permission});
     } catch (error) {
         console.log(error)
         response.status(500).send(error);
@@ -234,6 +236,65 @@ router.post('/delete-key-request-form', async (request, response) => {
         const delete_form_id_from_keys_result = await dbOperations.deleteFormIdFromKeys(form_id);
         // delete the form
         const result = await dbOperations.deleteKeyRequestForm(form_id);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.get('/get-all-user-data', async (request, response) => {
+    try {
+        const result = await dbOperations.getAllUserData();
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.post('/add-user', async (request, response) => {
+    try {
+        const { accessId, permissions } = request.body;
+        const doesUserAlreadyExist = await dbOperations.isAccessIdWhiteListed(accessId);
+        if (doesUserAlreadyExist) {
+            response.status(400).send('User already exists');
+            return;
+        }
+        const result = await dbOperations.addUser(accessId, permissions);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.post('/search-user', async (request, response) => {
+    try {
+        const { column, row } = request.body;
+        const result = await dbOperations.searchUser(column, row);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.post('/edit-user', async (request, response) => {
+    try {
+        const { fname, lname, access_id, title, permissions } = request.body;
+        const result = await dbOperations.editUser(fname, lname, access_id, title, permissions);
+        response.status(200).send(result);
+    } catch (error) {
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.post('/delete-user', async (request, response) => {
+    try {
+        const { access_id } = request.body;
+        const result = await dbOperations.deleteUser(access_id);
         response.status(200).send(result);
     } catch (error) {
         console.log(error);

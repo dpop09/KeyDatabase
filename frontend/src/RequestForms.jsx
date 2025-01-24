@@ -5,10 +5,21 @@ import NavBar from "./NavBar";
 
 function RequestForms() {
 
+    // global state variables
+    const { permissions, setRequestFormData } = useContext(AuthContext)
+
+    // display an unauthorized page if the permissions is not found in the database
+    if (permissions === "Unauthorized") {
+        return (
+            <div id="unauthorized-div-container">
+                <h1 id="unauthorized-h1-title">Unauthorized Access</h1>
+                <p id="unauthorized-p-subtitle">Contact the building manager to request access.</p>
+            </div>
+        )
+    }
+
     const [data, setData] = useState([]);
     const [imageData, setImageData] = useState(null);
-
-    const { setRequestFormData } = useContext(AuthContext)
 
     const navigate = useNavigate();
     const handleAddRequestForm = () => {

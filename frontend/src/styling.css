@@ -17,59 +17,23 @@ body {
 }
 
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Signin.jsx component styling
+Unauthorized page styling
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-  
-#Signin-h1-page-title {
-  text-align: center;
-  font-size: 3rem;
-  padding-top: 1rem;
-}
 
-#Signin-div-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-  padding: 3rem;
-  border: 25px outset rgb(12, 84, 73);
-}
-  
-#Signin-h1-title {
-  text-align: center;
-  font-size: 2rem;
-  margin-bottom: 2rem;
-}
-  
-#Signin-input-username,
-#Signin-input-password {
-  font-size: medium;
-  height: 2rem;
-  margin-left: 5px;
-  border-radius: 5px;
-}
-  
-#Signin-div-row-flex-box {
+#unauthorized-div-container {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  height: 98vh;
+  text-align: center;
+  flex-direction: column;
 }
-  
-#Signin-button-signin {
-  background-color: rgb(255, 204, 51, 1);
-  font-size: medium;
-  width: 100%;
-  height: 2rem;
-  border: none;
-  border-radius: 5px;
-  margin-bottom: 1rem;
+#unauthorized-h1-title {
+  font-size: 50px;
+  font-weight: bold;
 }
-#Signin-button-signin:hover {
-  background-color: rgb(255, 224, 133, 1);
-  cursor: pointer;
-  transition: 0.3s;
+#unauthorized-p-subtitle {
+  font-size: 25px;
 }
 
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,22 +79,6 @@ NavBar.jsx component styling
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Keys.jsx component styling
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-
-#Keys-div-unauthorized {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 98vh;
-  text-align: center;
-  flex-direction: column;
-}
-#Keys-h1-unauthorized {
-  font-size: 50px;
-  font-weight: bold;
-}
-#Keys-p-unauthorized {
-  font-size: 25px;
-}
 
 #Keys-div-container {
   text-align: center;
@@ -303,17 +251,6 @@ CreateKey.jsx component styling
 }
 #CreateKey-textarea-comments {
   resize: none;
-}
-
-#CreateKey-input-tag_number:hover,
-#CreateKey-input-tag_color:hover,
-#CreateKey-input-core_number:hover,
-#CreateKey-input-room_number:hover,
-#CreateKey-input-room_type:hover,
-#CreateKey-input-key_number:hover,
-#CreateKey-input-last_edited_by:hover,
-#CreateKey-input-date_last_edited:hover {
-  cursor: not-allowed;
 }
 
 #CreateKey-div-assign-form-container {
@@ -769,15 +706,11 @@ EditKey.jsx component styling
   resize: none;
 }
 
-#EditKey-input-tag_number:hover,
-#EditKey-input-tag_color:hover,
-#EditKey-input-core_number:hover,
-#EditKey-input-room_number:hover,
-#EditKey-input-room_type:hover,
-#EditKey-input-key_number:hover,
-#EditKey-input-last_edited_by:hover,
-#EditKey-input-date_last_edited:hover {
+.non-admin-input:hover {
   cursor: not-allowed;
+}
+.admin-input:hover {
+  cursor: text;
 }
 
 #EditKey-div-assign-form-container {
@@ -1418,6 +1351,272 @@ EditRequestForm.jsx component styling
 }
 #EditRequestForm-button-submit:hover {  
   background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Users.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#Users-div-container {
+  text-align: center;
+  width: auto;
+  padding: 2rem;
+  padding-top: 0;
+}
+
+#Users-div-top-flex-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+#Users-div-search-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#Users-select-column,
+#Users-input-search-row {
+  font-size: larger;
+  width: 50%;
+  height: 2.35rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+}
+#Users-input-search-row {
+  height: 2.1rem;
+}
+
+#Users-button-search,
+#Users-button-clear-search{
+  margin-left: .5rem;
+  margin-right: .5rem;
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#Users-button-search:hover,
+#Users-button-clear-search:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#Users-button-add-user {
+  width: 64px;
+  height: 64px;
+  background-color: transparent;
+  background-image: url('./assets/add_user_icon_default.png');
+  background-size: cover;
+  border: none;
+  outline: none;
+}
+#Users-button-add-user:hover {
+  background-image: url('./assets/add_user_icon_hover.png');
+  cursor: pointer;
+  transition: .3s;
+}
+
+#Users-div-table-container {
+  overflow-y: auto;
+  border: 2px solid black;
+  border-radius: 5px;
+}
+
+#Users-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+#Users-td, #Users-th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+#Users-th {
+  color: white;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgb(9, 64, 56, 1);
+}
+#Users-tr {
+  text-align: left;
+}
+#Users-tr:nth-child(odd) {
+  background-color: #e2e2e2;
+}
+#Users-tr:nth-child(even) {
+  background-color: white;
+}
+#Users-tr:hover {
+  background-color: #d2d2d2;
+  cursor: pointer;
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+AddUser.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#AddUser-div-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  width: 25%;
+}
+
+#AddUser-h1-title {
+  text-align: center;
+  font-size: 2rem;
+}
+
+#AddUser-div-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#AddUser-div-input-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#AddUser-label-name,
+#AddUser-label-permissions {
+  font-size: 25px;
+  margin: 0.5rem;
+}
+
+#AddUser-input-access-id,
+#AddUser-select-permissions {
+  font-size: larger;
+  width: 50%;
+  height: 2.35rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+}
+
+#AddUser-div-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+#AddUser-button-submit,
+#AddUser-button-cancel {
+  background-color: rgb(255, 204, 51, 1);  
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#AddUser-button-submit:hover,
+#AddUser-button-cancel:hover {  
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+EditUser.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#EditUser-div-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  width: 25%;
+}
+
+#EditUser-h1-title {
+  text-align: center;
+  font-size: 2rem;
+}
+
+#EditUser-div-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#EditUser-div-input-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+#EditUser-label-name,
+#EditUser-label-permissions {
+  font-size: 25px;
+  margin: 0.5rem;
+}
+
+#EditUser-input-fname,
+#EditUser-input-lname,
+#EditUser-input-title,
+#EditUser-input-access-id,
+#EditUser-select-permissions {
+  font-size: larger;
+  width: 50%;
+  height: 2.35rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+}
+
+#EditUser-div-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+#EditUser-button-submit,
+#EditUser-button-cancel {
+  background-color: rgb(255, 204, 51, 1);  
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#EditUser-button-submit:hover,
+#EditUser-button-cancel:hover {  
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#EditUser-button-delete {
+  background-color: #dc4c64;
+  font-size: medium;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#EditUser-button-delete:hover {
+  background-color:  #e27b8e;
   cursor: pointer;
   transition: 0.3s;
 }

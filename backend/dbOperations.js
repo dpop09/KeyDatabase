@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const fs = require('fs').promises;
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const { scrapeWayneData } = require('./scrape');
 dotenv.config(); // read from .env file
 
 // create a connection to the database
@@ -409,6 +410,114 @@ const dbOperations = {
             console.log(error);
         }
     },
+    getAllUserData: async function () {
+        try {
+            const sql = 'SELECT * FROM users';
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    addUser: async function (access_id, permissions) {
+        try {
+            const results = await scrapeWayneData(access_id);
+            const sql = 'INSERT INTO users (access_id, first_name, last_name, title, permission) VALUES (?, ?, ?, ?, ?)';
+            const values = [access_id, results[0].firstName, results[0].lastName, results[0].title, permissions];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return true
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    searchUser: async function (column, row) {
+        try {
+            const sql = 'SELECT * FROM `users` WHERE ?? = ?';
+            const values = [column, row];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    editUser: async function (fname, lname, access_id, title, permissions) {
+        try {
+            const sql = 'UPDATE users SET first_name = ?, last_name = ?, title = ?, permission = ? WHERE access_id = ?';
+            const values = [fname, lname, title, permissions, access_id];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    deleteUser: async function (access_id) {
+        try {
+            const sql = 'DELETE FROM users WHERE access_id = ?';
+            const values = [access_id];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    getPermission: async function (access_id) {
+        try {
+            const sql = 'SELECT permission FROM users WHERE access_id = ?';
+            const values = [access_id];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result[0].permission);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 module.exports = dbOperations

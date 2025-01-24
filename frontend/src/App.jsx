@@ -8,8 +8,10 @@ import RequestForms from './RequestForms.jsx'
 import AddRequestForm from './AddRequestForm.jsx'
 import EditRequestForm from './EditRequestForm.jsx'
 import HistoryLog from './HistoryLog.jsx'
-import Settings from './Settings.jsx'
+import Users from './Users.jsx'
 import NavBar from './NavBar.jsx'
+import AddUser from './AddUser.jsx'
+import EditUser from './EditUser.jsx'
 
 function App() {
 
@@ -34,8 +36,18 @@ function App() {
           />
           <Route
             exact
-            path='/settings'
-            element={<Settings />}
+            path='/users'
+            element={<Users />}
+          />
+          <Route
+            exact
+            path='/adduser'
+            element={<AddUser />}
+          />
+          <Route
+            exact
+            path='/edituser'
+            element={<EditUser />}
           />
           <Route
             exact
