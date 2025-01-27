@@ -24,7 +24,7 @@ router.get('/get-access-id', async (request, response) => {
         var access_id = os.userInfo().username;
         var permission = "Unauthorized";
 
-        access_id = "hc7822" // for testing
+        //access_id = "hc7822" // for testing
 
         // check if the detected accessID is listed in the database
         const isAccessIdWhiteListed = await dbOperations.isAccessIdWhiteListed(access_id);
