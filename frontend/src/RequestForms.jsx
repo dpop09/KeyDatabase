@@ -101,7 +101,7 @@ function RequestForms() {
     }
 
     const getReadableDateSigned = (d) => {
-        if (!d.date_signed) {
+        if (d.date_signed === '0000-00-00') {
             return
         }
         // Create a Date object from the ISO date string
@@ -127,6 +127,34 @@ function RequestForms() {
     
         return `${month} ${dayWithOrdinal}, ${year}`;
     }
+
+    const getStatus = (d) => {
+        const hasValidDate = d.date_signed && d.date_signed !== '0000-00-00';
+        const hasAssignedKey = d.assigned_key_1 || d.assigned_key_2 || d.assigned_key_3 || d.assigned_key_4;
+    
+        if (!hasValidDate && !hasAssignedKey) {
+            return "Pending"; // No valid signed date and no assigned keys
+        } else if (hasValidDate && !hasAssignedKey) {
+            return "Idle"; // Signed but no assigned keys
+        } else if (hasValidDate && hasAssignedKey) {
+            return "Active"; // Signed and at least one key assigned
+        }
+        return "Unknown"; // Fallback case
+    };
+
+    const getStatusColor = (d) => {
+        const hasValidDate = d.date_signed && d.date_signed !== '0000-00-00';
+        const hasAssignedKey = d.assigned_key_1 || d.assigned_key_2 || d.assigned_key_3 || d.assigned_key_4;
+    
+        if (!hasValidDate && !hasAssignedKey) {
+            return "gold"; // Pending
+        } else if (hasValidDate && !hasAssignedKey) {
+            return "lightcoral"; // Idle
+        } else if (hasValidDate && hasAssignedKey) {
+            return "lightgreen"; // Active
+        }
+        return "grey"; // Default case
+    };
 
     return (
         <>
@@ -157,6 +185,7 @@ function RequestForms() {
                         <table id="RequestForms-table">
                             <tbody>
                                 <tr id="RequestForms-tr-header">
+                                    <th id="RequestForms-th">Status</th>
                                     <th id="RequestForms-th">First Name</th>
                                     <th id="RequestForms-th">Last Name</th>
                                     <th id="RequestForms-th">Access ID</th>
@@ -172,6 +201,7 @@ function RequestForms() {
                                         key={i} onMouseEnter={() => getImageData(d.form_id)} 
                                         onClick={() => handleRowClick(d)} 
                                     >
+                                        <td id="RequestForms-td" style={{ backgroundColor: getStatusColor(d) }}>{getStatus(d)}</td>
                                         <td id="RequestForms-td">{d.first_name}</td>
                                         <td id="RequestForms-td">{d.last_name}</td>
                                         <td id="RequestForms-td">{d.access_id}</td>

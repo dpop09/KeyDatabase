@@ -24,7 +24,7 @@ router.get('/get-access-id', async (request, response) => {
         var access_id = os.userInfo().username;
         var permission = "Unauthorized";
 
-        //access_id = "hc7822" // for testing
+        access_id = "hc7822" // for testing
 
         // check if the detected accessID is listed in the database
         const isAccessIdWhiteListed = await dbOperations.isAccessIdWhiteListed(access_id);
@@ -233,16 +233,26 @@ router.post('/search-request-form', async (request, response) => {
 
 router.post('/update-key-request-form', upload.single('file'), async (request, response) => {
     try {
-        const {form_id, first_name, last_name, access_id, date_signed} = request.body;
-        const file_buffer = request.file.buffer;
-        const result = await dbOperations.updateKeyRequestForm(form_id, first_name, last_name, access_id, date_signed, file_buffer);
+        const { form_id, first_name, last_name, access_id, date_signed } = request.body;
+        const file_buffer = request.file ? request.file.buffer : null;
+        let result = null;
+        if (file_buffer) { // if the user did upload a new pdf file, we replace the old pdf file
+            result = await dbOperations.updateKeyRequestFormWithFileBuffer(
+                form_id, first_name, last_name, access_id, date_signed, file_buffer
+            );
+        } else { // otherwise, the user left the upload file blank and we fallback on the old one
+            result = await dbOperations.updateKeyRequestFormWithoutFileBuffer(
+                form_id, first_name, last_name, access_id, date_signed
+            );
+        }
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
-        console.log(error);
+        console.error(error);
         response.status(500).send(error);
     }
 });
+
 
 router.post('/delete-key-request-form', async (request, response) => {
     try {

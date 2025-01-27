@@ -350,10 +350,29 @@ const dbOperations = {
             console.log(error);
         }
     },
-    updateKeyRequestForm: async function (form_id, first_name, last_name, access_id, date_signed, file_buffer) {
+    updateKeyRequestFormWithFileBuffer: async function (form_id, first_name, last_name, access_id, date_signed, file_buffer) {
         try {
             const sql = 'UPDATE key_request_form SET first_name = ?, last_name = ?, access_id = ?, date_signed = ?, image_data = ? WHERE form_id = ?';
             const values = [first_name, last_name, access_id, date_signed, file_buffer, form_id];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
+    updateKeyRequestFormWithoutFileBuffer: async function (form_id, first_name, last_name, access_id, date_signed) {
+        try {
+            const sql = 'UPDATE key_request_form SET first_name = ?, last_name = ?, access_id = ?, date_signed = ? WHERE form_id = ?';
+            const values = [first_name, last_name, access_id, date_signed, form_id];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {

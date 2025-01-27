@@ -54,7 +54,7 @@ function AddRequestForm() {
         const date_signed = document.getElementById('AddRequestForm-input-date-signed').value;
         const file = document.getElementById('AddRequestForm-input-file').files[0];
         // check if all required fields are filled
-        if (!first_name || !last_name || !access_id || !date_signed || !file) {
+        if (!first_name || !last_name || !access_id || !file) {
             alert("Please fill out all required fields.");
             return;
         }

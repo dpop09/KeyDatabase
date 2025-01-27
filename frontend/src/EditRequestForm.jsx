@@ -68,29 +68,41 @@ function EditRequestForm() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        const first_name = document.getElementById('EditRequestForm-input-first-name').value || document.getElementById('EditRequestForm-input-first-name').placeholder;
-        const last_name = document.getElementById('EditRequestForm-input-last-name').value || document.getElementById('EditRequestForm-input-last-name').placeholder;
-        const access_id = document.getElementById('EditRequestForm-input-access-id').value || document.getElementById('EditRequestForm-input-access-id').placeholder;
+    
+        const first_name = document.getElementById('EditRequestForm-input-first-name').value.trim() || requestFormData.first_name;
+        const last_name = document.getElementById('EditRequestForm-input-last-name').value.trim() || requestFormData.last_name;
+        const access_id = document.getElementById('EditRequestForm-input-access-id').value.trim() || requestFormData.access_id;
         const date_signed = document.getElementById('EditRequestForm-input-date-signed').value || requestFormData.date_signed;
-        const file = document.getElementById('EditRequestForm-input-file').files[0] || null;
+        
+        // Properly retrieve the file
+        const fileInput = document.getElementById('EditRequestForm-input-file');
+        const file = fileInput && fileInput.files.length > 0 ? fileInput.files[0] : null;
+    
         const formData = new FormData();
         formData.append('form_id', requestFormData.form_id);
         formData.append('first_name', first_name);
         formData.append('last_name', last_name);
         formData.append('access_id', access_id);
         formData.append('date_signed', date_signed);
-        formData.append('file', file);
-        fetch(`http://localhost:8081/update-key-request-form`, { // send a POST request to the backend route
+        
+        if (file) {
+            formData.append('file', file);
+        }
+    
+        fetch(`http://localhost:8081/update-key-request-form`, {
             method: 'POST',
             body: formData,
-        }).then(response => {
-            if (response.ok) { // if the response is successful
-                navigate('/requestforms'); // redirect to the request forms page
+        })
+        .then(response => {
+            if (response.ok) {
+                navigate('/requestforms'); // Redirect if successful
             } else {
-                console.log('Internal Server Error. Please try again later.'); // log an error message
+                console.log('Internal Server Error. Please try again later.');
             }
-        }).catch(err => console.log(err));
-    }
+        })
+        .catch(err => console.log(err));
+    };
+    
 
     const handleDelete = (event) => {
         event.preventDefault();
