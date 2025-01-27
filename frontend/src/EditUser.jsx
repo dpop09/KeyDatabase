@@ -61,7 +61,7 @@ function EditUser() {
                 body: JSON.stringify({ access_id: selectedUser.access_id }),
             });
             if (response.status === 200) {
-                navigate('/settings');
+                navigate('/users');
             } else {
                 alert('Internal Server Error. Please try again later.');
             }
@@ -94,7 +94,7 @@ function EditUser() {
                     </div>
                     <div id="EditUser-div-input-container">
                         <label id="EditUser-label-permissions">Permissions:</label>
-                        <select id="EditUser-select-permissions">
+                        <select id="EditUser-select-permissions" value={selectedUser.permission}>
                             <option value="Student Employee">Student Employee</option>
                             <option value="Unauthorized">Unauthorized</option>
                             <option value="Admin">Admin</option>
