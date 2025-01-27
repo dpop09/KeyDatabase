@@ -35,6 +35,9 @@ create table key_request_form(
 create table users(
     access_id varchar(6),
     permission varchar(20),
+    first_name varchar(50),
+    last_name varchar(50),
+    title varchar(20),
     PRIMARY KEY(access_id)
 )
 
