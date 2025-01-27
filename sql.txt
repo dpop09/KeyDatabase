@@ -37,7 +37,7 @@ create table users(
     permission varchar(20),
     first_name varchar(50),
     last_name varchar(50),
-    title varchar(20),
+    title varchar(50),
     PRIMARY KEY(access_id)
 )
 
