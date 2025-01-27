@@ -94,7 +94,7 @@ function EditUser() {
                     </div>
                     <div id="EditUser-div-input-container">
                         <label id="EditUser-label-permissions">Permissions:</label>
-                        <select id="EditUser-select-permissions" value={selectedUser.permission}>
+                        <select id="EditUser-select-permissions" placeholder={selectedUser.permission}>
                             <option value="Student Employee">Student Employee</option>
                             <option value="Unauthorized">Unauthorized</option>
                             <option value="Admin">Admin</option>
