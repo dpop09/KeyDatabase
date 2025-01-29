@@ -219,7 +219,7 @@ function EditKey() {
     }
 
     const getReadableDateSigned = (d) => {
-        if (!d.date_signed) {
+        if (d.date_signed === '0000-00-00') {
             return
         }
         // Create a Date object from the ISO date string
@@ -316,7 +316,7 @@ function EditKey() {
                             />
                         </div>
                     </div>
-                    <div id="EditKey-div-form-container">
+                    <div id="EditKey-div-form-container-2">
                         <div id="EditKey-div-row-flex-box-title">
                             <h2>EDIT KEY HOLDER</h2>
                         </div>
@@ -338,7 +338,7 @@ function EditKey() {
                         </div>
                         <div id="EditKey-div-row-flex-box">
                             <h3>Comments:</h3>
-                            <textarea id="EditKey-textarea-comments" rows="6" cols="5" placeholder={keyData.comments} />
+                            <textarea id="EditKey-textarea-comments" rows="5" cols="5" placeholder={keyData.comments} />
                         </div>
                     </div>
                 </div>

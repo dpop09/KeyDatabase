@@ -92,15 +92,15 @@ function AddRequestForm() {
                             <h2>ADD INFORMATION</h2>
                         </div>
                         <div id="AddRequestForm-div-row-flex-box">
-                            <h2>First Name: </h2>
+                            <h2>*First Name: </h2>
                             <input type="text" id="AddRequestForm-input-first-name" name="first_name" />
                         </div>
                         <div id="AddRequestForm-div-row-flex-box-even">
-                            <h2>Last Name: </h2>
+                            <h2>*Last Name: </h2>
                             <input type="text" id="AddRequestForm-input-last-name" name="last_name" />
                         </div>
                         <div id="AddRequestForm-div-row-flex-box">
-                            <h2>Access ID: </h2>
+                            <h2>*Access ID: </h2>
                             <input type="text" id="AddRequestForm-input-access-id" name="access_id" />
                         </div>
                         <div id="AddRequestForm-div-row-flex-box-even">
@@ -108,7 +108,7 @@ function AddRequestForm() {
                             <input type="date" id="AddRequestForm-input-date-signed" name="date_signed" />
                         </div>
                         <div id="AddRequestForm-div-row-flex-box">
-                            <h2>PDF File: </h2>
+                            <h2>*PDF File: </h2>
                             <input type="file" id="AddRequestForm-input-file" accept="application/pdf" onChange={handleFileChange} />
                         </div>
                     </div>

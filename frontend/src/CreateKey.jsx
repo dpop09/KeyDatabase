@@ -173,7 +173,7 @@ function CreateKey() {
 
     // function to get the readable signed date
     const getReadableDateSigned = (d) => {
-        if (!d.date_signed) {
+        if (d.date_signed === '0000-00-00') {
             return
         }
         // Create a Date object from the ISO date string
@@ -230,7 +230,7 @@ function CreateKey() {
                             <input type="text" id="CreateKey-input-key_number" />
                         </div>
                     </div>
-                    <div id="CreateKey-div-form-container">
+                    <div id="CreateKey-div-form-container-2">
                         <div id="CreateKey-div-row-flex-box-title">
                             <h2>KEY HOLDER</h2>
                         </div>
@@ -252,7 +252,7 @@ function CreateKey() {
                         </div>
                         <div id="CreateKey-div-row-flex-box">
                             <h3>Comments:</h3>
-                            <textarea id="CreateKey-textarea-comments" rows="6" cols="5" />
+                            <textarea id="CreateKey-textarea-comments" rows="5" cols="5" />
                         </div>
                     </div>
                 </div>
