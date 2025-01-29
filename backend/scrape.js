@@ -3,10 +3,10 @@ const cheerio = require('cheerio');
 const errorLogOperations = require('./errorLogOperations');
 
 async function scrapeWayneData(access_id) {
-  const url = `https://wayne.edu/search-advanced?accessid=${access_id}`;
+  const URL = `https://wayne.edu/search-advanced?accessid=${access_id}`;
 
   try {
-    const { data } = await axios.get(url);
+    const { data } = await axios.get(URL);
     const $ = cheerio.load(data);
 
     const results = [];
@@ -17,7 +17,7 @@ async function scrapeWayneData(access_id) {
       const tds = $(row).find('td');
 
       // Name is in the first cell, inside an <a>:
-      const rawName = tds.eq(0).find('a').text().trim(); // e.g. "Garapati, Prem Prathyush"
+      const rawName = tds.eq(0).find('a').text().trim(); // e.g. "Smith, John Robert"
       // Split into last/first if it’s always "LastName, FirstName"
       let firstName = '';
       let lastName = '';
