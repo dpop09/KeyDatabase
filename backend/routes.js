@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const dbOperations = require('./dbOperations');
 const errorLogOperations = require('./errorLogOperations');
+const { scrapeWayneData } = require('./scrape');
 const os = require('os');
 
 const router = express.Router();
@@ -332,5 +333,21 @@ router.post('/delete-user', async (request, response) => {
         response.status(500).send(error);
     }
 });
+
+router.post('/get-info-from-access-id', async (request, response) => {
+    try {
+        const {input_access_id } = request.body;
+        let result = await scrapeWayneData(input_access_id)
+        // ensure result is an array and check if it's empty
+        if (!Array.isArray(result) || result.length === 0) {
+            result = [{ firstName: null, lastName: null }];
+        }
+        response.status(200).send({first_name : result[0].firstName, last_name : result[0].lastName})
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+})
 
 module.exports = router;

@@ -1,4 +1,7 @@
+create database keysdb;
+
 use keysdb;
+
 create table `keys`(
     tag_number int(11),
     tag_color varchar(50),
@@ -39,11 +42,12 @@ create table users(
     last_name varchar(50),
     title varchar(50),
     PRIMARY KEY(access_id)
-)
+);
 
 create table history(
-    id SERIAL PRIMARY KEY,
+    log_id SERIAL,
     access_id varchar(6),
-    action text,
-    date DATE
+    log_action text,
+    log_date DATE,
+    PRIMARY KEY(log_id)
 )

@@ -121,6 +121,40 @@ function EditRequestForm() {
         }).catch(err => console.log(err));
     }
 
+    const getInfoFromAccessId = async (event) => {
+        event.preventDefault();
+        const input_access_id = document.getElementById('EditRequestForm-input-access-id').value
+        // regular expression to match exactly 2 letters followed by 4 digits
+        const regex = /^[A-Za-z]{2}\d{4}$/;
+        // check if input_access_id matches the pattern
+        if (!regex.test(input_access_id)) {
+            // clear the inputs if the input access id doesn't follow format
+            document.getElementById('EditRequestForm-input-first-name').value = null;
+            document.getElementById('EditRequestForm-input-last-name').value = null;
+            return
+        }
+        try {
+            const response = await fetch('http://localhost:8081/get-info-from-access-id', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ input_access_id })
+            })
+            if (response.ok) { // if the response is successful
+                const data = await response.json();
+                console.log(data)
+                // setting the input values dynamically
+                document.getElementById('EditRequestForm-input-first-name').value = data.first_name;
+                document.getElementById('EditRequestForm-input-last-name').value = data.last_name;
+            } else { // if the response is unsuccessful
+                console.log("Internal Server Error. Please try again later.");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <>
             <NavBar />
@@ -131,8 +165,8 @@ function EditRequestForm() {
                             <h2>EDIT REQUEST FORM</h2>
                         </div>
                         <div id="EditRequestForm-div-row-flex-box">
-                            <h3>Form ID:</h3>
-                            <input id="EditRequestForm-input-form-id" type="text" placeholder={requestFormData.form_id} disabled />
+                            <h3>Access ID:</h3>
+                            <input id="EditRequestForm-input-access-id" type="text" placeholder={requestFormData.access_id} onChange={getInfoFromAccessId} />
                         </div>
                         <div id="EditRequestForm-div-row-flex-box-even">
                             <h3>First Name:</h3>
@@ -143,30 +177,26 @@ function EditRequestForm() {
                             <input id="EditRequestForm-input-last-name" type="text" placeholder={requestFormData.last_name} />
                         </div>
                         <div id="EditRequestForm-div-row-flex-box-even">
-                            <h3>Access ID:</h3>
-                            <input id="EditRequestForm-input-access-id" type="text" placeholder={requestFormData.access_id} />
-                        </div>
-                        <div id="EditRequestForm-div-row-flex-box">
                             <h3>Date Signed:</h3>
                             <input id="EditRequestForm-input-date-signed" type="date" placeholder={requestFormData.date_signed} />
                         </div>
-                        <div id="EditRequestForm-div-row-flex-box-even">
+                        <div id="EditRequestForm-div-row-flex-box">
                             <h3>Assigned Key 1:</h3>
                             <input id="EditRequestForm-input-key-number" type="text" placeholder={requestFormData.assigned_key_1} disabled/>
                         </div>
-                        <div id="EditRequestForm-div-row-flex-box">
+                        <div id="EditRequestForm-div-row-flex-box-even">
                             <h3>Assigned Key 2:</h3>
                             <input id="EditRequestForm-input-key-number" type="text" placeholder={requestFormData.assigned_key_2} disabled/>
                         </div>
-                        <div id="EditRequestForm-div-row-flex-box-even">
+                        <div id="EditRequestForm-div-row-flex-box">
                             <h3>Assigned Key 3:</h3>
                             <input id="EditRequestForm-input-key-number" type="text" placeholder={requestFormData.assigned_key_3} disabled/>
                         </div>
-                        <div id="EditRequestForm-div-row-flex-box">
+                        <div id="EditRequestForm-div-row-flex-box-even">
                             <h3>Assigned Key 4:</h3>
                             <input id="EditRequestForm-input-key-number" type="text" placeholder={requestFormData.assigned_key_4} disabled/>
                         </div>
-                        <div id="EditRequestForm-div-row-flex-box-even">
+                        <div id="EditRequestForm-div-row-flex-box">
                             <h3>PDF File:</h3>
                             <input id="EditRequestForm-input-file" type="file" accept=".pdf" onChange={handleFileChange} />
                         </div>

@@ -77,7 +77,7 @@ function Home() {
     }
 
     const getReadableDateAssigned = (d) => {
-        if (!d.date_assigned) {
+        if (d.date_assigned === '0000-00-00') {
             return
         }
         // Create a Date object from the ISO date string

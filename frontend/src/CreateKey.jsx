@@ -171,6 +171,40 @@ function CreateKey() {
         getKeyRequestForms();
     }
 
+    const getInfoFromAccessId = async (event) => {
+        event.preventDefault();
+        const input_access_id = document.getElementById('CreateKey-input-key_holder_access_id').value
+        // regular expression to match exactly 2 letters followed by 4 digits
+        const regex = /^[A-Za-z]{2}\d{4}$/;
+        // check if input_access_id matches the pattern
+        if (!regex.test(input_access_id)) {
+            // clear the inputs if the input access id doesn't follow format
+            document.getElementById('CreateKey-input-key_holder_fname').value = null;
+            document.getElementById('CreateKey-input-key_holder_lname').value = null;
+            return
+        }
+        try {
+            const response = await fetch('http://localhost:8081/get-info-from-access-id', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ input_access_id })
+            })
+            if (response.ok) { // if the response is successful
+                const data = await response.json();
+                console.log(data)
+                // setting the input values dynamically
+                document.getElementById('CreateKey-input-key_holder_fname').value = data.first_name;
+                document.getElementById('CreateKey-input-key_holder_lname').value = data.last_name;
+            } else { // if the response is unsuccessful
+                console.log("Internal Server Error. Please try again later.");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     // function to get the readable signed date
     const getReadableDateSigned = (d) => {
         if (d.date_signed === '0000-00-00') {
@@ -235,16 +269,16 @@ function CreateKey() {
                             <h2>KEY HOLDER</h2>
                         </div>
                         <div id="CreateKey-div-row-flex-box">
-                            <h3>Key Holder's First Name:</h3>
-                            <input type="text" id="CreateKey-input-key_holder_fname" />
+                            <h3>Access ID:</h3>
+                            <input type="text" id="CreateKey-input-key_holder_access_id" onChange={getInfoFromAccessId} />
                         </div>
                         <div id="CreateKey-div-row-flex-box-even">
-                            <h3>Key Holder's Last Name:</h3>
-                            <input type="text" id="CreateKey-input-key_holder_lname" />
+                            <h3>First Name:</h3>
+                            <input type="text" id="CreateKey-input-key_holder_fname" />
                         </div>
                         <div id="CreateKey-div-row-flex-box">
-                            <h3>Key Holder's Access ID:</h3>
-                            <input type="text" id="CreateKey-input-key_holder_access_id" />
+                            <h3>Last Name:</h3>
+                            <input type="text" id="CreateKey-input-key_holder_lname" />
                         </div>
                         <div id="CreateKey-div-row-flex-box-even">
                             <h3>Date Assigned:</h3>
