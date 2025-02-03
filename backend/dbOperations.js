@@ -44,10 +44,10 @@ const dbOperations = {
             console.log(error);
         }
     },
-    search: async function (column, row) {
+    searchKey: async function (row) {
         try {
-            const sql = 'SELECT * FROM `Keys` WHERE ?? = ?';
-            const values = [column, row];
+            const sql = 'SELECT * FROM `keys` WHERE tag_number = ? OR core_number = ? OR room_number = ? OR room_type = ? OR key_number = ? OR key_holder_fname = ? OR key_holder_lname = ? OR date_assigned = ? OR key_holder_access_id = ?';
+            const values = [row, row, row, row, row, row, row, row, row];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {
@@ -331,10 +331,10 @@ const dbOperations = {
             console.log(error);
         }
     },
-    searchRequestForm: async function (column, row) {
+    searchRequestForm: async function (row) {
         try {
-            const sql = 'SELECT * FROM `key_request_form` WHERE ?? = ?';
-            const values = [column, row];
+            const sql = 'SELECT * FROM `key_request_form` WHERE first_name = ? OR last_name = ? OR access_id = ? OR date_signed = ? OR assigned_key_1 = ? OR assigned_key_2 = ? OR assigned_key_3 = ? OR assigned_key_4 = ?';
+            const values = [row, row, row, row, row, row, row, row];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {
@@ -556,6 +556,51 @@ const dbOperations = {
             return response;
         } catch (error) {
             errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
+    advancedSearchRequestForm: async function(input_fname, input_lname, input_access_id, input_date_signed, input_assigned_key) {
+        try {
+            // Start the base query
+            let sql = "SELECT * FROM key_request_form WHERE 1=1";
+            let values = [];
+    
+            // Dynamically add filters based on provided input values
+            if (input_fname) {
+                sql += " AND first_name = ?";
+                values.push(input_fname);
+            }
+            if (input_lname) {
+                sql += " AND last_name = ?";
+                values.push(input_lname);
+            }
+            if (input_access_id) {
+                sql += " AND access_id = ?";
+                values.push(input_access_id);
+            }
+            if (input_date_signed) {
+                sql += " AND date_signed = ?";
+                values.push(input_date_signed);
+            }
+            if (input_assigned_key) {
+                sql += " AND (assigned_key_1 = ? OR assigned_key_2 = ? OR assigned_key_3 = ? OR assigned_key_4 = ?)";
+                values.push(input_assigned_key, input_assigned_key, input_assigned_key, input_assigned_key);
+            }
+    
+            // Execute the query
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+    
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error);
             console.log(error);
         }
     }

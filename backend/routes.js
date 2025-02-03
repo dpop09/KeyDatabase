@@ -51,10 +51,10 @@ router.get('/getall', async (request, response) => {
     }
 });
 
-router.post('/search', async (request, response) => {
+router.post('/search-key', async (request, response) => {
     try {
-        const { column, row } = request.body;
-        const result = await dbOperations.search(column, row);
+        const { row } = request.body;
+        const result = await dbOperations.searchKey(row);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -222,8 +222,8 @@ router.post('/create-key', async (request, response) => {
 
 router.post('/search-request-form', async (request, response) => {
     try {
-        const { column, row } = request.body;
-        const result = await dbOperations.searchRequestForm(column, row);
+        const { row } = request.body;
+        const result = await dbOperations.searchRequestForm(row);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -343,6 +343,18 @@ router.post('/get-info-from-access-id', async (request, response) => {
             result = [{ firstName: null, lastName: null }];
         }
         response.status(200).send({first_name : result[0].firstName, last_name : result[0].lastName})
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+})
+
+router.post('/advanced-search-request-form', async (request, response) => {
+    try {
+        const { input_fname, input_lname, input_access_id, input_date_signed, input_assigned_key } = request.body;
+        const result = await dbOperations.advancedSearchRequestForm(input_fname, input_lname, input_access_id, input_date_signed, input_assigned_key)
+        response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
         console.log(error);
