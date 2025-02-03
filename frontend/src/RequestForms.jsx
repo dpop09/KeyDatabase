@@ -20,6 +20,11 @@ function RequestForms() {
 
     const [data, setData] = useState([]);
     const [imageData, setImageData] = useState(null);
+    const [displayAdvancedSearch, setDisplayAdvancedSearch] = useState(false)
+
+    const toggleDisplayAdvancedSearch = () => {
+        setDisplayAdvancedSearch(!displayAdvancedSearch)
+    }
 
     const navigate = useNavigate();
     const handleAddRequestForm = () => {
@@ -64,9 +69,8 @@ function RequestForms() {
 
     const handleSearch = async (event) => {
         event.preventDefault();
-        const column = document.getElementById('RequestForms-select-column').value;
         const row = document.getElementById('RequestForms-input-search-row').value;
-        if (!column || !row) { // if the column or row is empty
+        if (!row) { // if the row is empty
             alert('Please enter a column and row to search.');
             return
         }
@@ -76,7 +80,7 @@ function RequestForms() {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({ column: column, row: row })
+                body: JSON.stringify({ row: row })
             })
             const data = await response.json();
             if (data) { // if the response is successful
@@ -87,11 +91,51 @@ function RequestForms() {
         } catch (error) {
             console.log(error);
         }
-        return
     }
 
     const handleClearSearch = async (event) => {
         event.preventDefault();
+        document.getElementById('RequestForms-input-search-row').value = null
+        getAllRequestForms();
+    }
+
+    const handleAdvancedSearch = async (event) => {
+        event.preventDefault();
+        const input_fname = document.getElementById('RequestForms-input-advanced-search-fname').value;
+        const input_lname = document.getElementById('RequestForms-input-advanced-search-lname').value;
+        const input_access_id = document.getElementById('RequestForms-input-advanced-search-access-id').value;
+        const input_date_signed = document.getElementById('RequestForms-input-advanced-search-date-signed').value;
+        const input_assigned_key = document.getElementById('RequestForms-input-advanced-search-assigned-key').value;
+        // do nothing if none of the fields are filled
+        if (!input_fname && !input_lname && !input_access_id && !input_date_signed && !input_assigned_key) {
+            return
+        }
+        try {
+            const response = await fetch('http://localhost:8081/advanced-search-request-form', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ input_fname, input_lname, input_access_id, input_date_signed, input_assigned_key })
+            })
+            const data = await response.json();
+            if (data) { // if the response is successful
+                setData(data);
+            } else { // if the response is unsuccessful
+                alert("Internal Server Error. Please try again later.");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleClearAdvancedSearch = async (event) => {
+        event.preventDefault();
+        document.getElementById('RequestForms-input-advanced-search-fname').value = null
+        document.getElementById('RequestForms-input-advanced-search-lname').value = null
+        document.getElementById('RequestForms-input-advanced-search-access-id').value = null
+        document.getElementById('RequestForms-input-advanced-search-date-signed').value = null
+        document.getElementById('RequestForms-input-advanced-search-assigned-key').value = null
         getAllRequestForms();
     }
 
@@ -162,24 +206,49 @@ function RequestForms() {
             <div id="RequestForms-div-container">
                 <div id="RequestForms-div-top-flex-box">
                     <div id="RequestForms-div-search-container">
-                        <h3>Column:</h3>
-                        <select id="RequestForms-select-column">
-                            <option value="first_name">First Name</option>
-                            <option value="last_name">Last Name</option>
-                            <option value="access_id">Access ID</option>
-                            <option value="date_signed">Date Signed</option>
-                            <option value="assigned_key_1">Assigned Key 1</option>
-                            <option value="assigned_key_2">Assigned Key 2</option>
-                            <option value="assigned_key_3">Assigned Key 3</option>
-                            <option value="assigned_key_4">Assigned Key 4</option>
-                        </select>
-                        <h3>Search:</h3>
+                        <h2>General Search:</h2>
                         <input id="RequestForms-input-search-row" type="text" />
                         <button id="RequestForms-button-search" onClick={handleSearch}>Search</button>
                         <button id="RequestForms-button-clear-search" onClick={handleClearSearch}>Clear</button>
                     </div>
-                    <button id="RequestForms-button-add-form" onClick={handleAddRequestForm}/>
+                    <div id="RequestForms-div-action-buttons">
+                        <button id="RequestForms-button-advanced-search" onClick={toggleDisplayAdvancedSearch} />
+                        <button id="RequestForms-button-add-form" onClick={handleAddRequestForm}/>
+                    </div>
                 </div>
+                {displayAdvancedSearch && (
+                    <div id="RequestForms-div-advanced-search">
+                        <div id="RequestForms-div-advanced-search-top">
+                            <h2>Advanced Search:</h2>
+                            <div id="RequestForms-div-advanced-search-buttons">
+                                <button id="RequestForms-button-search" onClick={handleAdvancedSearch}>Search</button>
+                                <button id="RequestForms-button-clear-search" onClick={handleClearAdvancedSearch}>Clear</button>
+                            </div>
+                        </div>
+                        <div id="RequestForms-div-advanced-search-flex-box-1">
+                            <div id="RequestForms-div-advanced-search-flex-box-2">
+                                <label id="RequestForms-label-advanced-search">First Name:</label>
+                                <input id="RequestForms-input-advanced-search-fname" />
+                            </div>
+                            <div id="RequestForms-div-advanced-search-flex-box-2">
+                                <label id="RequestForms-label-advanced-search">Last Name:</label>
+                                <input id="RequestForms-input-advanced-search-lname" />
+                            </div>
+                            <div id="RequestForms-div-advanced-search-flex-box-2">
+                                <label id="RequestForms-label-advanced-search">Access Id:</label>
+                                <input id="RequestForms-input-advanced-search-access-id" />
+                            </div>
+                            <div id="RequestForms-div-advanced-search-flex-box-2">
+                                <label id="RequestForms-label-advanced-search">Date Signed:</label>
+                                <input type="date" id="RequestForms-input-advanced-search-date-signed" />
+                            </div>
+                            <div id="RequestForms-div-advanced-search-flex-box-2">
+                                <label id="RequestForms-label-advanced-search">Assigned Key:</label>
+                                <input id="RequestForms-input-advanced-search-assigned-key" />
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <div id="RequestForms-div-flex-box">
                     <div id="RequestForms-div-table-container">
                         <table id="RequestForms-table">

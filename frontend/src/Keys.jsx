@@ -41,19 +41,17 @@ function Home() {
 
     const handleSearch = async (event) => {
         event.preventDefault();
-        const column = document.getElementById('Keys-select-column').value;
         const row = document.getElementById('Keys-input-search-row').value;
-        if (!column || !row) {
-            alert('Please fill both column and row');
+        if (!row) {
             return
         }
         try {
-            const response = await fetch('http://localhost:8081/search', { // send a POST request to the backend route
+            const response = await fetch('http://localhost:8081/search-key', { // send a POST request to the backend route
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({ column: column, row: row })
+                body: JSON.stringify({ row: row })
             })
             const data = await response.json();
             if (data) { // if the response is successful
@@ -68,6 +66,7 @@ function Home() {
 
     const handleClearSearch = async (event) => {
         event.preventDefault();
+        document.getElementById('Keys-input-search-row').value = null
         getAllKeys();
     }
 
@@ -110,19 +109,8 @@ function Home() {
             <div id="Keys-div-container">
                 <div id="Keys-div-top-flex-box">
                     <div id="Keys-div-search-container">
-                        <h3>Column:</h3>
-                        <select id="Keys-select-column">
-                            <option value="tag_number">Tag Number</option>
-                            <option value="core_number">Core Number</option>
-                            <option value="room_number">Room Number</option>
-                            <option value="room_type">Room Type</option>
-                            <option value="key_number">Key Number</option>
-                            <option value="key_holder_fname">Holder's First Name</option>
-                            <option value="key_holder_lname">Holder's Last Name</option>
-                            <option value="key_holder_access_id">Holder's Access ID</option>
-                            <option value="date_assigned">Date Assigned</option>
-                        </select>
-                        <h3>Search:</h3>
+
+                        <h2>General Search:</h2>
                         <input id="Keys-input-search-row" type="text" />
                         <button id="Keys-button-search" onClick={handleSearch}>Search</button>
                         <button id="Keys-button-clear-search" onClick={handleClearSearch}>Clear</button>

@@ -95,6 +95,7 @@ Keys.jsx component styling
 }
 
 #Keys-div-search-container {
+  width: 50%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -776,29 +777,9 @@ EditKey.jsx component styling
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-}
-#EditKey-div-assign-form-search-column {
-  padding-left: 1rem;
-  width: 40%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-}
-#EditKey-div-assign-form-search-row {
-  padding-right: 1rem;
-  width: 60%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-}
-#EditKey-select-assign-form-search {
-  font-size: medium;
-  width: 100%;
-  height: 2.35rem;
-  border-radius: 5px;
-  margin: 0.5rem;
+  margin-left: .5rem;
 }
 #EditKey-input-assign-form-search {
   font-size: medium;
@@ -806,6 +787,11 @@ EditKey.jsx component styling
   height: 2.35rem;
   border-radius: 5px;
   margin: 0.5rem;
+}
+#EditKey-div-search-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 #EditKey-button-assign-form-search,
 #EditKey-button-assign-form-clear-search {
@@ -1038,6 +1024,7 @@ RequestForms.jsx component styling
 }
 
 #RequestForms-div-search-container {
+  width: 50%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -1073,6 +1060,13 @@ RequestForms.jsx component styling
   transition: 0.3s;
 }
 
+#RequestForms-div-action-buttons {
+  width: 7.5%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
 #RequestForms-button-add-form {
   width: 52px;
   height: 52px;
@@ -1086,6 +1080,66 @@ RequestForms.jsx component styling
   background-image: url('./assets/add_key_request_form_icon_hover.png');
   cursor: pointer;
   transition: .3s;
+}
+#RequestForms-button-advanced-search {
+  width: 52px;
+  height: 52px;
+  background-color: transparent;
+  background-image: url('./assets/advanced_search_icon_default.png');
+  background-size: cover;
+  border: none;
+  outline: none;
+}
+#RequestForms-button-advanced-search:hover {
+  background-image: url('./assets/advanced_search_icon_hover.png');
+  cursor: pointer;
+  transition: .3s;
+}
+
+#RequestForms-div-advanced-search {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-top: 2px solid black;
+  margin-bottom: 1rem;
+}
+#RequestForms-div-advanced-search-top {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+#RequestForms-div-advanced-search-buttons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+#RequestForms-div-advanced-search-flex-box-1 {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+#RequestForms-div-advanced-search-flex-box-2 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+#RequestForms-label-advanced-search {
+  font-size: large;
+  font-weight: bold;
+  margin-right: .5rem;
+}
+#RequestForms-input-advanced-search-fname,
+#RequestForms-input-advanced-search-lname,
+#RequestForms-input-advanced-search-access-id,
+#RequestForms-input-advanced-search-date-signed,
+#RequestForms-input-advanced-search-assigned-key {
+  width: 50%;
+  font-size: larger;
+  height: 2.35rem;
+  border-radius: 5px;
 }
 
 #RequestForms-div-flex-box {
