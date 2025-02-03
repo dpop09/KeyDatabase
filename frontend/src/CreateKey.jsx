@@ -137,12 +137,10 @@ function CreateKey() {
     // function to search for a request form
     const handleSearchForm = async (event) => {
         event.preventDefault();
-        // get values from the input fields
-        const column = document.getElementById('CreateKey-select-assign-form-search').value;
+        // get value from the input field
         const row = document.getElementById('CreateKey-input-assign-form-search').value;
-        // if any of the input fields are empty, show an alert
-        if (!column || !row) {
-            alert("Please fill out all required fields.");
+        // if search is empty, do nothing
+        if (!row) {
             return
         }
         // send a POST request to the backend route
@@ -152,7 +150,7 @@ function CreateKey() {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({ column, row })
+                body: JSON.stringify({ row })
             })
             if (response.ok) { // if the response is successful
                 const data = await response.json();
@@ -168,6 +166,7 @@ function CreateKey() {
     // function to clear the search
     const handleClearSearch = async (event) => {
         event.preventDefault();
+        document.getElementById('CreateKey-input-assign-form-search').value = null
         getKeyRequestForms();
     }
 
@@ -297,25 +296,12 @@ function CreateKey() {
                     <div id="CreateKey-div-assgin-form-lower-container">
                         <div id="CreateKey-div-assign-form-table-container">
                             <div id="CreateKey-div-assign-form-search">
-                                <div id="CreateKey-div-assign-form-search-column">
-                                    <h3>Column:</h3>
-                                    <select id="CreateKey-select-assign-form-search">
-                                        <option value="first_name">First Name</option>
-                                        <option value="last_name">Last Name</option>
-                                        <option value="access_id">Access ID</option>
-                                        <option value="date_signed">Date Signed</option>
-                                        <option value="assigned_key_1">Assigned Key 1</option>
-                                        <option value="assigned_key_2">Assigned Key 2</option>
-                                        <option value="assigned_key_3">Assigned Key 3</option>
-                                        <option value="assigned_key_4">Assigned Key 4</option>
-                                    </select>
+                                <h3>Search:</h3>
+                                <input type="text" id="CreateKey-input-assign-form-search" placeholder="Search..."/>
+                                <div id="CreateKey-div-search-buttons">
+                                    <button id="CreateKey-button-assign-form-search" onClick={handleSearchForm}>Search</button>
+                                    <button id="CreateKey-button-assign-form-clear-search" onClick={handleClearSearch}>Clear</button>
                                 </div>
-                                <div id="CreateKey-div-assign-form-search-row">
-                                    <h3>Search:</h3>
-                                    <input type="text" id="CreateKey-input-assign-form-search" placeholder="Search..."/>
-                                </div>
-                                <button id="CreateKey-button-assign-form-search" onClick={handleSearchForm}>Search</button>
-                                <button id="CreateKey-button-assign-form-clear-search" onClick={handleClearSearch}>Clear</button>
                             </div>
                             <div id="CreateKey-div-table-container">
                                 <table id="CreateKey-table">

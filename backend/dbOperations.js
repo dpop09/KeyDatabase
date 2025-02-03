@@ -483,10 +483,10 @@ const dbOperations = {
             console.log(error);
         }
     },
-    searchUser: async function (column, row) {
+    searchUser: async function (row) {
         try {
-            const sql = 'SELECT * FROM `users` WHERE ?? = ?';
-            const values = [column, row];
+            const sql = 'SELECT * FROM `users` WHERE access_id = ? OR permission = ? OR first_name = ? OR last_name = ? OR title = ?';
+            const values = [row, row, row, row, row];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {

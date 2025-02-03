@@ -300,8 +300,8 @@ router.post('/add-user', async (request, response) => {
 
 router.post('/search-user', async (request, response) => {
     try {
-        const { column, row } = request.body;
-        const result = await dbOperations.searchUser(column, row);
+        const { row } = request.body;
+        const result = await dbOperations.searchUser(row);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
