@@ -54,7 +54,7 @@ function AddRequestForm() {
         const date_signed = document.getElementById('AddRequestForm-input-date-signed').value;
         const file = document.getElementById('AddRequestForm-input-file').files[0];
         // check if all required fields are filled
-        if (!first_name || !last_name || !access_id || !date_signed || !file) {
+        if (!first_name || !last_name || !access_id || !file) {
             alert("Please fill out all required fields.");
             return;
         }
@@ -82,6 +82,40 @@ function AddRequestForm() {
         }
     }
 
+    const getInfoFromAccessId = async (event) => {
+        event.preventDefault();
+        const input_access_id = document.getElementById('AddRequestForm-input-access-id').value
+        // regular expression to match exactly 2 letters followed by 4 digits
+        const regex = /^[A-Za-z]{2}\d{4}$/;
+        // check if input_access_id matches the pattern
+        if (!regex.test(input_access_id)) {
+            // clear the inputs if the input access id doesn't follow format
+            document.getElementById('AddRequestForm-input-first-name').value = null;
+            document.getElementById('AddRequestForm-input-last-name').value = null;
+            return
+        }
+        try {
+            const response = await fetch('http://localhost:8081/get-info-from-access-id', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ input_access_id })
+            })
+            if (response.ok) { // if the response is successful
+                const data = await response.json();
+                console.log(data)
+                // setting the input values dynamically
+                document.getElementById('AddRequestForm-input-first-name').value = data.first_name;
+                document.getElementById('AddRequestForm-input-last-name').value = data.last_name;
+            } else { // if the response is unsuccessful
+                console.log("Internal Server Error. Please try again later.");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <>
             <NavBar />
@@ -92,23 +126,23 @@ function AddRequestForm() {
                             <h2>ADD INFORMATION</h2>
                         </div>
                         <div id="AddRequestForm-div-row-flex-box">
-                            <h2>First Name: </h2>
-                            <input type="text" id="AddRequestForm-input-first-name" name="first_name" />
+                            <h2>*Access ID: </h2>
+                            <input type="text" id="AddRequestForm-input-access-id" name="access_id" onChange={getInfoFromAccessId} />
                         </div>
                         <div id="AddRequestForm-div-row-flex-box-even">
-                            <h2>Last Name: </h2>
-                            <input type="text" id="AddRequestForm-input-last-name" name="last_name" />
+                            <h2>*First Name: </h2>
+                            <input type="text" id="AddRequestForm-input-first-name" name="first_name" />
                         </div>
                         <div id="AddRequestForm-div-row-flex-box">
-                            <h2>Access ID: </h2>
-                            <input type="text" id="AddRequestForm-input-access-id" name="access_id" />
+                            <h2>*Last Name: </h2>
+                            <input type="text" id="AddRequestForm-input-last-name" name="last_name" />
                         </div>
                         <div id="AddRequestForm-div-row-flex-box-even">
                             <h2>Date Signed: </h2>
                             <input type="date" id="AddRequestForm-input-date-signed" name="date_signed" />
                         </div>
                         <div id="AddRequestForm-div-row-flex-box">
-                            <h2>PDF File: </h2>
+                            <h2>*PDF File: </h2>
                             <input type="file" id="AddRequestForm-input-file" accept="application/pdf" onChange={handleFileChange} />
                         </div>
                     </div>

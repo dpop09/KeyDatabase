@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const dbOperations = require('./dbOperations');
 const errorLogOperations = require('./errorLogOperations');
+const { scrapeWayneData } = require('./scrape');
 const os = require('os');
 
 const router = express.Router();
@@ -24,7 +25,7 @@ router.get('/get-access-id', async (request, response) => {
         var access_id = os.userInfo().username;
         var permission = "Unauthorized";
 
-        //access_id = "hc7822" // for testing
+        access_id = "hc7822" // for testing
 
         // check if the detected accessID is listed in the database
         const isAccessIdWhiteListed = await dbOperations.isAccessIdWhiteListed(access_id);
@@ -50,10 +51,10 @@ router.get('/getall', async (request, response) => {
     }
 });
 
-router.post('/search', async (request, response) => {
+router.post('/search-key', async (request, response) => {
     try {
-        const { column, row } = request.body;
-        const result = await dbOperations.search(column, row);
+        const { row } = request.body;
+        const result = await dbOperations.searchKey(row);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -221,8 +222,8 @@ router.post('/create-key', async (request, response) => {
 
 router.post('/search-request-form', async (request, response) => {
     try {
-        const { column, row } = request.body;
-        const result = await dbOperations.searchRequestForm(column, row);
+        const { row } = request.body;
+        const result = await dbOperations.searchRequestForm(row);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -233,16 +234,26 @@ router.post('/search-request-form', async (request, response) => {
 
 router.post('/update-key-request-form', upload.single('file'), async (request, response) => {
     try {
-        const {form_id, first_name, last_name, access_id, date_signed} = request.body;
-        const file_buffer = request.file.buffer;
-        const result = await dbOperations.updateKeyRequestForm(form_id, first_name, last_name, access_id, date_signed, file_buffer);
+        const { form_id, first_name, last_name, access_id, date_signed } = request.body;
+        const file_buffer = request.file ? request.file.buffer : null;
+        let result = null;
+        if (file_buffer) { // if the user did upload a new pdf file, we replace the old pdf file
+            result = await dbOperations.updateKeyRequestFormWithFileBuffer(
+                form_id, first_name, last_name, access_id, date_signed, file_buffer
+            );
+        } else { // otherwise, the user left the upload file blank and we fallback on the old one
+            result = await dbOperations.updateKeyRequestFormWithoutFileBuffer(
+                form_id, first_name, last_name, access_id, date_signed
+            );
+        }
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
-        console.log(error);
+        console.error(error);
         response.status(500).send(error);
     }
 });
+
 
 router.post('/delete-key-request-form', async (request, response) => {
     try {
@@ -289,8 +300,8 @@ router.post('/add-user', async (request, response) => {
 
 router.post('/search-user', async (request, response) => {
     try {
-        const { column, row } = request.body;
-        const result = await dbOperations.searchUser(column, row);
+        const { row } = request.body;
+        const result = await dbOperations.searchUser(row);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -322,5 +333,45 @@ router.post('/delete-user', async (request, response) => {
         response.status(500).send(error);
     }
 });
+
+router.post('/get-info-from-access-id', async (request, response) => {
+    try {
+        const {input_access_id } = request.body;
+        let result = await scrapeWayneData(input_access_id)
+        // ensure result is an array and check if it's empty
+        if (!Array.isArray(result) || result.length === 0) {
+            result = [{ firstName: null, lastName: null }];
+        }
+        response.status(200).send({first_name : result[0].firstName, last_name : result[0].lastName})
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+})
+
+router.post('/advanced-search-request-form', async (request, response) => {
+    try {
+        const { input_fname, input_lname, input_access_id, input_date_signed, input_assigned_key } = request.body;
+        const result = await dbOperations.advancedSearchRequestForm(input_fname, input_lname, input_access_id, input_date_signed, input_assigned_key)
+        response.status(200).send(result);
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+})
+
+router.post('/advanced-search-key', async (request, response) => {
+    try {
+        const { input_tag_num, input_core, input_room_num, input_room_type, input_key_num, input_availability, input_fname, input_lname, input_access_id, input_date_assigned } = request.body;
+        const result = await dbOperations.advancedSearchKey(input_tag_num, input_core, input_room_num, input_room_type, input_key_num, input_availability, input_fname, input_lname, input_access_id, input_date_assigned);
+        response.status(200).send(result);
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+})
 
 module.exports = router;

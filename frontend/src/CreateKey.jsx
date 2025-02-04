@@ -137,12 +137,10 @@ function CreateKey() {
     // function to search for a request form
     const handleSearchForm = async (event) => {
         event.preventDefault();
-        // get values from the input fields
-        const column = document.getElementById('CreateKey-select-assign-form-search').value;
+        // get value from the input field
         const row = document.getElementById('CreateKey-input-assign-form-search').value;
-        // if any of the input fields are empty, show an alert
-        if (!column || !row) {
-            alert("Please fill out all required fields.");
+        // if search is empty, do nothing
+        if (!row) {
             return
         }
         // send a POST request to the backend route
@@ -152,7 +150,7 @@ function CreateKey() {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({ column, row })
+                body: JSON.stringify({ row })
             })
             if (response.ok) { // if the response is successful
                 const data = await response.json();
@@ -168,12 +166,47 @@ function CreateKey() {
     // function to clear the search
     const handleClearSearch = async (event) => {
         event.preventDefault();
+        document.getElementById('CreateKey-input-assign-form-search').value = null
         getKeyRequestForms();
+    }
+
+    const getInfoFromAccessId = async (event) => {
+        event.preventDefault();
+        const input_access_id = document.getElementById('CreateKey-input-key_holder_access_id').value
+        // regular expression to match exactly 2 letters followed by 4 digits
+        const regex = /^[A-Za-z]{2}\d{4}$/;
+        // check if input_access_id matches the pattern
+        if (!regex.test(input_access_id)) {
+            // clear the inputs if the input access id doesn't follow format
+            document.getElementById('CreateKey-input-key_holder_fname').value = null;
+            document.getElementById('CreateKey-input-key_holder_lname').value = null;
+            return
+        }
+        try {
+            const response = await fetch('http://localhost:8081/get-info-from-access-id', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ input_access_id })
+            })
+            if (response.ok) { // if the response is successful
+                const data = await response.json();
+                console.log(data)
+                // setting the input values dynamically
+                document.getElementById('CreateKey-input-key_holder_fname').value = data.first_name;
+                document.getElementById('CreateKey-input-key_holder_lname').value = data.last_name;
+            } else { // if the response is unsuccessful
+                console.log("Internal Server Error. Please try again later.");
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     // function to get the readable signed date
     const getReadableDateSigned = (d) => {
-        if (!d.date_signed) {
+        if (d.date_signed === '0000-00-00') {
             return
         }
         // Create a Date object from the ISO date string
@@ -230,21 +263,21 @@ function CreateKey() {
                             <input type="text" id="CreateKey-input-key_number" />
                         </div>
                     </div>
-                    <div id="CreateKey-div-form-container">
+                    <div id="CreateKey-div-form-container-2">
                         <div id="CreateKey-div-row-flex-box-title">
                             <h2>KEY HOLDER</h2>
                         </div>
                         <div id="CreateKey-div-row-flex-box">
-                            <h3>Key Holder's First Name:</h3>
-                            <input type="text" id="CreateKey-input-key_holder_fname" />
+                            <h3>Access ID:</h3>
+                            <input type="text" id="CreateKey-input-key_holder_access_id" onChange={getInfoFromAccessId} />
                         </div>
                         <div id="CreateKey-div-row-flex-box-even">
-                            <h3>Key Holder's Last Name:</h3>
-                            <input type="text" id="CreateKey-input-key_holder_lname" />
+                            <h3>First Name:</h3>
+                            <input type="text" id="CreateKey-input-key_holder_fname" />
                         </div>
                         <div id="CreateKey-div-row-flex-box">
-                            <h3>Key Holder's Access ID:</h3>
-                            <input type="text" id="CreateKey-input-key_holder_access_id" />
+                            <h3>Last Name:</h3>
+                            <input type="text" id="CreateKey-input-key_holder_lname" />
                         </div>
                         <div id="CreateKey-div-row-flex-box-even">
                             <h3>Date Assigned:</h3>
@@ -252,7 +285,7 @@ function CreateKey() {
                         </div>
                         <div id="CreateKey-div-row-flex-box">
                             <h3>Comments:</h3>
-                            <textarea id="CreateKey-textarea-comments" rows="6" cols="5" />
+                            <textarea id="CreateKey-textarea-comments" rows="5" cols="5" />
                         </div>
                     </div>
                 </div>
@@ -263,25 +296,12 @@ function CreateKey() {
                     <div id="CreateKey-div-assgin-form-lower-container">
                         <div id="CreateKey-div-assign-form-table-container">
                             <div id="CreateKey-div-assign-form-search">
-                                <div id="CreateKey-div-assign-form-search-column">
-                                    <h3>Column:</h3>
-                                    <select id="CreateKey-select-assign-form-search">
-                                        <option value="first_name">First Name</option>
-                                        <option value="last_name">Last Name</option>
-                                        <option value="access_id">Access ID</option>
-                                        <option value="date_signed">Date Signed</option>
-                                        <option value="assigned_key_1">Assigned Key 1</option>
-                                        <option value="assigned_key_2">Assigned Key 2</option>
-                                        <option value="assigned_key_3">Assigned Key 3</option>
-                                        <option value="assigned_key_4">Assigned Key 4</option>
-                                    </select>
+                                <h3>Search:</h3>
+                                <input type="text" id="CreateKey-input-assign-form-search" placeholder="Search..."/>
+                                <div id="CreateKey-div-search-buttons">
+                                    <button id="CreateKey-button-assign-form-search" onClick={handleSearchForm}>Search</button>
+                                    <button id="CreateKey-button-assign-form-clear-search" onClick={handleClearSearch}>Clear</button>
                                 </div>
-                                <div id="CreateKey-div-assign-form-search-row">
-                                    <h3>Search:</h3>
-                                    <input type="text" id="CreateKey-input-assign-form-search" placeholder="Search..."/>
-                                </div>
-                                <button id="CreateKey-button-assign-form-search" onClick={handleSearchForm}>Search</button>
-                                <button id="CreateKey-button-assign-form-clear-search" onClick={handleClearSearch}>Clear</button>
                             </div>
                             <div id="CreateKey-div-table-container">
                                 <table id="CreateKey-table">

@@ -188,10 +188,8 @@ function EditKey() {
 
     const handleSearchForm = async (event) => {
         event.preventDefault();
-        const column = document.getElementById('EditKey-select-assign-form-search').value;
         const row = document.getElementById('EditKey-input-assign-form-search').value;
-        if (!column || !row) {
-            alert("Please fill out all required fields.");
+        if (!row) {
             return
         }
         try {
@@ -200,7 +198,7 @@ function EditKey() {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({ column, row })
+                body: JSON.stringify({ row })
             })
             if (response.ok) { // if the response is successful
                 const data = await response.json();
@@ -215,11 +213,46 @@ function EditKey() {
 
     const handleClearSearch = async (event) => {
         event.preventDefault();
+        document.getElementById('EditKey-input-assign-form-search').value = null
         getKeyRequestForms();
     }
 
+    const getInfoFromAccessId = async (event) => {
+        event.preventDefault();
+        const input_access_id = document.getElementById('EditKey-input-key_holder_access_id').value
+        // regular expression to match exactly 2 letters followed by 4 digits
+        const regex = /^[A-Za-z]{2}\d{4}$/;
+        // check if input_access_id matches the pattern
+        if (!regex.test(input_access_id)) {
+            // clear the inputs if the input access id doesn't follow format
+            document.getElementById('EditKey-input-key_holder_fname').value = null;
+            document.getElementById('EditKey-input-key_holder_lname').value = null;
+            return
+        }
+        try {
+            const response = await fetch('http://localhost:8081/get-info-from-access-id', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ input_access_id })
+            })
+            if (response.ok) { // if the response is successful
+                const data = await response.json();
+                console.log(data)
+                // setting the input values dynamically
+                document.getElementById('EditKey-input-key_holder_fname').value = data.first_name;
+                document.getElementById('EditKey-input-key_holder_lname').value = data.last_name;
+            } else { // if the response is unsuccessful
+                console.log("Internal Server Error. Please try again later.");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const getReadableDateSigned = (d) => {
-        if (!d.date_signed) {
+        if (d.date_signed === '0000-00-00') {
             return
         }
         // Create a Date object from the ISO date string
@@ -316,21 +349,21 @@ function EditKey() {
                             />
                         </div>
                     </div>
-                    <div id="EditKey-div-form-container">
+                    <div id="EditKey-div-form-container-2">
                         <div id="EditKey-div-row-flex-box-title">
                             <h2>EDIT KEY HOLDER</h2>
                         </div>
                         <div id="EditKey-div-row-flex-box">
-                            <h3>Key Holder's First Name:</h3>
-                            <input type="text" id="EditKey-input-key_holder_fname" placeholder={keyData.key_holder_fname} />
+                            <h3>Access ID:</h3>
+                            <input type="text" id="EditKey-input-key_holder_access_id" placeholder={keyData.key_holder_access_id} onChange={getInfoFromAccessId}/>
                         </div>
                         <div id="EditKey-div-row-flex-box-even">
-                            <h3>Key Holder's Last Name:</h3>
-                            <input type="text" id="EditKey-input-key_holder_lname" placeholder={keyData.key_holder_lname} />
+                            <h3>First Name:</h3>
+                            <input type="text" id="EditKey-input-key_holder_fname" placeholder={keyData.key_holder_fname} />
                         </div>
                         <div id="EditKey-div-row-flex-box">
-                            <h3>Key Holder's Access ID:</h3>
-                            <input type="text" id="EditKey-input-key_holder_access_id" placeholder={keyData.key_holder_access_id} />
+                            <h3>Last Name:</h3>
+                            <input type="text" id="EditKey-input-key_holder_lname" placeholder={keyData.key_holder_lname} />
                         </div>
                         <div id="EditKey-div-row-flex-box-even">
                             <h3>Date Assigned:</h3>
@@ -338,7 +371,7 @@ function EditKey() {
                         </div>
                         <div id="EditKey-div-row-flex-box">
                             <h3>Comments:</h3>
-                            <textarea id="EditKey-textarea-comments" rows="6" cols="5" placeholder={keyData.comments} />
+                            <textarea id="EditKey-textarea-comments" rows="5" cols="5" placeholder={keyData.comments} />
                         </div>
                     </div>
                 </div>
@@ -349,25 +382,12 @@ function EditKey() {
                     <div id="EditKey-div-assgin-form-lower-container">
                         <div id="EditKey-div-assign-form-table-container">
                             <div id="EditKey-div-assign-form-search">
-                                <div id="EditKey-div-assign-form-search-column">
-                                    <h3>Column:</h3>
-                                    <select id="EditKey-select-assign-form-search">
-                                        <option value="first_name">First Name</option>
-                                        <option value="last_name">Last Name</option>
-                                        <option value="access_id">Access ID</option>
-                                        <option value="date_signed">Date Signed</option>
-                                        <option value="assigned_key_1">Assigned Key 1</option>
-                                        <option value="assigned_key_2">Assigned Key 2</option>
-                                        <option value="assigned_key_3">Assigned Key 3</option>
-                                        <option value="assigned_key_4">Assigned Key 4</option>
-                                    </select>
+                                <h3>Search:</h3>
+                                <input type="text" id="EditKey-input-assign-form-search" placeholder="Search..."/>
+                                <div id="EditKey-div-search-buttons">
+                                    <button id="EditKey-button-assign-form-search" onClick={handleSearchForm}>Search</button>
+                                    <button id="EditKey-button-assign-form-clear-search" onClick={handleClearSearch}>Clear</button>
                                 </div>
-                                <div id="EditKey-div-assign-form-search-row">
-                                    <h3>Search:</h3>
-                                    <input type="text" id="EditKey-input-assign-form-search" placeholder="Search..."/>
-                                </div>
-                                <button id="EditKey-button-assign-form-search" onClick={handleSearchForm}>Search</button>
-                                <button id="EditKey-button-assign-form-clear-search" onClick={handleClearSearch}>Clear</button>
                             </div>
                             <div id="EditKey-div-table-container">
                                 <table id="EditKey-table">

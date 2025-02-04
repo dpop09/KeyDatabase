@@ -40,10 +40,8 @@ function Users() {
 
     const handleSearch = async (event) => {
         event.preventDefault();
-        const column = document.getElementById('Users-select-column').value;
         const row = document.getElementById('Users-input-search-row').value;
-        if (!column || !row) {
-            alert('Please fill both column and row');
+        if (!row) {
             return
         }
         try {
@@ -52,7 +50,7 @@ function Users() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ column: column, row: row })
+                body: JSON.stringify({ row: row })
             });
             const data = await response.json();
             if (data) { // if the response is successful
@@ -67,6 +65,7 @@ function Users() {
 
     const handleClearSearch = async (event) => {
         event.preventDefault();
+        document.getElementById('Users-input-search-row').value = null
         getAllUserData();
     }
 
@@ -94,15 +93,7 @@ function Users() {
             <div id="Users-div-container">
                 <div id="Users-div-top-flex-box">
                     <div id="Users-div-search-container">
-                        <h3>Column:</h3>
-                        <select id="Users-select-column">
-                            <option value="first_name">First Name</option>
-                            <option value="last_name">Last Name</option>
-                            <option value="access_id">Access ID</option>
-                            <option value="title">Title</option>
-                            <option value="permission">Permissions</option>
-                        </select>
-                        <h3>Search:</h3>
+                        <h2>General Search:</h2>
                         <input id="Users-input-search-row" type="text" />
                         <button id="Users-button-search" onClick={handleSearch}>Search</button>
                         <button id="Users-button-clear-search" onClick={handleClearSearch}>Clear</button>
