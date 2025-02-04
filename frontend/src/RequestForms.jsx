@@ -225,24 +225,24 @@ function RequestForms() {
                                 <button id="RequestForms-button-clear-search" onClick={handleClearAdvancedSearch}>Clear</button>
                             </div>
                         </div>
-                        <div id="RequestForms-div-advanced-search-flex-box-1">
-                            <div id="RequestForms-div-advanced-search-flex-box-2">
+                        <div id="RequestForms-div-advanced-search-inputs-container">
+                            <div class="RequestForms-div-advanced-search-grid-item">
                                 <label id="RequestForms-label-advanced-search">First Name:</label>
                                 <input id="RequestForms-input-advanced-search-fname" />
                             </div>
-                            <div id="RequestForms-div-advanced-search-flex-box-2">
+                            <div class="RequestForms-div-advanced-search-grid-item">
                                 <label id="RequestForms-label-advanced-search">Last Name:</label>
                                 <input id="RequestForms-input-advanced-search-lname" />
                             </div>
-                            <div id="RequestForms-div-advanced-search-flex-box-2">
+                            <div class="RequestForms-div-advanced-search-grid-item">
                                 <label id="RequestForms-label-advanced-search">Access Id:</label>
                                 <input id="RequestForms-input-advanced-search-access-id" />
                             </div>
-                            <div id="RequestForms-div-advanced-search-flex-box-2">
+                            <div class="RequestForms-div-advanced-search-grid-item">
                                 <label id="RequestForms-label-advanced-search">Date Signed:</label>
                                 <input type="date" id="RequestForms-input-advanced-search-date-signed" />
                             </div>
-                            <div id="RequestForms-div-advanced-search-flex-box-2">
+                            <div class="RequestForms-div-advanced-search-grid-item">
                                 <label id="RequestForms-label-advanced-search">Assigned Key:</label>
                                 <input id="RequestForms-input-advanced-search-assigned-key" />
                             </div>

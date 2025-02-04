@@ -362,4 +362,16 @@ router.post('/advanced-search-request-form', async (request, response) => {
     }
 })
 
+router.post('/advanced-search-key', async (request, response) => {
+    try {
+        const { input_tag_num, input_core, input_room_num, input_room_type, input_key_num, input_availability, input_fname, input_lname, input_access_id, input_date_assigned } = request.body;
+        const result = await dbOperations.advancedSearchKey(input_tag_num, input_core, input_room_num, input_room_type, input_key_num, input_availability, input_fname, input_lname, input_access_id, input_date_assigned);
+        response.status(200).send(result);
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+})
+
 module.exports = router;

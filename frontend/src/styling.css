@@ -102,7 +102,6 @@ Keys.jsx component styling
   align-items: center;
 }
 
-#Keys-select-column,
 #Keys-input-search-row {
   font-size: larger;
   width: 50%;
@@ -131,6 +130,27 @@ Keys.jsx component styling
   transition: 0.3s;
 }
 
+#Keys-div-action-buttons {
+  width: 7.5%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+#Keys-button-advanced-search {
+  width: 52px;
+  height: 52px;
+  background-color: transparent;
+  background-image: url('./assets/advanced_search_icon_default.png');
+  background-size: cover;
+  border: none;
+  outline: none;
+}
+#Keys-button-advanced-search:hover {
+  background-image: url('./assets/advanced_search_icon_hover.png');
+  cursor: pointer;
+  transition: .3s;
+}
 #Keys-button-create-key {
   width: 52px;
   height: 52px;
@@ -144,6 +164,43 @@ Keys.jsx component styling
   background-image: url('./assets/add_key_icon_hover.png');
   cursor: pointer;
   transition: .3s;
+}
+
+#Keys-div-advanced-search {
+  border-top: 2px solid black;
+  margin-bottom: 2rem;
+}
+
+#Keys-div-advanced-search-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/* Grid container: 5 columns, automatically creating 2 rows for 10 items */
+#Keys-div-advanced-search-inputs-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);  /* 5 columns of equal width */
+  grid-auto-rows: auto;                  /* Rows adjust based on content */
+  gap: 1rem;                           /* Space between grid items */
+}
+
+/* Each grid item (label + input/select) */
+.advanced-search-grid-item {
+  display: flex;
+  flex-direction: column;
+}
+.advanced-search-grid-item label {
+  font-size: large;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.advanced-search-grid-item input,
+.advanced-search-grid-item select {
+  width: 95%;
+  font-size: larger;
+  height: 2.35rem;
+  border-radius: 5px;
+  padding: 0.2rem;
 }
 
 #Keys-table-container {
@@ -174,7 +231,7 @@ Keys.jsx component styling
   background-color: #e2e2e2;
 }
 #Keys-tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: white;
 }
 #Keys-tr:hover {
   background-color: #d2d2d2;
@@ -371,7 +428,7 @@ CreateKey.jsx component styling
   background-color: #e2e2e2;
 }
 #CreateKey-tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: white;
 }
 #CreateKey-tr:hover {
   background-color: #d2d2d2;
@@ -827,7 +884,7 @@ EditKey.jsx component styling
   background-color: #e2e2e2;
 }
 #EditKey-tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: white;
 }
 #EditKey-tr:hover {
   background-color: #d2d2d2;
@@ -1086,45 +1143,37 @@ RequestForms.jsx component styling
   flex-direction: column;
   justify-content: flex-start;
   border-top: 2px solid black;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 #RequestForms-div-advanced-search-top {
   display: flex;
-  flex-direction: row;
-  align-items: center;
   justify-content: space-between;
-}
-#RequestForms-div-advanced-search-buttons {
-  display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content: flex-start;
 }
-#RequestForms-div-advanced-search-flex-box-1 {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
+#RequestForms-div-advanced-search-inputs-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);  /* 5 columns of equal width */
+  gap: 1rem;                           /* Space between grid items */
 }
-#RequestForms-div-advanced-search-flex-box-2 {
+.RequestForms-div-advanced-search-grid-item {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 }
 #RequestForms-label-advanced-search {
   font-size: large;
   font-weight: bold;
-  margin-right: .5rem;
+  margin-bottom: 0.5rem;
 }
 #RequestForms-input-advanced-search-fname,
 #RequestForms-input-advanced-search-lname,
 #RequestForms-input-advanced-search-access-id,
 #RequestForms-input-advanced-search-date-signed,
 #RequestForms-input-advanced-search-assigned-key {
-  width: 50%;
+  width: 95%;
   font-size: larger;
   height: 2.35rem;
   border-radius: 5px;
+  padding: 0.2rem;
 }
 
 #RequestForms-div-flex-box {
@@ -1162,7 +1211,7 @@ RequestForms.jsx component styling
   background-color: #e2e2e2;
 }
 #RequestForms-tr:nth-child(even) {
-  background-color: #f2f2f2;
+  background-color: white;
 }
 #RequestForms-tr:hover {
   background-color: #d2d2d2;
