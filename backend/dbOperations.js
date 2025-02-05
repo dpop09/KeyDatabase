@@ -46,8 +46,20 @@ const dbOperations = {
     },
     searchKey: async function (row) {
         try {
-            const sql = 'SELECT * FROM `keys` WHERE tag_number = ? OR core_number = ? OR room_number = ? OR room_type = ? OR key_number = ? OR key_holder_fname = ? OR key_holder_lname = ? OR date_assigned = ? OR key_holder_access_id = ?';
-            const values = [row, row, row, row, row, row, row, row, row];
+            const sql = 'SELECT * FROM `keys` WHERE tag_number LIKE ? OR core_number LIKE ? OR room_number LIKE ? OR room_type LIKE ? OR key_number LIKE ? OR key_holder_fname LIKE ? OR key_holder_lname LIKE ? OR date_assigned LIKE ? OR key_holder_access_id LIKE ?';
+            // Create a search term with wildcards.
+            const searchTerm = `%${row}%`;
+            const values = [
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm
+            ];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {
@@ -333,8 +345,19 @@ const dbOperations = {
     },
     searchRequestForm: async function (row) {
         try {
-            const sql = 'SELECT * FROM `key_request_form` WHERE first_name = ? OR last_name = ? OR access_id = ? OR date_signed = ? OR assigned_key_1 = ? OR assigned_key_2 = ? OR assigned_key_3 = ? OR assigned_key_4 = ?';
-            const values = [row, row, row, row, row, row, row, row];
+            const sql = 'SELECT * FROM `key_request_form` WHERE first_name LIKE ? OR last_name LIKE ? OR access_id LIKE ? OR date_signed LIKE ? OR assigned_key_1 LIKE ? OR assigned_key_2 LIKE ? OR assigned_key_3 LIKE ? OR assigned_key_4 LIKE ?';
+            // Create a search term with wildcards.
+            const searchTerm = `%${row}%`;
+            const values = [
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm
+            ];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {
@@ -485,8 +508,16 @@ const dbOperations = {
     },
     searchUser: async function (row) {
         try {
-            const sql = 'SELECT * FROM `users` WHERE access_id = ? OR permission = ? OR first_name = ? OR last_name = ? OR title = ?';
-            const values = [row, row, row, row, row];
+            const sql = 'SELECT * FROM `users` WHERE access_id LIKE ? OR permission LIKE ? OR first_name LIKE ? OR last_name LIKE ? OR title LIKE ?';
+            // Create a search term with wildcards.
+            const searchTerm = `%${row}%`;
+            const values = [
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm
+            ];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {
@@ -559,51 +590,88 @@ const dbOperations = {
             console.log(error);
         }
     },
-    advancedSearchRequestForm: async function(input_fname, input_lname, input_access_id, input_date_signed, input_assigned_key) {
+    advancedSearchRequestForm: async function(
+        input_fname,
+        input_lname,
+        input_access_id,
+        input_date_signed,
+        input_assigned_key,
+        input_status // new parameter for filtering by status
+      ) {
         try {
-            // Start the base query
-            let sql = "SELECT * FROM key_request_form WHERE 1=1";
-            let values = [];
-    
-            // Dynamically add filters based on provided input values
-            if (input_fname) {
-                sql += " AND first_name = ?";
-                values.push(input_fname);
+          // Start the base query
+          let sql = "SELECT * FROM key_request_form WHERE 1=1";
+          let values = [];
+      
+          // Dynamically add filters based on provided input values
+          if (input_fname) {
+            sql += " AND first_name = ?";
+            values.push(input_fname);
+          }
+          if (input_lname) {
+            sql += " AND last_name = ?";
+            values.push(input_lname);
+          }
+          if (input_access_id) {
+            sql += " AND access_id = ?";
+            values.push(input_access_id);
+          }
+          if (input_date_signed) {
+            sql += " AND date_signed = ?";
+            values.push(input_date_signed);
+          }
+          if (input_assigned_key) {
+            sql += " AND (assigned_key_1 = ? OR assigned_key_2 = ? OR assigned_key_3 = ? OR assigned_key_4 = ?)";
+            values.push(input_assigned_key, input_assigned_key, input_assigned_key, input_assigned_key);
+          }
+      
+          // Add status filtering logic based on the derived logic:
+          // For the key columns, we'll use COALESCE to default to an empty string if they are NULL.
+          if (input_status) {
+            if (input_status === "Pending") {
+              sql += `
+                AND (
+                  (date_signed IS NULL OR date_signed = '0000-00-00')
+                  AND 
+                  (COALESCE(assigned_key_1, '') = '' AND COALESCE(assigned_key_2, '') = '' AND COALESCE(assigned_key_3, '') = '' AND COALESCE(assigned_key_4, '') = '')
+                )
+              `;
+            } else if (input_status === "Idle") {
+              sql += `
+                AND (
+                  (date_signed IS NOT NULL AND date_signed <> '0000-00-00')
+                  AND 
+                  (COALESCE(assigned_key_1, '') = '' AND COALESCE(assigned_key_2, '') = '' AND COALESCE(assigned_key_3, '') = '' AND COALESCE(assigned_key_4, '') = '')
+                )
+              `;
+            } else if (input_status === "Active") {
+              sql += `
+                AND (
+                  (date_signed IS NOT NULL AND date_signed <> '0000-00-00')
+                  AND 
+                  (COALESCE(assigned_key_1, '') <> '' OR COALESCE(assigned_key_2, '') <> '' OR COALESCE(assigned_key_3, '') <> '' OR COALESCE(assigned_key_4, '') <> '')
+                )
+              `;
             }
-            if (input_lname) {
-                sql += " AND last_name = ?";
-                values.push(input_lname);
-            }
-            if (input_access_id) {
-                sql += " AND access_id = ?";
-                values.push(input_access_id);
-            }
-            if (input_date_signed) {
-                sql += " AND date_signed = ?";
-                values.push(input_date_signed);
-            }
-            if (input_assigned_key) {
-                sql += " AND (assigned_key_1 = ? OR assigned_key_2 = ? OR assigned_key_3 = ? OR assigned_key_4 = ?)";
-                values.push(input_assigned_key, input_assigned_key, input_assigned_key, input_assigned_key);
-            }
-    
-            // Execute the query
-            const response = await new Promise((resolve, reject) => {
-                db.query(sql, values, (err, result) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(result);
-                    }
-                });
+          }
+      
+          // Execute the query
+          const response = await new Promise((resolve, reject) => {
+            db.query(sql, values, (err, result) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(result);
+              }
             });
-    
-            return response;
+          });
+      
+          return response;
         } catch (error) {
-            errorLogOperations.logError(error);
-            console.log(error);
+          errorLogOperations.logError(error);
+          console.log(error);
         }
-    },
+      },      
     advancedSearchKey: async function(tag_number, core_number, room_number, room_type, key_number, availability, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned) {
         // Array to hold SQL conditions
         let conditions = [];
@@ -647,28 +715,39 @@ const dbOperations = {
             params.push(date_assigned);
         }
         
-        // Handle the "availability" logical attribute:
-        if (availability) {
-            availability = !!availability // convert it to a bool
-            if (availability === true) {
-            // Key is available if none of the assignment fields are set.
-            conditions.push(
-                "key_holder_fname IS NULL AND key_holder_lname IS NULL AND key_holder_access_id IS NULL AND date_assigned IS NULL"
+        // Check that availability is provided (including when it is "false")
+        if (availability !== null && availability !== undefined && availability !== '') {
+            // Convert the value to a boolean.
+            // Note: availability might come in as a string from your select element.
+            let availBool;
+            if (availability === "true" || availability === true) {
+                availBool = true;
+            } else if (availability === "false" || availability === false) {
+                availBool = false;
+            }
+            // Only add conditions if we got a valid boolean.
+            if (availBool === true) {
+                // Key is available if none of the assignment fields are set,
+                // including date_assigned being either NULL or "1969-12-31"
+                conditions.push(
+                    "key_holder_fname IS NULL AND key_holder_lname IS NULL AND key_holder_access_id IS NULL AND (date_assigned IS NULL OR date_assigned = '1969-12-31')"
             );
-            } else if (availability === false) {
-            // Key is not available if all assignment fields are set.
-            conditions.push(
-                "key_holder_fname IS NOT NULL AND key_holder_lname IS NOT NULL AND key_holder_access_id IS NOT NULL AND date_assigned IS NOT NULL"
-            );
+            } else if (availBool === false) {
+                // Key is not available if all assignment fields are set,
+                // and date_assigned is not NULL or "1969-12-31"
+                conditions.push(
+                    "key_holder_fname IS NOT NULL AND key_holder_lname IS NOT NULL AND key_holder_access_id IS NOT NULL AND (date_assigned IS NOT NULL AND date_assigned <> '1969-12-31')"
+                );
             }
         }
+  
         
         // Build the final query.
         let sql = "SELECT * FROM `keys`";
         if (conditions.length > 0) {
             sql += " WHERE " + conditions.join(" AND ");
         }
-
+        console.log(sql)
         // Execute the query (replace 'db.query' with your actual query execution function).
         try {
             const response = await new Promise((resolve, reject) => {

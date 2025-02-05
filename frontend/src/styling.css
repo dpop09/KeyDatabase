@@ -1152,7 +1152,7 @@ RequestForms.jsx component styling
 }
 #RequestForms-div-advanced-search-inputs-container {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);  /* 5 columns of equal width */
+  grid-template-columns: repeat(6, 1fr);  /* 5 columns of equal width */
   gap: 1rem;                           /* Space between grid items */
 }
 .RequestForms-div-advanced-search-grid-item {
@@ -1164,6 +1164,7 @@ RequestForms.jsx component styling
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
+#RequestForms-input-advanced-search-status,
 #RequestForms-input-advanced-search-fname,
 #RequestForms-input-advanced-search-lname,
 #RequestForms-input-advanced-search-access-id,

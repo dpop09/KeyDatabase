@@ -279,6 +279,34 @@ function EditKey() {
         return `${month} ${dayWithOrdinal}, ${year}`;
     }
 
+    const getStatus = (d) => {
+        const hasValidDate = d.date_signed && d.date_signed !== '0000-00-00';
+        const hasAssignedKey = d.assigned_key_1 || d.assigned_key_2 || d.assigned_key_3 || d.assigned_key_4;
+    
+        if (!hasValidDate && !hasAssignedKey) {
+            return "Pending"; // No valid signed date and no assigned keys
+        } else if (hasValidDate && !hasAssignedKey) {
+            return "Idle"; // Signed but no assigned keys
+        } else if (hasValidDate && hasAssignedKey) {
+            return "Active"; // Signed and at least one key assigned
+        }
+        return "Unknown"; // Fallback case
+    };
+
+    const getStatusColor = (d) => {
+        const hasValidDate = d.date_signed && d.date_signed !== '0000-00-00';
+        const hasAssignedKey = d.assigned_key_1 || d.assigned_key_2 || d.assigned_key_3 || d.assigned_key_4;
+    
+        if (!hasValidDate && !hasAssignedKey) {
+            return "gold"; // Pending
+        } else if (hasValidDate && !hasAssignedKey) {
+            return "lightcoral"; // Idle
+        } else if (hasValidDate && hasAssignedKey) {
+            return "lightgreen"; // Active
+        }
+        return "grey"; // Default case
+    };
+
     return (
         <>
             <NavBar />
@@ -383,9 +411,8 @@ function EditKey() {
                         <div id="EditKey-div-assign-form-table-container">
                             <div id="EditKey-div-assign-form-search">
                                 <h3>Search:</h3>
-                                <input type="text" id="EditKey-input-assign-form-search" placeholder="Search..."/>
+                                <input type="text" id="EditKey-input-assign-form-search" placeholder="Search..." onChange={handleSearchForm} />
                                 <div id="EditKey-div-search-buttons">
-                                    <button id="EditKey-button-assign-form-search" onClick={handleSearchForm}>Search</button>
                                     <button id="EditKey-button-assign-form-clear-search" onClick={handleClearSearch}>Clear</button>
                                 </div>
                             </div>
@@ -393,6 +420,7 @@ function EditKey() {
                                 <table id="EditKey-table">
                                     <tbody>
                                         <tr id="EditKey-tr-header">
+                                            <th id="EditKey-th">Status</th>
                                             <th id="EditKey-th">First Name</th>
                                             <th id="EditKey-th">Last Name</th>
                                             <th id="EditKey-th">Access ID</th>
@@ -410,6 +438,7 @@ function EditKey() {
                                                 onClick={() => handleSelectForm(d)}
                                                 className={selectedForm && selectedForm.form_id === d.form_id ? 'selected-form' : ''}
                                             >
+                                                <td id="EditKey-td" style={{ backgroundColor: getStatusColor(d) }}>{getStatus(d)}</td>
                                                 <td id="EditKey-td">{d.first_name}</td>
                                                 <td id="EditKey-td">{d.last_name}</td>
                                                 <td id="EditKey-td">{d.access_id}</td>

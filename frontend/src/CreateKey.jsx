@@ -229,6 +229,34 @@ function CreateKey() {
         return `${month} ${dayWithOrdinal}, ${year}`;
     }
 
+    const getStatus = (d) => {
+        const hasValidDate = d.date_signed && d.date_signed !== '0000-00-00';
+        const hasAssignedKey = d.assigned_key_1 || d.assigned_key_2 || d.assigned_key_3 || d.assigned_key_4;
+    
+        if (!hasValidDate && !hasAssignedKey) {
+            return "Pending"; // No valid signed date and no assigned keys
+        } else if (hasValidDate && !hasAssignedKey) {
+            return "Idle"; // Signed but no assigned keys
+        } else if (hasValidDate && hasAssignedKey) {
+            return "Active"; // Signed and at least one key assigned
+        }
+        return "Unknown"; // Fallback case
+    };
+
+    const getStatusColor = (d) => {
+        const hasValidDate = d.date_signed && d.date_signed !== '0000-00-00';
+        const hasAssignedKey = d.assigned_key_1 || d.assigned_key_2 || d.assigned_key_3 || d.assigned_key_4;
+    
+        if (!hasValidDate && !hasAssignedKey) {
+            return "gold"; // Pending
+        } else if (hasValidDate && !hasAssignedKey) {
+            return "lightcoral"; // Idle
+        } else if (hasValidDate && hasAssignedKey) {
+            return "lightgreen"; // Active
+        }
+        return "grey"; // Default case
+    };
+
     return (
         <>
             <NavBar />
@@ -297,9 +325,8 @@ function CreateKey() {
                         <div id="CreateKey-div-assign-form-table-container">
                             <div id="CreateKey-div-assign-form-search">
                                 <h3>Search:</h3>
-                                <input type="text" id="CreateKey-input-assign-form-search" placeholder="Search..."/>
+                                <input type="text" id="CreateKey-input-assign-form-search" placeholder="Search..." onChange={handleSearchForm} />
                                 <div id="CreateKey-div-search-buttons">
-                                    <button id="CreateKey-button-assign-form-search" onClick={handleSearchForm}>Search</button>
                                     <button id="CreateKey-button-assign-form-clear-search" onClick={handleClearSearch}>Clear</button>
                                 </div>
                             </div>
@@ -307,6 +334,7 @@ function CreateKey() {
                                 <table id="CreateKey-table">
                                     <tbody>
                                         <tr id="CreateKey-tr-header">
+                                            <th id="CreateKey-th">Status</th>
                                             <th id="CreateKey-th">First Name</th>
                                             <th id="CreateKey-th">Last Name</th>
                                             <th id="CreateKey-th">Access ID</th>
@@ -324,6 +352,7 @@ function CreateKey() {
                                                 onClick={() => handleSelectForm(d)}
                                                 className={selectedForm && selectedForm.form_id === d.form_id ? 'selected-form' : ''}
                                             >
+                                                <td id="CreateKey-td" style={{ backgroundColor: getStatusColor(d) }}>{getStatus(d)}</td>
                                                 <td id="CreateKey-td">{d.first_name}</td>
                                                 <td id="CreateKey-td">{d.last_name}</td>
                                                 <td id="CreateKey-td">{d.access_id}</td>

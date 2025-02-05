@@ -352,8 +352,8 @@ router.post('/get-info-from-access-id', async (request, response) => {
 
 router.post('/advanced-search-request-form', async (request, response) => {
     try {
-        const { input_fname, input_lname, input_access_id, input_date_signed, input_assigned_key } = request.body;
-        const result = await dbOperations.advancedSearchRequestForm(input_fname, input_lname, input_access_id, input_date_signed, input_assigned_key)
+        const { input_status, input_fname, input_lname, input_access_id, input_date_signed, input_assigned_key } = request.body;
+        const result = await dbOperations.advancedSearchRequestForm(input_fname, input_lname, input_access_id, input_date_signed, input_assigned_key, input_status)
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);

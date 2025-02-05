@@ -94,8 +94,7 @@ function Users() {
                 <div id="Users-div-top-flex-box">
                     <div id="Users-div-search-container">
                         <h2>General Search:</h2>
-                        <input id="Users-input-search-row" type="text" />
-                        <button id="Users-button-search" onClick={handleSearch}>Search</button>
+                        <input id="Users-input-search-row" type="text" placeholder="Search..." onChange={handleSearch} />
                         <button id="Users-button-clear-search" onClick={handleClearSearch}>Clear</button>
                     </div>
                     <button id="Users-button-add-user" onClick={handleAddUser}></button>
