@@ -140,7 +140,7 @@ function Home() {
     }
 
     const getReadableDateAssigned = (d) => {
-        if (d.date_assigned === '0000-00-00') {
+        if (d.date_assigned === '0000-00-00' || d.date_assigned === '1969-12-31' || d.date_assigned === null) {
             return
         }
         // Create a Date object from the ISO date string
@@ -174,8 +174,7 @@ function Home() {
                 <div id="Keys-div-top-flex-box">
                     <div id="Keys-div-search-container">
                         <h2>General Search:</h2>
-                        <input id="Keys-input-search-row" type="text" />
-                        <button id="Keys-button-search" onClick={handleSearch}>Search</button>
+                        <input id="Keys-input-search-row" type="text" placeholder="Search..." onChange={handleSearch}/>
                         <button id="Keys-button-clear-search" onClick={handleClearSearch}>Clear</button>
                     </div>
                     <div id="Keys-div-action-buttons">

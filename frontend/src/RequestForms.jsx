@@ -71,7 +71,6 @@ function RequestForms() {
         event.preventDefault();
         const row = document.getElementById('RequestForms-input-search-row').value;
         if (!row) { // if the row is empty
-            alert('Please enter a column and row to search.');
             return
         }
         try {
@@ -101,13 +100,14 @@ function RequestForms() {
 
     const handleAdvancedSearch = async (event) => {
         event.preventDefault();
+        const input_status = document.getElementById('RequestForms-input-advanced-search-status').value;
         const input_fname = document.getElementById('RequestForms-input-advanced-search-fname').value;
         const input_lname = document.getElementById('RequestForms-input-advanced-search-lname').value;
         const input_access_id = document.getElementById('RequestForms-input-advanced-search-access-id').value;
         const input_date_signed = document.getElementById('RequestForms-input-advanced-search-date-signed').value;
         const input_assigned_key = document.getElementById('RequestForms-input-advanced-search-assigned-key').value;
         // do nothing if none of the fields are filled
-        if (!input_fname && !input_lname && !input_access_id && !input_date_signed && !input_assigned_key) {
+        if (!input_status && !input_fname && !input_lname && !input_access_id && !input_date_signed && !input_assigned_key) {
             return
         }
         try {
@@ -116,7 +116,7 @@ function RequestForms() {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({ input_fname, input_lname, input_access_id, input_date_signed, input_assigned_key })
+                body: JSON.stringify({ input_status, input_fname, input_lname, input_access_id, input_date_signed, input_assigned_key })
             })
             const data = await response.json();
             if (data) { // if the response is successful
@@ -131,6 +131,7 @@ function RequestForms() {
 
     const handleClearAdvancedSearch = async (event) => {
         event.preventDefault();
+        document.getElementById('RequestForms-input-advanced-search-status').value = null
         document.getElementById('RequestForms-input-advanced-search-fname').value = null
         document.getElementById('RequestForms-input-advanced-search-lname').value = null
         document.getElementById('RequestForms-input-advanced-search-access-id').value = null
@@ -207,8 +208,7 @@ function RequestForms() {
                 <div id="RequestForms-div-top-flex-box">
                     <div id="RequestForms-div-search-container">
                         <h2>General Search:</h2>
-                        <input id="RequestForms-input-search-row" type="text" />
-                        <button id="RequestForms-button-search" onClick={handleSearch}>Search</button>
+                        <input id="RequestForms-input-search-row" type="text" placeholder="Search..." onChange={handleSearch} />
                         <button id="RequestForms-button-clear-search" onClick={handleClearSearch}>Clear</button>
                     </div>
                     <div id="RequestForms-div-action-buttons">
@@ -226,6 +226,15 @@ function RequestForms() {
                             </div>
                         </div>
                         <div id="RequestForms-div-advanced-search-inputs-container">
+                            <div class="RequestForms-div-advanced-search-grid-item">
+                                <label id="RequestForms-label-advanced-search">Status:</label>
+                                <select id="RequestForms-input-advanced-search-status">
+                                    <option value={null}></option>
+                                    <option value="Active">Active</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Idle">Idle</option>
+                                </select>
+                            </div>
                             <div class="RequestForms-div-advanced-search-grid-item">
                                 <label id="RequestForms-label-advanced-search">First Name:</label>
                                 <input id="RequestForms-input-advanced-search-fname" />
