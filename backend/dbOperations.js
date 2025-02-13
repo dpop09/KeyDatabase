@@ -765,6 +765,43 @@ const dbOperations = {
             console.error("Error executing advanced search query:", err);
             throw err;
         }
+    },
+    getFirstNameFromAccessID: async function(access_id) {
+        try {
+            const sql = 'SELECT first_name FROM users WHERE access_id = ?';
+            const values = [access_id];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result[0].first_name);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
+    getAllHistoryLogs: async function() {
+        try {
+            const sql = 'SELECT * FROM history';
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
     }
 }
 

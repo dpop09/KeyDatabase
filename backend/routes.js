@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const dbOperations = require('./dbOperations');
+const historyLogOperations = require('./historyLogOperations')
 const errorLogOperations = require('./errorLogOperations');
 const { scrapeWayneData } = require('./scrape');
 const os = require('os');
@@ -195,6 +196,7 @@ router.post('/get-key-request-form-image-with-key-number', async (req, res) => {
 router.post('/create-key', async (request, response) => {
     try {
         const { 
+            access_id,
             tag_number, 
             tag_color, 
             core_number, 
@@ -209,6 +211,7 @@ router.post('/create-key', async (request, response) => {
             new_form_id, 
             assigned_key } = request.body;
         const result = await dbOperations.createKey(tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id);
+        const historyLogResult = await  historyLogOperations.logCreateKey(access_id, tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id)
         if (new_form_id != null) { // if a form is provided
             const update_new_form_result = await dbOperations.updateKeyNumberInRequestForm(key_number, new_form_id, assigned_key); 
         }
@@ -366,6 +369,17 @@ router.post('/advanced-search-key', async (request, response) => {
     try {
         const { input_tag_num, input_core, input_room_num, input_room_type, input_key_num, input_availability, input_fname, input_lname, input_access_id, input_date_assigned } = request.body;
         const result = await dbOperations.advancedSearchKey(input_tag_num, input_core, input_room_num, input_room_type, input_key_num, input_availability, input_fname, input_lname, input_access_id, input_date_assigned);
+        response.status(200).send(result);
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+})
+
+router.get('/get-all-history', async (request, response) => {
+    try {
+        const result = await dbOperations.getAllHistoryLogs();
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
