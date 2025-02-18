@@ -82,7 +82,8 @@ router.post('/getKeyRequestForm' , async (request, response) => {
 
 router.post('/edit-key', async (request, response) => {
     try {
-        const { tag_number,
+        const { access_id,
+            tag_number,
             tag_color,
             core_number,
             room_number,
@@ -93,20 +94,19 @@ router.post('/edit-key', async (request, response) => {
             key_holder_access_id,
             date_assigned,
             comments,
-            old_form_id,
-            new_form_id,
-            assigned_key
+            request_form
             } = request.body;
-        if (new_form_id != null) { // if a form is provided
-            if (old_form_id != null && old_form_id != new_form_id) { // if there is an old form and it is not the same as the new form
+        if (request_form.new_form_id != null) { // if a form is provided
+            if (request_form.old_form_id != null && request_form.old_form_id != request_form.new_form_id) { // if there is an old form and it is not the same as the new form
                 // remove all instances of the key number in the old form
-                const update_old_form_result = await dbOperations.setKeyNumberInRequestFormToNull(key_number, old_form_id);
+                const update_old_form_result = await dbOperations.setKeyNumberInRequestFormToNull(key_number.value, request_form.old_form_id);
             }
             // update the key number in the form
             // if the form already contains any instance of the key number, adjust it to the new column if necessary
-            const update_new_form_result = await dbOperations.updateKeyNumberInRequestForm(key_number, new_form_id, assigned_key); 
+            const update_new_form_result = await dbOperations.updateKeyNumberInRequestForm(key_number.value, request_form.new_form_id, request_form.assigned_column); 
         }
-        const result = await dbOperations.editKey(tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id);
+        const result = await dbOperations.editKey(tag_number.value, tag_color.value, core_number.value, room_number.value, room_type.value, key_number.value, key_holder_fname.value, key_holder_lname.value, key_holder_access_id.value, date_assigned.value, comments.value, request_form.new_form_id);
+        const history_log_result = await historyLogOperations.logEditKey(access_id, tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, request_form);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -211,7 +211,7 @@ router.post('/create-key', async (request, response) => {
             new_form_id, 
             assigned_key } = request.body;
         const result = await dbOperations.createKey(tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id);
-        const historyLogResult = await  historyLogOperations.logCreateKey(access_id, tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id)
+        const history_log_result = await  historyLogOperations.logCreateKey(access_id, tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id)
         if (new_form_id != null) { // if a form is provided
             const update_new_form_result = await dbOperations.updateKeyNumberInRequestForm(key_number, new_form_id, assigned_key); 
         }

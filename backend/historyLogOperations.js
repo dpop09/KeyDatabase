@@ -66,44 +66,44 @@ const historyLogOperations = {
             console.log(error);
         }
     },
-    logEditKey: async function(access_id, tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id) {
+    logEditKey: async function(access_id, tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, request_form) {
         const first_name = await dbOperations.getFirstNameFromAccessID(access_id)
         let text = `${first_name} edited a key with the following information:\n`
-        if (tag_number) {
-            text += `, tag_number = '${tag_number}'`
+        if (tag_number.edit_flag) {
+            text += `, tag_number = '${tag_number.value}'`
         }
-        if (tag_color) {
-            text += `, tag_color = '${tag_color}'`
+        if (tag_color.edit_flag) {
+            text += `, tag_color = '${tag_color.value}'`
         }
-        if (core_number) {
-            text += `, core_number = '${core_number}'`
+        if (core_number.edit_flag) {
+            text += `, core_number = '${core_number.value}'`
         }
-        if (room_number) {
-            text += `, room_number = '${room_number}'`
+        if (room_number.edit_flag) {
+            text += `, room_number = '${room_number.value}'`
         }
-        if (room_type) {
-            text += `, room_type = '${room_type}'`
+        if (room_type.edit_flag) {
+            text += `, room_type = '${room_type.value}'`
         }
-        if (key_number) {
-            text += `, key_number = '${key_number}'`
+        if (key_number.edit_flag) {
+            text += `, key_number = '${key_number.value}'`
         }
-        if (key_holder_fname) {
-            text += `, key_holder_fname = '${key_holder_fname}'`
+        if (key_holder_fname.edit_flag) {
+            text += `, key_holder_fname = '${key_holder_fname.value}'`
         }
-        if (key_holder_lname) {
-            text += `, key_holder_lname = '${key_holder_lname}'`
+        if (key_holder_lname.edit_flag) {
+            text += `, key_holder_lname = '${key_holder_lname.value}'`
         }
-        if (key_holder_access_id) {
-            text += `, key_holder_access_id = '${key_holder_access_id}'`
+        if (key_holder_access_id.edit_flag) {
+            text += `, key_holder_access_id = '${key_holder_access_id.value}'`
         }
-        if (date_assigned) {
-            text += `, date_assigned = '${date_assigned}'`
+        if (date_assigned.edit_flag) {
+            text += `, date_assigned = '${date_assigned.value}'`
         }
-        if (comments) {
-            text += `, comments = '${comments}'`
+        if (comments.edit_flag) {
+            text += `, comments = '${comments.value}'`
         }
-        if (form_id) {
-            text += `, form_id = '${form_id}'`
+        if (request_form.new_form_id !== null) {
+            text += `, form_id = '${request_form.new_form_id}'`
         }
         try {
             const sql = 'INSERT INTO history (access_id, log_action) VALUES (?, ?)';

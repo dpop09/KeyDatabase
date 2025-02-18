@@ -6,7 +6,7 @@ import NavBar from "./NavBar";
 function EditKey() {
 
     // global state variables
-    const { permissions, keyData, setKeyData } = useContext(AuthContext);
+    const { accessId, permissions, keyData, setKeyData } = useContext(AuthContext);
 
     // display an unauthorized page if the permissions is not found in the database
     if (permissions === "Unauthorized") {
@@ -80,26 +80,48 @@ function EditKey() {
 
     const handleSubmitEdit = async (event) => {
         event.preventDefault();
-        const tag_number = document.getElementById('EditKey-input-tag_number').value || document.getElementById('EditKey-input-tag_number').placeholder;
-        const tag_color = document.getElementById('EditKey-input-tag_color').value || document.getElementById('EditKey-input-tag_color').placeholder;
-        const core_number = document.getElementById('EditKey-input-core_number').value || document.getElementById('EditKey-input-core_number').placeholder;
-        const room_number = document.getElementById('EditKey-input-room_number').value || document.getElementById('EditKey-input-room_number').placeholder;
-        const room_type = document.getElementById('EditKey-input-room_type').value || document.getElementById('EditKey-input-room_type').placeholder;
-        const key_number = document.getElementById('EditKey-input-key_number').value || document.getElementById('EditKey-input-key_number').placeholder;
-        const key_holder_fname = document.getElementById('EditKey-input-key_holder_fname').value || document.getElementById('EditKey-input-key_holder_fname').placeholder;
-        const key_holder_lname = document.getElementById('EditKey-input-key_holder_lname').value || document.getElementById('EditKey-input-key_holder_lname').placeholder;
-        const key_holder_access_id = document.getElementById('EditKey-input-key_holder_access_id').value || document.getElementById('EditKey-input-key_holder_access_id').placeholder;
-        const date_assigned = document.getElementById('EditKey-input-date_assigned').value || document.getElementById('EditKey-input-date_assigned').placeholder;
-        const comments = document.getElementById('EditKey-textarea-comments').value || document.getElementById('EditKey-textarea-comments').placeholder;
-        // get value of the selected radio button
-        const assigned_key_value = document.querySelector('input[name="assignedKey"]:checked');
-        const assigned_key = assigned_key_value ? assigned_key_value.value : null;
-        if (!tag_number || !tag_color || !core_number || !room_number || !room_type || !key_number ) { // check if any of the core key fields are empty
+        const tag_number = (document.getElementById('EditKey-input-tag_number').value) ? 
+                            {value: document.getElementById('EditKey-input-tag_number').value, edit_flag: true} : 
+                            {value: document.getElementById('EditKey-input-tag_number').placeholder, edit_flag: false};
+        const tag_color = (document.getElementById('EditKey-input-tag_color').value) ?
+                            {value: document.getElementById('EditKey-input-tag_color').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-input-tag_color').placeholder, edit_flag: false};
+        const core_number = (document.getElementById('EditKey-input-core_number').value) ?
+                            {value: document.getElementById('EditKey-input-core_number').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-input-core_number').placeholder, edit_flag: false};
+        const room_number = (document.getElementById('EditKey-input-room_number').value) ? 
+                            {value: document.getElementById('EditKey-input-room_number').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-input-room_number').placeholder, edit_flag: false};
+        const room_type = (document.getElementById('EditKey-input-room_type').value) ?
+                            {value: document.getElementById('EditKey-input-room_type').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-input-room_type').placeholder, edit_flag: false};
+        const key_number = (document.getElementById('EditKey-input-key_number').value) ?
+                            {value: document.getElementById('EditKey-input-key_number').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-input-key_number').placeholder, edit_flag: false};
+        const key_holder_fname = (document.getElementById('EditKey-input-key_holder_fname').value) ?
+                            {value: document.getElementById('EditKey-input-key_holder_fname').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-input-key_holder_fname').placeholder, edit_flag: false};
+        const key_holder_lname = (document.getElementById('EditKey-input-key_holder_lname').value) ?
+                            {value: document.getElementById('EditKey-input-key_holder_lname').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-input-key_holder_lname').placeholder, edit_flag: false};
+        const key_holder_access_id = (document.getElementById('EditKey-input-key_holder_access_id').value) ?
+                            {value: document.getElementById('EditKey-input-key_holder_access_id').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-input-key_holder_access_id').placeholder, edit_flag: false};
+        const date_assigned = (document.getElementById('EditKey-input-date_assigned').value) ?
+                            {value: document.getElementById('EditKey-input-date_assigned').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-input-date_assigned').placeholder, edit_flag: false};
+        const comments = (document.getElementById('EditKey-textarea-comments').value) ?
+                            {value: document.getElementById('EditKey-textarea-comments').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-textarea-comments').placeholder, edit_flag: false};
+        const request_form = {assigned_column: (document.querySelector('input[name="assignedKey"]:checked')) ? (document.querySelector('input[name="assignedKey"]:checked')).value : null,
+                            old_form_id: (keyData.form_id != null) ? keyData.form_id : null,
+                            new_form_id: (selectedForm != null) ? selectedForm.form_id : null};
+        if (!tag_number.value || !tag_color.value || !core_number.value || !room_number.value || !room_type.value || !key_number.value ) { // check if any of the core key fields are empty
             alert("Please fill out all required fields.");
             return
         }
-        if (selectedForm != null && assigned_key == null) { // if a form is selected and the assigned key is not selected, show an alert
-            alert("Please select an assigned key.");
+        if (selectedForm != null && request_form.assigned_column == null) { // if a form is selected and the assigned key is not selected, show an alert
+            alert("Please select an assigned key column.");
             return
         }
         try {
@@ -109,20 +131,19 @@ function EditKey() {
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify({
-                    tag_number: tag_number,
-                    tag_color: tag_color,
-                    core_number: core_number,
-                    room_number: room_number,
-                    room_type: room_type,
-                    key_number: key_number,
-                    key_holder_fname: key_holder_fname,
-                    key_holder_lname: key_holder_lname,
-                    key_holder_access_id: key_holder_access_id,
-                    date_assigned: date_assigned,
-                    comments: comments,
-                    old_form_id: keyData.form_id != null ? keyData.form_id : null, // if there is a form already associated with the key, send its form_id, else send null
-                    new_form_id: selectedForm != null ? selectedForm.form_id : null, // if a form is selected, send its form_id, else send null
-                    assigned_key: assigned_key
+                    access_id: accessId,
+                    tag_number,
+                    tag_color,
+                    core_number,
+                    room_number,
+                    room_type,
+                    key_number,
+                    key_holder_fname,
+                    key_holder_lname,
+                    key_holder_access_id,
+                    date_assigned,
+                    comments,
+                    request_form
                 })
             })
             if (response.ok) { // if the response is successful

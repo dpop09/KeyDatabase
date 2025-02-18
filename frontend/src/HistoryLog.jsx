@@ -104,8 +104,8 @@ function HistoryLog() {
                     <table id="HistoryLog-table">
                         <tbody>
                             <tr id="HistoryLog-tr-header">
-                                <th id="HistoryLog-th">Access ID</th>
                                 <th id="HistoryLog-th">Log ID</th>
+                                <th id="HistoryLog-th">Access ID</th>
                                 <th id="HistoryLog-th">Action</th>
                                 <th id="HistoryLog-th">Time</th>
                             </tr>
