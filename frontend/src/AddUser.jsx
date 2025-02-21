@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from './AuthContext'
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
+import Modal from 'react-bootstrap/Modal';
 
 function AddUser() {
 
@@ -18,6 +19,14 @@ function AddUser() {
         )
     }
 
+    // State for the Modal
+    const [showModal, setShowModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
+
+    // Modal handlers
+    const handleModalClose = () => setShowModal(false);
+    const handleModalShow = () => setShowModal(true);
+
     const navigate = useNavigate();
     const handleCancel = () => {
         navigate('/users');
@@ -29,9 +38,10 @@ function AddUser() {
         const lname_input = document.getElementById('AddUser-input-lname').value;
         const title_input = document.getElementById('AddUser-input-title').value;
         const permissions_input = document.getElementById('AddUser-select-permissions').value;
-        if (!access_id_input || !fname_input || !lname_input || !title_input || !permissions_input) { // check if all required fields are filled
-            alert('Please fill out all required fields.');
-            return;
+        if (!access_id_input || !fname_input || !lname_input || !title_input || permissions_input === "") { // check if all required fields are filled
+            setErrorMessage("Please fill out all required fields.");
+            handleModalShow();
+            return
         }
         try {
             const response = await fetch('http://localhost:8081/add-user', {
@@ -51,9 +61,11 @@ function AddUser() {
             if (response.status === 200) {
                 navigate('/users');
             } else if (response.status === 400) {
-                alert('User already exists');
+                setErrorMessage("This user already exists.");
+                handleModalShow();
             } else {
-                alert('Internal Server Error. Please try again later.');
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
             }
         } catch (error) {
             console.error(error);
@@ -132,6 +144,14 @@ function AddUser() {
                     <button id="AddUser-button-submit" onClick={handleSubmit}>Submit</button>
                 </div>
             </div>
+            <Modal show={showModal} onHide={handleModalClose} centered>
+                <Modal.Header className="AddUser-Modal" >
+                    <Modal.Title>{errorMessage}</Modal.Title>
+                </Modal.Header>
+                <Modal.Footer className="AddUser-Modal" >
+                    <button id="AddUser-button-modal" onClick={handleModalClose}>Close</button>
+                </Modal.Footer>
+            </Modal>
         </>
     )
 }
