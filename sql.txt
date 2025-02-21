@@ -13,10 +13,7 @@ create table `keys`(
     key_holder_lname varchar(50),
     date_assigned date,
     comments text,
-    last_edited_by varchar(100),
-    date_last_edited date,
     key_holder_access_id varchar(6),
-    last_action_made text,
     form_id varchar(100),
     PRIMARY KEY(key_number)
 );
@@ -44,10 +41,12 @@ create table users(
     PRIMARY KEY(access_id)
 );
 
-create table history(
-    log_id SERIAL,
-    access_id varchar(6),
+CREATE TABLE history (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    user VARCHAR(100),
+    target_type VARCHAR(50),
+    target_id VARCHAR(50),
+    action_type VARCHAR(50),
     log_action text,
-    log_date DATE,
-    PRIMARY KEY(log_id)
-)
+    log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -6,7 +6,7 @@ import NavBar from "./NavBar";
 function CreateKey() {
 
     // global state variables
-    const { permissions } = useContext(AuthContext)
+    const { accessId, permissions } = useContext(AuthContext)
 
     // display an unauthorized page if the permissions is not found in the database
     if (permissions === "Unauthorized") {
@@ -109,6 +109,7 @@ function CreateKey() {
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify({
+                    access_id: accessId,
                     tag_number: tag_number,
                     tag_color: tag_color,
                     core_number: core_number,

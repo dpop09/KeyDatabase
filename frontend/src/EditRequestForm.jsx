@@ -6,7 +6,7 @@ import NavBar from "./NavBar";
 function EditRequestForm() {
 
     // global state variables
-    const { permissions, requestFormData } = useContext(AuthContext)
+    const { accessId, permissions, requestFormData } = useContext(AuthContext)
 
     // display an unauthorized page if the permissions is not found in the database
     if (permissions === "Unauthorized") {
@@ -69,16 +69,25 @@ function EditRequestForm() {
     const handleSubmit = (event) => {
         event.preventDefault();
     
-        const first_name = document.getElementById('EditRequestForm-input-first-name').value.trim() || requestFormData.first_name;
-        const last_name = document.getElementById('EditRequestForm-input-last-name').value.trim() || requestFormData.last_name;
-        const access_id = document.getElementById('EditRequestForm-input-access-id').value.trim() || requestFormData.access_id;
-        const date_signed = document.getElementById('EditRequestForm-input-date-signed').value || requestFormData.date_signed;
+        const first_name = (document.getElementById('EditRequestForm-input-first-name').value) ?
+                        {value: document.getElementById('EditRequestForm-input-first-name').value, edit_flag: true} :
+                        {value: document.getElementById('EditRequestForm-input-first-name').placeholder, edit_flag: false};
+        const last_name = (document.getElementById('EditRequestForm-input-last-name').value) ?
+                        {value: document.getElementById('EditRequestForm-input-last-name').value, edit_flag: true} :
+                        {value: document.getElementById('EditRequestForm-input-last-name').placeholder, edit_flag: false};
+        const access_id = (document.getElementById('EditRequestForm-input-access-id').value) ?
+                        {value: document.getElementById('EditRequestForm-input-access-id').value, edit_flag: true} :
+                        {value: document.getElementById('EditRequestForm-input-access-id').placeholder, edit_flag: false};
+        const date_signed = (document.getElementById('EditRequestForm-input-date-signed').value) ?
+                        {value: document.getElementById('EditRequestForm-input-date-signed').value, edit_flag: true} :
+                        {value: document.getElementById('EditRequestForm-input-date-signed').placeholder, edit_flag: false};
         
         // Properly retrieve the file
         const fileInput = document.getElementById('EditRequestForm-input-file');
         const file = fileInput && fileInput.files.length > 0 ? fileInput.files[0] : null;
     
         const formData = new FormData();
+        formData.append('user_access_id', accessId);
         formData.append('form_id', requestFormData.form_id);
         formData.append('first_name', first_name);
         formData.append('last_name', last_name);
@@ -111,7 +120,7 @@ function EditRequestForm() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ form_id: requestFormData.form_id }),
+            body: JSON.stringify({ user_access_id: accessId, form_id: requestFormData.form_id }),
         }).then(response => {
             if (response.ok) { // if the response is successful
                 navigate('/requestforms'); // redirect to the request forms page

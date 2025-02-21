@@ -6,7 +6,7 @@ import NavBar from "./NavBar";
 function EditUser() {
 
     // global state variables
-    const { permissions, selectedUser } = useContext(AuthContext)
+    const { accessId, permissions, selectedUser } = useContext(AuthContext)
 
     // display an unauthorized page if the permissions is not found in the database
     if (permissions === "Unauthorized") {
@@ -25,12 +25,19 @@ function EditUser() {
 
     const handleSubmit = async () => {
         try {
-            const fname = document.getElementById('EditUser-input-fname').value || document.getElementById('EditUser-input-fname').placeholder;
-            const lname = document.getElementById('EditUser-input-lname').value || document.getElementById('EditUser-input-lname').placeholder;
-            const access_id = selectedUser.access_id;
-            const title = document.getElementById('EditUser-input-title').value || document.getElementById('EditUser-input-title').placeholder;
-            const permissions = document.getElementById('EditUser-select-permissions').value;
-            if (!fname || !lname || !access_id || !title || !permissions) {
+            const fname = (document.getElementById('EditUser-input-fname').value) ? 
+                        {value: document.getElementById('EditUser-input-fname').value, edit_flag: true} :
+                        {value: document.getElementById('EditUser-input-fname').placeholder, edit_flag: false};
+            const lname = (document.getElementById('EditUser-input-lname').value) ? 
+                        {value: document.getElementById('EditUser-input-lname').value, edit_flag: true} :
+                        {value: document.getElementById('EditUser-input-lname').placeholder, edit_flag: false};
+            const title = (document.getElementById('EditUser-input-title').value) ? 
+                        {value: document.getElementById('EditUser-input-title').value, edit_flag: true} :
+                        {value: document.getElementById('EditUser-input-title').placeholder, edit_flag: false};
+            const permissions = (document.getElementById('EditUser-select-permissions').value) ?
+                        {value: document.getElementById('EditUser-select-permissions').value, edit_flag: true} :
+                        {value: document.getElementById('EditUser-select-permissions').placeholder, edit_flag: false};
+            if (!fname.value || !lname.value || !title.value || !permissions.value) {
                 alert('Please fill in all fields.');
                 return;
             }
@@ -39,7 +46,14 @@ function EditUser() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ fname, lname, access_id, title, permissions }),
+                body: JSON.stringify({ 
+                    user_access_id: accessId, 
+                    fname, 
+                    lname, 
+                    access_id: selectedUser.access_id, 
+                    title, 
+                    permissions 
+                }),
             });
             if (response.status === 200) {
                 navigate('/users');
@@ -58,7 +72,7 @@ function EditUser() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ access_id: selectedUser.access_id }),
+                body: JSON.stringify({ user_access_id: accessId, access_id: selectedUser.access_id }),
             });
             if (response.status === 200) {
                 navigate('/users');
@@ -95,6 +109,7 @@ function EditUser() {
                     <div id="EditUser-div-input-container">
                         <label id="EditUser-label-permissions">Permissions:</label>
                         <select id="EditUser-select-permissions" placeholder={selectedUser.permission}>
+                            <option value="" hidden={true}>Select a permission</option>
                             <option value="Student Employee">Student Employee</option>
                             <option value="Unauthorized">Unauthorized</option>
                             <option value="Admin">Admin</option>

@@ -1,9 +1,12 @@
 const express = require('express');
 const multer = require('multer');
 const dbOperations = require('./dbOperations');
+const historyLogOperations = require('./historyLogOperations')
 const errorLogOperations = require('./errorLogOperations');
 const { scrapeWayneData } = require('./scrape');
 const os = require('os');
+const { access } = require('fs');
+const { v4: uuidv4 } = require('uuid');
 
 const router = express.Router();
 
@@ -81,7 +84,8 @@ router.post('/getKeyRequestForm' , async (request, response) => {
 
 router.post('/edit-key', async (request, response) => {
     try {
-        const { tag_number,
+        const { access_id,
+            tag_number,
             tag_color,
             core_number,
             room_number,
@@ -92,20 +96,19 @@ router.post('/edit-key', async (request, response) => {
             key_holder_access_id,
             date_assigned,
             comments,
-            old_form_id,
-            new_form_id,
-            assigned_key
+            request_form
             } = request.body;
-        if (new_form_id != null) { // if a form is provided
-            if (old_form_id != null && old_form_id != new_form_id) { // if there is an old form and it is not the same as the new form
+        if (request_form.new_form_id != null) { // if a form is provided
+            if (request_form.old_form_id != null && request_form.old_form_id != request_form.new_form_id) { // if there is an old form and it is not the same as the new form
                 // remove all instances of the key number in the old form
-                const update_old_form_result = await dbOperations.setKeyNumberInRequestFormToNull(key_number, old_form_id);
+                const update_old_form_result = await dbOperations.setKeyNumberInRequestFormToNull(key_number.value, request_form.old_form_id);
             }
             // update the key number in the form
             // if the form already contains any instance of the key number, adjust it to the new column if necessary
-            const update_new_form_result = await dbOperations.updateKeyNumberInRequestForm(key_number, new_form_id, assigned_key); 
+            const update_new_form_result = await dbOperations.updateKeyNumberInRequestForm(key_number.value, request_form.new_form_id, request_form.assigned_column); 
         }
-        const result = await dbOperations.editKey(tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id);
+        const result = await dbOperations.editKey(tag_number.value, tag_color.value, core_number.value, room_number.value, room_type.value, key_number.value, key_holder_fname.value, key_holder_lname.value, key_holder_access_id.value, date_assigned.value, comments.value, request_form.new_form_id);
+        const history_log_result = await historyLogOperations.logEditKey(access_id, tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, request_form);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -116,11 +119,12 @@ router.post('/edit-key', async (request, response) => {
 
 router.post('/remove-key-holder', async (request, response) => {
     try {
-        const { key_number, form_id } = request.body;
+        const { access_id, key_number, form_id } = request.body;
         if (form_id != null) { // if a form_id is provided, remove the key holder from the form
             const update_form_result = await dbOperations.setKeyNumberInRequestFormToNull(key_number, form_id);
         }
         const result = await dbOperations.removeKeyHolder(key_number);
+        const history_log_result = await historyLogOperations.logRemoveKeyHolder(access_id, key_number, form_id)
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -131,11 +135,12 @@ router.post('/remove-key-holder', async (request, response) => {
 
 router.post('/delete-key', async (request, response) => {
     try {
-        const { key_number, form_id } = request.body;
+        const { access_id, key_number, form_id } = request.body;
         if (form_id != null) { // if a form_id is provided, remove the key from the form
             const update_form_result = await dbOperations.setKeyNumberInRequestFormToNull(key_number, form_id);
         }
         const result = await dbOperations.deleteKey(key_number);
+        const history_log_result = await historyLogOperations.logDeleteKey(access_id, key_number, form_id)
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -157,9 +162,11 @@ router.get('/get-all-key-request-forms', async (request, response) => {
 
 router.post('/add-key-request-form', upload.single('file'), async (request, response) => {
     try {
-        const {first_name, last_name, access_id, date_signed} = request.body;
+        const {user_access_id, first_name, last_name, access_id, date_signed} = request.body;
         const file_buffer = request.file.buffer;
-        const result = await dbOperations.addKeyRequestForm(first_name, last_name, access_id, date_signed, file_buffer);
+        const form_id = uuidv4().replace(/-/g, '').substring(0, 8);
+        const result = await dbOperations.addKeyRequestForm(first_name, last_name, access_id, date_signed, file_buffer, form_id);
+        const history_log_result = await historyLogOperations.logCreateRequestForm(user_access_id, first_name, last_name, access_id, date_signed, form_id);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -195,6 +202,7 @@ router.post('/get-key-request-form-image-with-key-number', async (req, res) => {
 router.post('/create-key', async (request, response) => {
     try {
         const { 
+            access_id,
             tag_number, 
             tag_color, 
             core_number, 
@@ -209,6 +217,7 @@ router.post('/create-key', async (request, response) => {
             new_form_id, 
             assigned_key } = request.body;
         const result = await dbOperations.createKey(tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id);
+        const history_log_result = await  historyLogOperations.logCreateKey(access_id, tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id)
         if (new_form_id != null) { // if a form is provided
             const update_new_form_result = await dbOperations.updateKeyNumberInRequestForm(key_number, new_form_id, assigned_key); 
         }
@@ -234,18 +243,20 @@ router.post('/search-request-form', async (request, response) => {
 
 router.post('/update-key-request-form', upload.single('file'), async (request, response) => {
     try {
-        const { form_id, first_name, last_name, access_id, date_signed } = request.body;
+        const { user_access_id, form_id, first_name, last_name, access_id, date_signed } = request.body;
+        console.log(user_access_id, form_id, first_name)
         const file_buffer = request.file ? request.file.buffer : null;
         let result = null;
         if (file_buffer) { // if the user did upload a new pdf file, we replace the old pdf file
             result = await dbOperations.updateKeyRequestFormWithFileBuffer(
-                form_id, first_name, last_name, access_id, date_signed, file_buffer
+                form_id, first_name.value, last_name.value, access_id.value, date_signed.value, file_buffer
             );
         } else { // otherwise, the user left the upload file blank and we fallback on the old one
             result = await dbOperations.updateKeyRequestFormWithoutFileBuffer(
-                form_id, first_name, last_name, access_id, date_signed
+                form_id, first_name.value, last_name.value, access_id.value, date_signed.value
             );
         }
+        const history_log_result = await historyLogOperations.logEditRequestForm(user_access_id, form_id, first_name, last_name, access_id, date_signed, (file_buffer) ? true : false)
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -257,10 +268,10 @@ router.post('/update-key-request-form', upload.single('file'), async (request, r
 
 router.post('/delete-key-request-form', async (request, response) => {
     try {
-        const { form_id } = request.body;
+        const { user_access_id, form_id } = request.body;
         // delete the form_id from all keys that are in the form
         const delete_form_id_from_keys_result = await dbOperations.deleteFormIdFromKeys(form_id);
-        // delete the form
+        const history_log_result = await historyLogOperations.logDeleteRequestForm(user_access_id, form_id);
         const result = await dbOperations.deleteKeyRequestForm(form_id);
         response.status(200).send(result);
     } catch (error) {
@@ -283,13 +294,14 @@ router.get('/get-all-user-data', async (request, response) => {
 
 router.post('/add-user', async (request, response) => {
     try {
-        const { accessId, permissions } = request.body;
-        const doesUserAlreadyExist = await dbOperations.isAccessIdWhiteListed(accessId);
+        const { user_access_id, access_id, permissions } = request.body;
+        const doesUserAlreadyExist = await dbOperations.isAccessIdWhiteListed(access_id);
         if (doesUserAlreadyExist) {
             response.status(400).send('User already exists');
             return;
         }
-        const result = await dbOperations.addUser(accessId, permissions);
+        const result = await dbOperations.addUser(access_id, permissions);
+        const history_log_result = await historyLogOperations.logAddUser(user_access_id, access_id, permissions);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -312,8 +324,9 @@ router.post('/search-user', async (request, response) => {
 
 router.post('/edit-user', async (request, response) => {
     try {
-        const { fname, lname, access_id, title, permissions } = request.body;
-        const result = await dbOperations.editUser(fname, lname, access_id, title, permissions);
+        const { user_access_id, fname, lname, access_id, title, permissions } = request.body;
+        const result = await dbOperations.editUser(fname.value, lname.value, access_id, title.value, permissions.value);
+        const history_log_result = await historyLogOperations.logEditUser(user_access_id, fname, lname, access_id, title, permissions);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -324,8 +337,9 @@ router.post('/edit-user', async (request, response) => {
 
 router.post('/delete-user', async (request, response) => {
     try {
-        const { access_id } = request.body;
+        const { user_access_id, access_id } = request.body;
         const result = await dbOperations.deleteUser(access_id);
+        const history_log_result = await historyLogOperations.logDeleteUser(user_access_id, access_id);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -366,6 +380,17 @@ router.post('/advanced-search-key', async (request, response) => {
     try {
         const { input_tag_num, input_core, input_room_num, input_room_type, input_key_num, input_availability, input_fname, input_lname, input_access_id, input_date_assigned } = request.body;
         const result = await dbOperations.advancedSearchKey(input_tag_num, input_core, input_room_num, input_room_type, input_key_num, input_availability, input_fname, input_lname, input_access_id, input_date_assigned);
+        response.status(200).send(result);
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+})
+
+router.get('/get-all-history', async (request, response) => {
+    try {
+        const result = await dbOperations.getAllHistoryLogs();
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);

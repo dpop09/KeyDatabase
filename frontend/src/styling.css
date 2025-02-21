@@ -109,9 +109,6 @@ Keys.jsx component styling
   border-radius: 5px;
   margin: 0.5rem;
 }
-#Keys-input-search-row {
-  height: 2.1rem;
-}
 
 #Keys-button-search,
 #Keys-button-clear-search{
@@ -946,9 +943,10 @@ EditKey.jsx component styling
 
 #EditKey-button-remove-holder {
   background-color: rgb(255, 204, 51, 1);
-  font-size: medium;
+  font-size: large;
   font-weight: bold;
-  height: 50%;
+  width: 10rem;
+  height: 2.3rem;
   border-radius: 5px;
   border: none;
 }
@@ -960,9 +958,10 @@ EditKey.jsx component styling
 
 #EditKey-button-remove-key {
   background-color: #dc4c64;
-  font-size: medium;
+  font-size: large;
   font-weight: bold;
-  height: 50%;
+  width: 10rem;
+  height: 2.3rem;
   border-radius: 5px;
   border: none;
 }
@@ -1080,9 +1079,6 @@ RequestForms.jsx component styling
   height: 2.35rem;
   border-radius: 5px;
   margin: 0.5rem;
-}
-#RequestForms-input-search-row {
-  height: 2.1rem;
 }
   
 #RequestForms-button-search,
@@ -1498,9 +1494,6 @@ Users.jsx component styling
   border-radius: 5px;
   margin: 0.5rem;
 }
-#Users-input-search-row {
-  height: 2.1rem;
-}
 
 #Users-button-search,
 #Users-button-clear-search{
@@ -1728,4 +1721,139 @@ EditUser.jsx component styling
   background-color:  #e27b8e;
   cursor: pointer;
   transition: 0.3s;
+}
+
+/*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+HistoryLog.jsx component styling
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#HistoryLog-div-container {
+  text-align: center;
+  padding: 2rem;
+  padding-top: 0;
+}
+
+#HistoryLog-div-top-flex-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+#HistoryLog-div-search-container {
+  width: 50%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#HistoryLog-input-search-row {
+  font-size: larger;
+  width: 50%;
+  height: 2.35rem;
+  border-radius: 5px;
+  margin: 0.5rem;
+}
+
+#HistoryLog-button-clear-search,
+#HistoryLog-button-search {
+  margin-left: .5rem;
+  margin-right: .5rem;
+  background-color: rgb(255, 204, 51, 1);
+  font-size: medium;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#HistoryLog-button-clear-search:hover,
+#HistoryLog-button-search:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#HistoryLog-button-advanced-search {
+  width: 52px;
+  height: 52px;
+  background-color: transparent;
+  background-image: url('./assets/advanced_search_icon_default.png');
+  background-size: cover;
+  border: none;
+  outline: none;
+}
+#HistoryLog-button-advanced-search:hover {
+  background-image: url('./assets/advanced_search_icon_hover.png');
+  cursor: pointer;
+  transition: .3s;
+}
+
+#HistoryLog-div-advanced-search {
+  border-top: 2px solid black;
+  margin-bottom: 2rem;
+}
+
+#HistoryLog-div-advanced-search-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#HistoryLog-advanced-search-inputs-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);  /* 5 columns of equal width */
+  grid-auto-rows: auto;                  /* Rows adjust based on content */
+  gap: 1rem;                           /* Space between grid items */
+}
+.HistoryLog-div-advanced-search-grid-item {
+  display: flex;
+  flex-direction: column;
+}
+.HistoryLog-div-advanced-search-grid-item label {
+  font-size: large;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.HistoryLog-div-advanced-search-grid-item input {
+  width: 95%;
+  font-size: larger;
+  height: 2.35rem;
+  border-radius: 5px;
+  padding: 0.2rem;
+}
+
+#HistoryLog-table-container {
+  height: 70vh;
+  overflow-y: auto;
+  border: 2px solid black;
+  border-radius: 5px;
+}
+#HistoryLog-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+#HistoryLog-td,
+#HistoryLog-th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+#HistoryLog-th {
+  color: white;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: rgb(9, 64, 56, 1);
+}
+#HistoryLog-tr {
+  text-align: left;
+}
+#HistoryLog-tr:nth-child(odd) {
+  background-color: #e2e2e2;
+}
+#HistoryLog-tr:nth-child(even) {
+  background-color: white;
+}
+#HistoryLog-tr:hover {
+  background-color: #d2d2d2;
 }

@@ -6,7 +6,7 @@ import NavBar from "./NavBar";
 function AddUser() {
 
     // global state variables
-    const { permissions } = useContext(AuthContext)
+    const { accessId, permissions } = useContext(AuthContext)
 
     // display an unauthorized page if the accessID is not found in the database
     if (permissions !== "Admin") {
@@ -36,7 +36,7 @@ function AddUser() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ accessId: accessId_input, permissions: permissions_input }),
+                body: JSON.stringify({ user_access_id: accessId, access_id: accessId_input, permissions: permissions_input }),
             });
             if (response.status === 200) {
                 navigate('/users');
