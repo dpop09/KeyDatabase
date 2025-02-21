@@ -248,9 +248,9 @@ const historyLogOperations = {
             console.log(error);
         }
     },
-    logAddUser: async function(user_access_id, access_id, permissions) {
+    logAddUser: async function(user_access_id, access_id, fname, lname, title, permissions) {
         const user = await dbOperations.getFullNameFromAccessID(user_access_id);
-        let text = `User added with the following information:\naccess_id = '${access_id}', permissions = '${permissions}'`
+        let text = `User added with the following information:\naccess_id = '${access_id}', first_name = '${fname}', last_name = '${lname}', title = '${title}', permissions = '${permissions}'`
         try {
             const sql = 'INSERT INTO history (user, target_type, target_id, action_type, log_action) VALUES (?, ?, ?, ?, ?)';
             const values = [user, "User", access_id, "Insert", text];

@@ -1568,40 +1568,46 @@ AddUser.jsx component styling
 
 #AddUser-div-container {
   position: absolute;
-  top: 50%;
+  top: 55%;
   left: 50%;
   margin-right: -50%;
   transform: translate(-50%, -50%);
-  width: 25%;
+  width: 30%;
+  border: 2px solid black;
+  border-radius: 5px;
 }
 
 #AddUser-h1-title {
   text-align: center;
   font-size: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px black solid;
 }
 
 #AddUser-div-form-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  margin-bottom: 1rem;
 }
 
 #AddUser-div-input-container {
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 
-#AddUser-label-name,
-#AddUser-label-permissions {
+.AddUser-label {
   font-size: 25px;
-  margin: 0.5rem;
+  margin: 0.5rem; 
 }
-
 #AddUser-input-access-id,
+#AddUser-input-fname,
+#AddUser-input-lname,
+#AddUser-input-title,
 #AddUser-select-permissions {
   font-size: larger;
   width: 50%;
@@ -1613,15 +1619,16 @@ AddUser.jsx component styling
 #AddUser-div-button-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  margin-top: 2rem;
+  border-top: 2px black solid;
+  padding: 1rem;
 }
 
 #AddUser-button-submit,
 #AddUser-button-cancel {
   background-color: rgb(255, 204, 51, 1);  
-  font-size: medium;
+  font-size: large;
   width: 5rem;
   height: 2.3rem;
   border-radius: 5px;
@@ -1640,35 +1647,39 @@ EditUser.jsx component styling
 
 #EditUser-div-container {
   position: absolute;
-  top: 50%;
+  top: 55%;
   left: 50%;
   margin-right: -50%;
   transform: translate(-50%, -50%);
-  width: 25%;
+  width: 30%;
+  border: 2px solid black;
+  border-radius: 5px;
 }
 
 #EditUser-h1-title {
   text-align: center;
   font-size: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px black solid;
 }
 
 #EditUser-div-form-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  margin-bottom: 1rem;
 }
 
 #EditUser-div-input-container {
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 
-#EditUser-label-name,
-#EditUser-label-permissions {
+.EditUser-label {
   font-size: 25px;
   margin: 0.5rem;
 }
@@ -1688,15 +1699,16 @@ EditUser.jsx component styling
 #EditUser-div-button-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  margin-top: 2rem;
+  border-top: 2px black solid;
+  padding: 1rem;
 }
 
 #EditUser-button-submit,
 #EditUser-button-cancel {
   background-color: rgb(255, 204, 51, 1);  
-  font-size: medium;
+  font-size: large;
   width: 5rem;
   height: 2.3rem;
   border-radius: 5px;
@@ -1711,7 +1723,7 @@ EditUser.jsx component styling
 
 #EditUser-button-delete {
   background-color: #dc4c64;
-  font-size: medium;
+  font-size: large;
   width: 5rem;
   height: 2.3rem;
   border-radius: 5px;

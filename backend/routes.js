@@ -294,14 +294,15 @@ router.get('/get-all-user-data', async (request, response) => {
 
 router.post('/add-user', async (request, response) => {
     try {
-        const { user_access_id, access_id, permissions } = request.body;
+        const { user_access_id, access_id, fname, lname, title, permissions } = request.body;
+        // check if the user already exists
         const doesUserAlreadyExist = await dbOperations.isAccessIdWhiteListed(access_id);
         if (doesUserAlreadyExist) {
             response.status(400).send('User already exists');
             return;
         }
-        const result = await dbOperations.addUser(access_id, permissions);
-        const history_log_result = await historyLogOperations.logAddUser(user_access_id, access_id, permissions);
+        const result = await dbOperations.addUser(access_id, fname, lname, title, permissions);
+        const history_log_result = await historyLogOperations.logAddUser(user_access_id, access_id, fname, lname, title, permissions);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -392,6 +393,22 @@ router.get('/get-all-history', async (request, response) => {
     try {
         const result = await dbOperations.getAllHistoryLogs();
         response.status(200).send(result);
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+})
+
+router.post('/get-name-title-from-access-id', async (request, response) => {
+    try {
+        const {input_access_id } = request.body;
+        let result = await scrapeWayneData(input_access_id)
+        // ensure result is an array and check if it's empty
+        if (!Array.isArray(result) || result.length === 0) {
+            result = [{ firstName: null, lastName: null, title: null }];
+        }
+        response.status(200).send({first_name : result[0].firstName, last_name : result[0].lastName, title : result[0].title})
     } catch (error) {
         errorLogOperations.logError(error);
         console.log(error);

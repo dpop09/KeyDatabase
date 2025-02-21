@@ -37,8 +37,8 @@ function EditUser() {
             const permissions = (document.getElementById('EditUser-select-permissions').value) ?
                         {value: document.getElementById('EditUser-select-permissions').value, edit_flag: true} :
                         {value: document.getElementById('EditUser-select-permissions').placeholder, edit_flag: false};
-            if (!fname.value || !lname.value || !title.value || !permissions.value) {
-                alert('Please fill in all fields.');
+            if (!fname.edit_flag && !lname.edit_flag && !title.edit_flag && !permissions.edit_flag) {
+                alert('No edits were made.');
                 return;
             }
             const response = await fetch('http://localhost:8081/edit-user', {
@@ -91,25 +91,25 @@ function EditUser() {
                 <h1 id="EditUser-h1-title">Edit {selectedUser.first_name}'s Profile</h1>
                 <div id="EditUser-div-form-container">
                     <div id="EditUser-div-input-container">
-                        <label id="EditUser-label-name">First Name:</label>
+                        <label className="EditUser-label">Access ID:</label>
+                        <input id="EditUser-input-access-id" className="EditUser-input-access-id" type="text" placeholder={selectedUser.access_id} disabled/>
+                    </div>
+                    <div id="EditUser-div-input-container">
+                        <label className="EditUser-label">First Name:</label>
                         <input id="EditUser-input-fname" type="text" placeholder={selectedUser.first_name}/>
                     </div>
                     <div id="EditUser-div-input-container">
-                        <label id="EditUser-label-name">Last Name:</label>
+                        <label className="EditUser-label">Last Name:</label>
                         <input id="EditUser-input-lname" type="text" placeholder={selectedUser.last_name}/>
                     </div>
                     <div id="EditUser-div-input-container">
-                        <label id="EditUser-label-name">Access ID:</label>
-                        <input id="EditUser-input-access-id" type="text" placeholder={selectedUser.access_id} disabled/>
-                    </div>
-                    <div id="EditUser-div-input-container">
-                        <label id="EditUser-label-name">Title:</label>
+                        <label className="EditUser-label">Title:</label>
                         <input id="EditUser-input-title" type="text" placeholder={selectedUser.title}/>
                     </div>
                     <div id="EditUser-div-input-container">
-                        <label id="EditUser-label-permissions">Permissions:</label>
+                        <label className="EditUser-label">Permissions:</label>
                         <select id="EditUser-select-permissions" placeholder={selectedUser.permission}>
-                            <option value="" hidden={true}>Select a permission</option>
+                            <option value="" hidden={true}>{selectedUser.permission}</option>
                             <option value="Student Employee">Student Employee</option>
                             <option value="Unauthorized">Unauthorized</option>
                             <option value="Admin">Admin</option>
