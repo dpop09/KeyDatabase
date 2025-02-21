@@ -59,6 +59,35 @@ function HistoryLog() {
         getAllHistory();
     }
 
+    const getOrdinal = (n) => {
+        const s = ["th", "st", "nd", "rd"],
+            v = n % 100;
+        return n + (s[(v - 20) % 10] || s[v] || s[0]);
+    };
+    const getReadableDate = (log) => {
+        // Parse the ISO string into a Date object
+        const date = new Date(log);
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        // Using local time; if you want to display UTC instead, use getUTCMonth(), getUTCDate(), etc.
+        const month = monthNames[date.getMonth()];
+        const day = getOrdinal(date.getDate());
+        const year = date.getFullYear();
+        return `${month} ${day}, ${year}`;
+    }
+    const getReadableTime = (log) => {
+        // Parse the ISO string into a Date object
+        const date = new Date(log);
+        // Using local time; if you want UTC time, use getUTCHours(), getUTCMinutes(), etc.
+        let hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const seconds = date.getSeconds().toString().padStart(2, '0');
+        const period = hours >= 12 ? 'pm' : 'am';
+        // Convert from 24-hour (military) format to 12-hour format
+        hours = hours % 12 || 12;
+        return `${hours}:${minutes}:${seconds}${period}`;
+    }
+
     return (
         <>
             <NavBar />
@@ -105,16 +134,24 @@ function HistoryLog() {
                         <tbody>
                             <tr id="HistoryLog-tr-header">
                                 <th id="HistoryLog-th">Log ID</th>
-                                <th id="HistoryLog-th">Access ID</th>
-                                <th id="HistoryLog-th">Action</th>
+                                <th id="HistoryLog-th">User</th>
+                                <th id="HistoryLog-th">Target Type</th>
+                                <th id="HistoryLog-th">Target ID</th>
+                                <th id="HistoryLog-th">Action Type</th>
+                                <th id="HistoryLog-th">Action Details</th>
+                                <th id="HistoryLog-th">Date</th>
                                 <th id="HistoryLog-th">Time</th>
                             </tr>
                             {data.map((log, i) => (
                                 <tr id="HistoryLog-tr" key={i}>
                                     <td id="HistoryLog-td">{log.log_id}</td>
-                                    <td id="HistoryLog-td">{log.access_id}</td>
+                                    <td id="HistoryLog-td">{log.user}</td>
+                                    <td id="HistoryLog-td">{log.target_type}</td>
+                                    <td id="HistoryLog-td">{log.target_id}</td>
+                                    <td id="HistoryLog-td">{log.action_type}</td>
                                     <td id="HistoryLog-td">{log.log_action}</td>
-                                    <td id="HistoryLog-td">{log.log_time}</td>
+                                    <td id="HistoryLog-td">{getReadableDate(log.log_time)}</td>
+                                    <td id="HistoryLog-td">{getReadableTime(log.log_time)}</td>
                                 </tr>
                             ))}
                         </tbody>

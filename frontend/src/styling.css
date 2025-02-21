@@ -943,9 +943,10 @@ EditKey.jsx component styling
 
 #EditKey-button-remove-holder {
   background-color: rgb(255, 204, 51, 1);
-  font-size: medium;
+  font-size: large;
   font-weight: bold;
-  height: 50%;
+  width: 10rem;
+  height: 2.3rem;
   border-radius: 5px;
   border: none;
 }
@@ -957,9 +958,10 @@ EditKey.jsx component styling
 
 #EditKey-button-remove-key {
   background-color: #dc4c64;
-  font-size: medium;
+  font-size: large;
   font-weight: bold;
-  height: 50%;
+  width: 10rem;
+  height: 2.3rem;
   border-radius: 5px;
   border: none;
 }
@@ -1822,8 +1824,8 @@ HistoryLog.jsx component styling
 }
 
 #HistoryLog-table-container {
+  height: 70vh;
   overflow-y: auto;
-  margin-bottom: 1.25rem;
   border: 2px solid black;
   border-radius: 5px;
 }

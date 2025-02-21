@@ -167,6 +167,7 @@ function EditKey() {
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify({ 
+                    access_id: accessId,
                     key_number: keyData.key_number,
                     form_id: keyData.form_id != null ? keyData.form_id : null // if there is a form associated with the key, send its form_id, else send null
                 })
@@ -195,7 +196,7 @@ function EditKey() {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({ key_number: keyData.key_number, form_id: keyData.form_id != null ? keyData.form_id : null })
+                body: JSON.stringify({ access_id: accessId, key_number: keyData.key_number, form_id: keyData.form_id != null ? keyData.form_id : null })
             })
             if (response.ok) { // if the response is successful
                 navigate('/keys');
@@ -393,8 +394,8 @@ function EditKey() {
                                 type="text" 
                                 id="EditKey-input-key_number" 
                                 placeholder={keyData.key_number} 
-                                disabled={permissions !== "Admin"} 
-                                className={permissions === "Admin" ? "admin-input" : "non-admin-input"}
+                                disabled={true} 
+                                className={"non-admin-input"}
                             />
                         </div>
                     </div>
@@ -552,13 +553,13 @@ function EditKey() {
                     <div id="EditKey-div-quick-actions-title">
                         <h2>QUICK ACTIONS</h2>
                     </div>
-                    <div id="EditKey-div-row-flex-box">
+                    <div id="EditKey-div-row-flex-box-even">
                         <h3>Remove Holder:</h3>
                         <button id="EditKey-button-remove-holder" onClick={handleRemoveHolder}>Remove Holder</button>
                     </div>
-                    <div id="EditKey-div-row-flex-box-even">
+                    <div id="EditKey-div-row-flex-box">
                         <h3>Delete Key:</h3>
-                        <button id="EditKey-button-remove-key" onClick={handleDeleteKey} disabled={false}>Delete Key</button>
+                        <button id="EditKey-button-remove-key" onClick={handleDeleteKey}>Delete Key</button>
                     </div>
                 </div>
                 <div id="EditKey-div-button-container">

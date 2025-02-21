@@ -1,9 +1,5 @@
 const mysql = require('mysql');
 const dotenv = require('dotenv');
-const fs = require('fs').promises;
-const path = require('path');
-const { v4: uuidv4 } = require('uuid');
-const { scrapeWayneData } = require('./scrape');
 const errorLogOperations = require('./errorLogOperations');
 const dbOperations = require('./dbOperations')
 dotenv.config(); // read from .env file
@@ -28,8 +24,8 @@ db.connect((err) => {
 
 const historyLogOperations = {
     logCreateKey: async function(access_id, tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, form_id) {
-        const first_name = await dbOperations.getFirstNameFromAccessID(access_id)
-        let text = `${first_name} created a key with the following information:\ntag_number = '${tag_number}', tag_color = '${tag_color}', core_number = '${core_number}', room_number = '${room_number}', room_type = '${room_type}', key_number = '${key_number}'`
+        const user = await dbOperations.getFullNameFromAccessID(access_id)
+        let text = `Key was inserted with the following information:\ntag_number = '${tag_number}', tag_color = '${tag_color}', core_number = '${core_number}', room_number = '${room_number}', room_type = '${room_type}', key_number = '${key_number}'`
         if (key_holder_fname) {
             text += `, key_holder_fname = '${key_holder_fname}'`
         }
@@ -49,8 +45,8 @@ const historyLogOperations = {
             text += `, form_id = '${form_id}'`
         }
         try {
-            const sql = 'INSERT INTO history (access_id, log_action) VALUES (?, ?)';
-            const values = [access_id, text];
+            const sql = 'INSERT INTO history (user, target_type, target_id, action_type, log_action) VALUES (?, ?, ?, ?, ?)';
+            const values = [user, "Key", key_number, "Insert", text];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {
@@ -67,8 +63,8 @@ const historyLogOperations = {
         }
     },
     logEditKey: async function(access_id, tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, request_form) {
-        const first_name = await dbOperations.getFirstNameFromAccessID(access_id)
-        let text = `${first_name} edited a key with the following information:\n`
+        const user = await dbOperations.getFullNameFromAccessID(access_id)
+        let text = `Key was edited with the following information:\n`;
         if (tag_number.edit_flag) {
             text += `, tag_number = '${tag_number.value}'`
         }
@@ -106,8 +102,8 @@ const historyLogOperations = {
             text += `, form_id = '${request_form.new_form_id}'`
         }
         try {
-            const sql = 'INSERT INTO history (access_id, log_action) VALUES (?, ?)';
-            const values = [access_id, text];
+            const sql = 'INSERT INTO history (user, target_type, target_id, action_type, log_action) VALUES (?, ?, ?, ?, ?)';
+            const values = [user, "Key", key_number.value, "Edit", text];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {
@@ -122,7 +118,211 @@ const historyLogOperations = {
             errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
-    }
+    },
+    logRemoveKeyHolder: async function(access_id, key_number, form_id) {
+        const user = await dbOperations.getFullNameFromAccessID(access_id)
+        let text = `All of the key holder's information was removed `;
+        if (form_id) {
+            text += `, and the key got unattached from request form '${form_id}'`;
+        }
+        try {
+            const sql = 'INSERT INTO history (user, target_type, target_id, action_type, log_action) VALUES (?, ?, ?, ?, ?)';
+            const values = [user, "Key", key_number, "Edit", text];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
+    logDeleteKey: async function(access_id, key_number, form_id) {
+        const user = await dbOperations.getFullNameFromAccessID(access_id)
+        let text = `The key was deleted `;
+        if (form_id) {
+            text += `and unattached from request form '${form_id}'`;
+        }
+        try {
+            const sql = 'INSERT INTO history (user, target_type, target_id, action_type, log_action) VALUES (?, ?, ?, ?, ?)';
+            const values = [user, "Key", key_number, "Delete", text];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
+    logCreateRequestForm: async function(user_access_id, first_name, last_name, access_id, date_signed, form_id) {
+        const user = await dbOperations.getFullNameFromAccessID(user_access_id)
+        let text = `Request form was inserted with a PDF file with the following information:\nfirst_name = '${first_name}', last_name = '${last_name}, access_id = '${access_id}'`
+        if (date_signed) {
+            text += `, date_signed = '${date_signed}'`
+        }
+        try {
+            const sql = 'INSERT INTO history (user, target_type, target_id, action_type, log_action) VALUES (?, ?, ?, ?, ?)';
+            const values = [user, "Request Form", form_id, "Insert", text];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
+    logEditRequestForm: async function(user_access_id, form_id, first_name, last_name, access_id, date_signed, file_buffer_flag) {
+        const user = await dbOperations.getFullNameFromAccessID(user_access_id);
+        let text = `Request form was edited with the following information:\n`;
+        if (file_buffer_flag) {
+            text += `Uploaded a new PDF file, `;
+        }
+        if (first_name.edit_flag) {
+            text += `first_name = '${first_name.value}'`;
+        }
+        if (last_name.edit_flag) {
+            text += `last_name = '${last_name.value}'`;
+        }
+        if (access_id.edit_flag) {
+            text += `access_id = '${access_id}'`;
+        }
+        if (date_signed.edit_flag) {
+            text += `date_signed = '${date_signed}'`;
+        }
+        try {
+            const sql = 'INSERT INTO history (user, target_type, target_id, action_type, log_action) VALUES (?, ?, ?, ?, ?)';
+            const values = [user, "Request Form", form_id, "Insert", text];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
+    logDeleteRequestForm: async function(user_access_id, form_id) {
+        const user = await dbOperations.getFullNameFromAccessID(user_access_id);
+        const text = `Request form was deleted`;
+        try {
+            const sql = 'INSERT INTO history (user, target_type, target_id, action_type, log_action) VALUES (?, ?, ?, ?, ?)';
+            const values = [user, "Request Form", form_id, "Delete", text];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
+    logAddUser: async function(user_access_id, access_id, permissions) {
+        const user = await dbOperations.getFullNameFromAccessID(user_access_id);
+        let text = `User added with the following information:\naccess_id = '${access_id}', permissions = '${permissions}'`
+        try {
+            const sql = 'INSERT INTO history (user, target_type, target_id, action_type, log_action) VALUES (?, ?, ?, ?, ?)';
+            const values = [user, "User", access_id, "Insert", text];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
+    logEditUser: async function(user_access_id, fname, lname, access_id, title, permissions) {
+        const user = await dbOperations.getFullNameFromAccessID(user_access_id);
+        let text = `User was edited with the following information:\n`;
+        if (fname.edit_flag) {
+            text += `, first_name = '${fname.value}'`;
+        }
+        if (lname.edit_flag) {
+            text += `, last_name = '${lname.value}'`;
+        }
+        if (title.edit_flag) {
+            text += `, title = '${title.value}'`;
+        }
+        if (permissions.edit_flag) {
+            text += `, permission = '${permissions.value}'`
+        }
+        try {
+            const sql = 'INSERT INTO history (user, target_type, target_id, action_type, log_action) VALUES (?, ?, ?, ?, ?)';
+            const values = [user, "User", access_id, "Edit", text];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
+    logDeleteUser: async function(user_access_id, access_id) {
+        const user = await dbOperations.getFullNameFromAccessID(user_access_id);
+        const text = `User was deleted`;
+        try {
+            const sql = 'INSERT INTO history (user, target_type, target_id, action_type, log_action) VALUES (?, ?, ?, ?, ?)';
+            const values = [user, "User", access_id, "Delete", text];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
 }
 
 module.exports = historyLogOperations;

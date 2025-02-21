@@ -109,10 +109,8 @@ const dbOperations = {
         try {
             const date_assigned_parts = date_assigned.split(/[-\/]/); // Split date
             const formatted_date_assigned = `${date_assigned_parts[2]}-${date_assigned_parts[0]}-${date_assigned_parts[1]}`; // Rebuild date
-            const current_date = new Date() // Get current date
-            const formatted_date_last_edited = current_date.toISOString().slice(0, 19).replace('T', ' '); // Format date
-            const sql = 'UPDATE `Keys` SET tag_number = ?, tag_color = ?, core_number = ?, room_number = ?, room_type = ?, key_holder_fname = ?, key_holder_lname = ?, key_holder_access_id = ?, date_assigned = ?, comments = ?, date_last_edited = ?, form_id = ? WHERE key_number = ?';
-            const values = [tag_number, tag_color, core_number, room_number, room_type, key_holder_fname, key_holder_lname, key_holder_access_id, formatted_date_assigned, comments, formatted_date_last_edited, new_form_id, key_number];
+            const sql = 'UPDATE `Keys` SET tag_number = ?, tag_color = ?, core_number = ?, room_number = ?, room_type = ?, key_holder_fname = ?, key_holder_lname = ?, key_holder_access_id = ?, date_assigned = ?, comments = ?, form_id = ? WHERE key_number = ?';
+            const values = [tag_number, tag_color, core_number, room_number, room_type, key_holder_fname, key_holder_lname, key_holder_access_id, formatted_date_assigned, comments, new_form_id, key_number];
             // Perform the update to the key
             await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
@@ -145,11 +143,8 @@ const dbOperations = {
     },
     removeKeyHolder: async function (key_number) {
         try {
-            const current_date = new Date() // Get current date
-            const formatted_date_last_edited = current_date.toISOString().slice(0, 19).replace('T', ' '); // Format date
-            const last_action_made = 'Removed key holder';
-            const sql = 'UPDATE `Keys` SET key_holder_fname = NULL, key_holder_lname = NULL, key_holder_access_id = NULL, date_assigned = NULL, last_action_made = ?, date_last_edited = ? WHERE key_number = ?';
-            const values = [last_action_made, formatted_date_last_edited, key_number];
+            const sql = 'UPDATE `Keys` SET key_holder_fname = NULL, key_holder_lname = NULL, key_holder_access_id = NULL, date_assigned = NULL WHERE key_number = ?';
+            const values = [key_number];
             // Perform the update
             await new Promise((resolve, reject) => { 
                 db.query(sql, values, (err, result) => {
@@ -216,9 +211,8 @@ const dbOperations = {
             console.log(error);
         }
     },
-    addKeyRequestForm: async function (first_name, last_name, access_id, date_signed, file_buffer) {
+    addKeyRequestForm: async function (first_name, last_name, access_id, date_signed, file_buffer, form_id) {
         try {
-            const form_id = uuidv4();
             const sql = `INSERT INTO key_request_form (form_id, first_name, last_name, access_id, date_signed, image_data) VALUES (?, ?, ?, ?, ?, ?)`;
             const values = [form_id, first_name, last_name, access_id, date_signed, file_buffer];
             const response = await new Promise((resolve, reject) => {
@@ -766,23 +760,28 @@ const dbOperations = {
             throw err;
         }
     },
-    getFirstNameFromAccessID: async function(access_id) {
+    getFullNameFromAccessID: async function(access_id) {
         try {
-            const sql = 'SELECT first_name FROM users WHERE access_id = ?';
+            // Use a comma to select multiple columns
+            const sql = 'SELECT first_name, last_name FROM users WHERE access_id = ?';
             const values = [access_id];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {
-                        reject(err);
-                    } else {
-                        resolve(result[0].first_name);
+                        return reject(err);
                     }
+                    // Ensure we have a result and then combine first and last name
+                    if (result.length > 0) {
+                        const fullName = `${result[0].first_name} ${result[0].last_name}`;
+                        return resolve(fullName);
+                    }
+                    resolve(''); // or handle no user found accordingly
                 });
             });
             return response;
         } catch (error) {
             errorLogOperations.logError(error); // Log the error
-            console.log(error);
+            console.error(error);
         }
     },
     getAllHistoryLogs: async function() {

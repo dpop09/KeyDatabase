@@ -6,7 +6,7 @@ import NavBar from "./NavBar";
 function AddRequestForm() {
 
     // global state variables
-    const { permissions } = useContext(AuthContext)
+    const { accessId, permissions } = useContext(AuthContext)
 
     // display an unauthorized page if the user is unauthorized
     if (permissions === "Unauthorized") {
@@ -60,6 +60,7 @@ function AddRequestForm() {
         }
         // append the form data to a FormData object
         const formData = new FormData();
+        formData.append('user_access_id', accessId);
         formData.append('first_name', first_name);
         formData.append('last_name', last_name);
         formData.append('access_id', access_id);
