@@ -480,11 +480,10 @@ const dbOperations = {
             console.log(error);
         }
     },
-    addUser: async function (access_id, permissions) {
+    addUser: async function (access_id, fname, lname, title, permissions) {
         try {
-            const results = await scrapeWayneData(access_id);
             const sql = 'INSERT INTO users (access_id, first_name, last_name, title, permission) VALUES (?, ?, ?, ?, ?)';
-            const values = [access_id, results[0].firstName, results[0].lastName, results[0].title, permissions];
+            const values = [access_id, fname, lname, title, permissions];
             const response = await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {
