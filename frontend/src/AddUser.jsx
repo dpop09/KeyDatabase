@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from './AuthContext'
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
-import Modal from 'react-bootstrap/Modal';
+import { Modal, Box } from '@mui/material';
 
 function AddUser() {
 
@@ -144,13 +144,23 @@ function AddUser() {
                     <button id="AddUser-button-submit" onClick={handleSubmit}>Submit</button>
                 </div>
             </div>
-            <Modal show={showModal} onHide={handleModalClose} centered>
-                <Modal.Header className="AddUser-Modal" >
-                    <Modal.Title>{errorMessage}</Modal.Title>
-                </Modal.Header>
-                <Modal.Footer className="AddUser-Modal" >
+            <Modal open={showModal} onClose={handleModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <h2>{errorMessage}</h2>
                     <button id="AddUser-button-modal" onClick={handleModalClose}>Close</button>
-                </Modal.Footer>
+                </Box>
             </Modal>
         </>
     )

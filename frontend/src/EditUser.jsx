@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from './AuthContext'
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
+import { Modal, Box } from '@mui/material';
 
 function EditUser() {
 
@@ -17,6 +18,14 @@ function EditUser() {
             </div>
         )
     }
+
+    // State for the Modal
+    const [showModal, setShowModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
+
+    // Modal handlers
+    const handleModalClose = () => setShowModal(false);
+    const handleModalShow = () => setShowModal(true);
 
     const navigate = useNavigate();
     const handleCancel = () => {
@@ -36,9 +45,10 @@ function EditUser() {
                         {value: document.getElementById('EditUser-input-title').placeholder, edit_flag: false};
             const permissions = (document.getElementById('EditUser-select-permissions').value) ?
                         {value: document.getElementById('EditUser-select-permissions').value, edit_flag: true} :
-                        {value: document.getElementById('EditUser-select-permissions').placeholder, edit_flag: false};
+                        {value: selectedUser.permission, edit_flag: false};
             if (!fname.edit_flag && !lname.edit_flag && !title.edit_flag && !permissions.edit_flag) {
-                alert('No edits were made.');
+                setErrorMessage("No edits were made.");
+                handleModalShow();
                 return;
             }
             const response = await fetch('http://localhost:8081/edit-user', {
@@ -58,7 +68,8 @@ function EditUser() {
             if (response.status === 200) {
                 navigate('/users');
             } else {
-                alert('Internal Server Error. Please try again later.');
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
             }
         } catch (error) {
             console.log(error)
@@ -77,7 +88,8 @@ function EditUser() {
             if (response.status === 200) {
                 navigate('/users');
             } else {
-                alert('Internal Server Error. Please try again later.');
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
             }
         } catch (error) {
             console.log(error)
@@ -122,6 +134,24 @@ function EditUser() {
                     <button id="EditUser-button-delete" onClick={handleDeleteUser}>Delete</button>
                 </div>
             </div>
+            <Modal open={showModal} onClose={handleModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",
+                    textAlign: "center"
+                }}>
+                    <h2>{errorMessage}</h2>
+                    <button id="EditUser-button-modal" onClick={handleModalClose}>Close</button>
+                </Box>
+            </Modal>
         </>
     )
 }
