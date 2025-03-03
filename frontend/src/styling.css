@@ -1643,13 +1643,6 @@ AddUser.jsx component styling
   transition: 0.3s;
 }
 
-.AddUser-Modal {
-  background-color: white;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 EditUser.jsx component styling
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -1715,7 +1708,8 @@ EditUser.jsx component styling
 }
 
 #EditUser-button-submit,
-#EditUser-button-cancel {
+#EditUser-button-cancel,
+#EditUser-button-modal {
   background-color: rgb(255, 204, 51, 1);  
   font-size: large;
   width: 5rem;
@@ -1724,7 +1718,8 @@ EditUser.jsx component styling
   border: none;
 }
 #EditUser-button-submit:hover,
-#EditUser-button-cancel:hover {  
+#EditUser-button-cancel:hover,
+#EditUser-button-modal:hover {  
   background-color: rgb(255, 224, 133, 1);
   cursor: pointer;
   transition: 0.3s;
