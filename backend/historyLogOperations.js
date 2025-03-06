@@ -1,26 +1,6 @@
-const mysql = require('mysql');
-const dotenv = require('dotenv');
+const db = require('./db');
 const errorLogOperations = require('./errorLogOperations');
 const dbOperations = require('./dbOperations')
-dotenv.config(); // read from .env file
-
-// create a connection to the database
-const db = mysql.createConnection({
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
-    port: process.env.DB_PORT
-})
-
-// connect to the database
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection failed: ' + err.stack);
-        return;
-    }
-    console.log('Connected to the database.');
-});
 
 const historyLogOperations = {
     logCreateKey: async function(access_id, tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, form_id) {
