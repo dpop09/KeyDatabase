@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from './AuthContext'
 import NavBar from "./NavBar";
+import { Modal, Box } from '@mui/material';
 
 function HistoryLog() {
 
     // global state variables
-    const { permissions } = useContext(AuthContext)
+    const { accessId, permissions } = useContext(AuthContext)
 
     // display an unauthorized page if the permissions is not found in the database
     if (permissions === "Unauthorized") {
@@ -17,8 +18,26 @@ function HistoryLog() {
         )
     }
 
+    // state variables for the modals
+    const [showModal, setShowModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
     const [data, setData] = useState([]);
     const [displayAdvancedSearch, setDisplayAdvancedSearch] = useState(false)
+
+    // modal handlers
+    const handleModalClose = () => setShowModal(false);
+    const handleModalShow = () => setShowModal(true);
+    const handleConfirmationModalClose = () => setShowConfirmationModal(false);
+    const handleConfirmationModalShow = () => {
+        if (permissions !== "Admin") {
+            setErrorMessage("This action can only be performed by an admin.");
+            handleModalShow();
+            return
+        }
+        setShowConfirmationModal(true);
+    }
 
     const toggleDisplayAdvancedSearch = () => {
         setDisplayAdvancedSearch(!displayAdvancedSearch)
@@ -37,6 +56,28 @@ function HistoryLog() {
     useEffect(() => {
         getAllHistory();
     }, []);
+
+    const handleDeleteHistory = async () => {
+        try {
+            const response = await fetch('http://localhost:8081/delete-history', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ access_id: accessId })
+            })
+            if (!response.ok) { // if the response is unsuccessful
+                handleConfirmationModalClose();
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
+                return
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        handleConfirmationModalClose();
+        getAllHistory(); // update the history log table
+    }
 
     const handleSearch = async (event) => {
         event.preventDefault();
@@ -98,7 +139,10 @@ function HistoryLog() {
                         <input id="HistoryLog-input-search-row" type="text" placeholder="Search..." onChange={handleSearch} />
                         <button id="HistoryLog-button-clear-search" onClick={handleClearSearch}>Clear</button>
                     </div>
-                    <button id="HistoryLog-button-advanced-search" onClick={toggleDisplayAdvancedSearch} />
+                    <div id="HistoryLog-div-action-buttons">
+                        <button id="HistoryLog-button-advanced-search" onClick={toggleDisplayAdvancedSearch} />
+                        <button id="HistoryLog-button-delete-all" onClick={handleConfirmationModalShow} />
+                    </div>
                 </div>
                 {displayAdvancedSearch && (
                     <div id="HistoryLog-div-advanced-search">
@@ -158,6 +202,45 @@ function HistoryLog() {
                     </table>
                 </div>
             </div>
+            <Modal open={showModal} onClose={handleModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <h2>{errorMessage}</h2>
+                    <button id="Modal-button-close" onClick={handleModalClose}>Close</button>
+                </Box>
+            </Modal>
+            <Modal open={showConfirmationModal} onClose={handleConfirmationModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <h2>Are you sure you'd like to delete the history log?</h2>
+                    <div id="Modal-div-buttons">
+                        <button id="Modal-button-close" onClick={handleConfirmationModalClose}>Cancel</button>
+                        <button id="Modal-button-confirm" onClick={handleDeleteHistory}>Delete</button>
+                    </div>
+                </Box>
+            </Modal>
         </>
     )
 }

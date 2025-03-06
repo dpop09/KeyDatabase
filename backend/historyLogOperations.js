@@ -323,6 +323,27 @@ const historyLogOperations = {
             console.log(error);
         }
     },
+    logDeleteHistoryLog: async function(user_access_id) {
+        const user = await dbOperations.getFullNameFromAccessID(user_access_id);
+        const text = `History log was deleted`;
+        try {
+            const sql = 'INSERT INTO history (user, target_type, target_id, action_type, log_action) VALUES (?, ?, ?, ?, ?)';
+            const values = [user, "History", null, "Delete", text];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
 }
 
 module.exports = historyLogOperations;

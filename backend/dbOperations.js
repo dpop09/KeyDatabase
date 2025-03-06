@@ -800,7 +800,32 @@ const dbOperations = {
             errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
-    }
+    },
+    deleteHistoryLog: async function() {
+        try {
+            const sql = 'DELETE FROM history';
+            const sql_reset_auto_increment = 'ALTER TABLE history AUTO_INCREMENT = 1'; // Reset auto-increment
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        db.query(sql_reset_auto_increment, (resetErr) => { // Reset auto-increment after deletion
+                            if (resetErr) {
+                                reject(resetErr);
+                            } else {
+                                resolve(result);
+                            }
+                        });
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
 }
 
 module.exports = dbOperations
