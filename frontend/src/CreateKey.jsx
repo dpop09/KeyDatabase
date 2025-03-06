@@ -134,10 +134,13 @@ function CreateKey() {
                     assigned_key: assigned_key
                 })
             })
-            if (response.ok) { // if the response is successful
+            if (response.status === 200) { // if the response is successful
                 navigate('/keys');
-            } else { // if the response is unsuccessful
+            } else if (response.status === 500) { // if the response is unsuccessful
                 setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
+            } else if (response.status === 409) { // if there is already a key with the same number
+                setErrorMessage(`Key ${key_number} already exists. Duplicate keys are not allowed.`);
                 handleModalShow();
             }
         } catch (error) {

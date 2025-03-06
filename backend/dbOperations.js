@@ -804,6 +804,25 @@ const dbOperations = {
             console.log(error);
         }
     },
+    isKeyInDatabase: async function(key_number) {
+        try {
+            const sql = 'SELECT 1 FROM `Keys` WHERE key_number = ? LIMIT 1';
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, [key_number], (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result.length > 0); // returns true if key exists, false otherwise
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error);
+            console.error("Error checking key in database:", error);
+            return false; // Return false in case of an error
+        }
+    },
 }
 
 module.exports = dbOperations

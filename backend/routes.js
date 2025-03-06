@@ -216,11 +216,31 @@ router.post('/create-key', async (request, response) => {
             comments, 
             new_form_id, 
             assigned_key } = request.body;
-        const result = await dbOperations.createKey(tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id);
-        const history_log_result = await  historyLogOperations.logCreateKey(access_id, tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id)
-        if (new_form_id != null) { // if a form is provided
+
+        // check if the key already exists
+        const does_key_already_exist = await dbOperations.isKeyInDatabase(key_number);
+        if (does_key_already_exist) {
+            return response.status(409).json({ error: "Key already exists in the database." }); // 409 Conflict
+        }
+
+        // create the key if it doesn't exist
+        const result = await dbOperations.createKey(
+            tag_number, tag_color, core_number, room_number, room_type, key_number, 
+            key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, 
+            comments, new_form_id);
+
+        // log key creation in history
+        const history_log_result = await  historyLogOperations.logCreateKey(
+            access_id, tag_number, tag_color, core_number, room_number, room_type, 
+            key_number, key_holder_fname, key_holder_lname, key_holder_access_id, 
+            date_assigned, comments, new_form_id)
+
+        // update the request form if a form is provided
+        if (new_form_id != null) {
             const update_new_form_result = await dbOperations.updateKeyNumberInRequestForm(key_number, new_form_id, assigned_key); 
         }
+
+        // send success response
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
