@@ -66,17 +66,17 @@ function HistoryLog() {
                 },
                 body: JSON.stringify({ access_id: accessId })
             })
-            if (!response.ok) { // if the response is unsuccessful
+            if (response.status === 200) {
+                handleConfirmationModalClose();
+                getAllHistory(); // update the history log table
+            } else { // if the response is unsuccessful
                 handleConfirmationModalClose();
                 setErrorMessage("Internal Server Error. Please try again later.");
                 handleModalShow();
-                return
             }
         } catch (error) {
             console.log(error);
         }
-        handleConfirmationModalClose();
-        getAllHistory(); // update the history log table
     }
 
     const handleSearch = async (event) => {

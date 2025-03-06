@@ -22,11 +22,14 @@ function EditUser() {
     // State for the Modal
     const [showModal, setShowModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
     // Modal handlers
     const handleModalClose = () => setShowModal(false);
     const handleModalShow = () => setShowModal(true);
-
+    const handleConfirmationModalClose = () => setShowConfirmationModal(false);
+    const handleConfirmationModalShow = () => setShowConfirmationModal(true);
+    
     const navigate = useNavigate();
     const handleCancel = () => {
         navigate('/users');
@@ -83,11 +86,16 @@ function EditUser() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ user_access_id: accessId, access_id: selectedUser.access_id }),
+                body: JSON.stringify({ 
+                    user_access_id: accessId, 
+                    access_id: selectedUser.access_id 
+                }),
             });
             if (response.status === 200) {
+                handleConfirmationModalClose();
                 navigate('/users');
             } else {
+                handleConfirmationModalClose();
                 setErrorMessage("Internal Server Error. Please try again later.");
                 handleModalShow();
             }
@@ -131,7 +139,7 @@ function EditUser() {
                 <div id="EditUser-div-button-container">
                     <button id="EditUser-button-cancel" onClick={handleCancel}>Cancel</button>
                     <button id="EditUser-button-submit" onClick={handleSubmit}>Submit</button>
-                    <button id="EditUser-button-delete" onClick={handleDeleteUser}>Delete</button>
+                    <button id="EditUser-button-delete" onClick={handleConfirmationModalShow}>Delete</button>
                 </div>
             </div>
             <Modal open={showModal} onClose={handleModalClose}>
@@ -150,6 +158,27 @@ function EditUser() {
                 }}>
                     <h2>{errorMessage}</h2>
                     <button id="Modal-button-close" onClick={handleModalClose}>Close</button>
+                </Box>
+            </Modal>
+            <Modal open={showConfirmationModal} onClose={handleConfirmationModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <h2>Are you sure you'd like to delete {selectedUser.first_name}'s profile?</h2>
+                    <div id="Modal-div-buttons">
+                        <button id="Modal-button-close" onClick={handleConfirmationModalClose}>Cancel</button>
+                        <button id="Modal-button-confirm" onClick={handleDeleteUser}>Delete</button>
+                    </div>
                 </Box>
             </Modal>
         </>

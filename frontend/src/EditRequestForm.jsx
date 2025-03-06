@@ -22,12 +22,22 @@ function EditRequestForm() {
     // state variables for the modals
     const [showModal, setShowModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
     const [pdfData, setPdfData] = useState(null);
 
     // modal handlers
     const handleModalClose = () => setShowModal(false);
     const handleModalShow = () => setShowModal(true);
+    const handleConfirmationModalClose = () => setShowConfirmationModal(false);
+    const handleConfirmationModalShow = () => {
+        if (permissions !== "Admin") {
+            setErrorMessage("This action can only be performed by an admin.");
+            handleModalShow();
+            return
+        }
+        setShowConfirmationModal(true);
+    }
 
     const navigate = useNavigate();
     const handleCancel = () => {
@@ -130,27 +140,29 @@ function EditRequestForm() {
     };
     
 
-    const handleDelete = (event) => {
-        if (permissions !== "Admin") {
-            setErrorMessage("This action can only be performed by an admin.");
-            handleModalShow();
-            return
-        }
-        event.preventDefault();
-        fetch(`http://localhost:8081/delete-key-request-form`, { // send a POST request to the backend route
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ user_access_id: accessId, form_id: requestFormData.form_id }),
-        }).then(response => {
-            if (response.ok) { // if the response is successful
+    const handleDeleteForm = async () => {
+        try {
+            const response = await fetch(`http://localhost:8081/delete-key-request-form`, { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    user_access_id: accessId, 
+                    form_id: requestFormData.form_id 
+                }),
+            })
+            if (response.status === 200) {
+                handleConfirmationModalClose();
                 navigate('/requestforms'); // redirect to the request forms page
-            } else {
-                setErrorMessage('Internal Server Error. Please try again later.'); // log an error message
+            } else { // if the response is unsuccessful
+                handleConfirmationModalClose();
+                setErrorMessage("Internal Server Error. Please try again later.");
                 handleModalShow();
             }
-        }).catch(err => console.log(err));
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const getInfoFromAccessId = async (event) => {
@@ -236,8 +248,8 @@ function EditRequestForm() {
                             <h2>QUICK ACTIONS</h2>
                         </div>
                         <div id="EditRequestForm-div-row-flex-box">
-                            <h3>DELETE FORM:</h3>
-                            <button id="EditRequestForm-button-delete" onClick={handleDelete}>Delete</button>
+                            <h3>Delete Form:</h3>
+                            <button id="EditRequestForm-button-delete" onClick={handleConfirmationModalShow}>Delete</button>
                         </div>
                     </div>
                     <div id="EditRequestForm-div-right-box">
@@ -269,6 +281,27 @@ function EditRequestForm() {
                 }}>
                     <h2>{errorMessage}</h2>
                     <button id="Modal-button-close" onClick={handleModalClose}>Close</button>
+                </Box>
+            </Modal>
+            <Modal open={showConfirmationModal} onClose={handleConfirmationModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <h2>Are you sure you'd like to delete request form {requestFormData.form_id}?</h2>
+                    <div id="Modal-div-buttons">
+                        <button id="Modal-button-close" onClick={handleConfirmationModalClose}>Cancel</button>
+                        <button id="Modal-button-confirm" onClick={handleDeleteForm}>Delete</button>
+                    </div>
                 </Box>
             </Modal>
         </>

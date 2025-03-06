@@ -21,6 +21,7 @@ function EditKey() {
     // state variables for the modals
     const [showModal, setShowModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
     const [requestForms, setRequestForms] = useState([]);
     const [selectedForm, setSelectedForm] = useState(null);
@@ -29,6 +30,15 @@ function EditKey() {
     // modal handlers
     const handleModalClose = () => setShowModal(false);
     const handleModalShow = () => setShowModal(true);
+    const handleConfirmationModalClose = () => setShowConfirmationModal(false);
+    const handleConfirmationModalShow = () => {
+        if (permissions !== "Admin") {
+            setErrorMessage("This action can only be performed by an admin.");
+            handleModalShow();
+            return
+        }
+        setShowConfirmationModal(true);
+    }
 
     const navigate = useNavigate();
     const handleCancel = () => {
@@ -196,13 +206,7 @@ function EditKey() {
         }
     }
 
-    const handleDeleteKey = async (event) => {
-        if (permissions !== "Admin") {
-            setErrorMessage("This action can only be performed by an admin.");
-            handleModalShow();
-            return
-        }
-        event.preventDefault();
+    const handleDeleteKey = async () => {
         try {
             const response = await fetch('http://localhost:8081/delete-key', { // send a POST request to the backend route
                 method: 'POST',
@@ -212,8 +216,10 @@ function EditKey() {
                 body: JSON.stringify({ access_id: accessId, key_number: keyData.key_number, form_id: keyData.form_id != null ? keyData.form_id : null })
             })
             if (response.ok) { // if the response is successful
+                handleConfirmationModalClose();
                 navigate('/keys');
             } else { // if the response is unsuccessful
+                handleConfirmationModalClose();
                 setErrorMessage("Internal Server Error. Please try again later.");
                 handleModalShow();
             }
@@ -574,7 +580,7 @@ function EditKey() {
                     </div>
                     <div id="EditKey-div-row-flex-box">
                         <h3>Delete Key:</h3>
-                        <button id="EditKey-button-remove-key" onClick={handleDeleteKey}>Delete Key</button>
+                        <button id="EditKey-button-remove-key" onClick={handleConfirmationModalShow}>Delete Key</button>
                     </div>
                 </div>
                 <div id="EditKey-div-button-container">
@@ -598,6 +604,27 @@ function EditKey() {
                 }}>
                     <h2>{errorMessage}</h2>
                     <button id="Modal-button-close" onClick={handleModalClose}>Close</button>
+                </Box>
+            </Modal>
+            <Modal open={showConfirmationModal} onClose={handleConfirmationModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <h2>Are you sure you'd like to delete key {keyData.key_number}?</h2>
+                    <div id="Modal-div-buttons">
+                        <button id="Modal-button-close" onClick={handleConfirmationModalClose}>Cancel</button>
+                        <button id="Modal-button-confirm" onClick={handleDeleteKey}>Delete</button>
+                    </div>
                 </Box>
             </Modal>
         </> 
