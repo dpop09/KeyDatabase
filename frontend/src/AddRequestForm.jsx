@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from './AuthContext'
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
+import { Modal, Box } from '@mui/material';
 
 function AddRequestForm() {
 
@@ -18,8 +19,15 @@ function AddRequestForm() {
         )
     }
 
+    // state variables for the modals
+    const [showModal, setShowModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
     // state variable for the PDF data of the request form
     const [pdfData, setPdfData] = useState(null);
+
+    // modal handlers
+    const handleModalClose = () => setShowModal(false);
+    const handleModalShow = () => setShowModal(true);
 
     // navigation back to the request forms page
     const navigate = useNavigate();
@@ -48,15 +56,16 @@ function AddRequestForm() {
     // function to handle the form submission
     const handleSubmit = () => {
         // get the values of the input fields
-        const first_name = document.getElementById('AddRequestForm-input-first-name').value;
-        const last_name = document.getElementById('AddRequestForm-input-last-name').value;
-        const access_id = document.getElementById('AddRequestForm-input-access-id').value;
+        const first_name = document.getElementById('AddRequestForm-input-first-name').value.trim();
+        const last_name = document.getElementById('AddRequestForm-input-last-name').value.trim();
+        const access_id = document.getElementById('AddRequestForm-input-access-id').value.trim();
         const date_signed = document.getElementById('AddRequestForm-input-date-signed').value;
         const file = document.getElementById('AddRequestForm-input-file').files[0];
         // check if all required fields are filled
         if (!first_name || !last_name || !access_id || !file) {
-            alert("Please fill out all required fields.");
-            return;
+            setErrorMessage("Please fill out all required fields.");
+            handleModalShow();
+            return
         }
         // append the form data to a FormData object
         const formData = new FormData();
@@ -75,7 +84,8 @@ function AddRequestForm() {
                 if (response.ok) { // if the response is successful
                     navigate('/requestforms'); // redirect to the request forms page
                 } else {
-                    console.log("Internal Server Error. Please try again later.");
+                    setErrorMessage("Internal Server Error. Please try again later.");
+                    handleModalShow();
                 }
             }).catch(err => console.log(err));
         } catch (err) {
@@ -160,6 +170,24 @@ function AddRequestForm() {
                     <button id="AddRequestForm-button-submit" onClick={handleSubmit} >Submit</button>
                 </div>
             </div>
+            <Modal open={showModal} onClose={handleModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <h2>{errorMessage}</h2>
+                    <button id="Modal-button-close" onClick={handleModalClose}>Close</button>
+                </Box>
+            </Modal>
         </>
     )
 }

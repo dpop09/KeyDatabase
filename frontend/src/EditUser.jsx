@@ -149,7 +149,7 @@ function EditUser() {
                     textAlign: "center"
                 }}>
                     <h2>{errorMessage}</h2>
-                    <button id="EditUser-button-modal" onClick={handleModalClose}>Close</button>
+                    <button id="Modal-button-close" onClick={handleModalClose}>Close</button>
                 </Box>
             </Modal>
         </>

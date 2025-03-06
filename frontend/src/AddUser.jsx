@@ -159,7 +159,7 @@ function AddUser() {
                     textAlign: "center"       // Center text inside
                 }}>
                     <h2>{errorMessage}</h2>
-                    <button id="AddUser-button-modal" onClick={handleModalClose}>Close</button>
+                    <button id="Modal-button-close" onClick={handleModalClose}>Close</button>
                 </Box>
             </Modal>
         </>

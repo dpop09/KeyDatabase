@@ -16,6 +16,20 @@ body {
   background-color: rgb(244, 244, 245, 1);
 }
 
+#Modal-button-close {
+  background-color: rgb(255, 204, 51, 1);  
+  font-size: large;
+  width: 5rem;
+  height: 2.3rem;
+  border-radius: 5px;
+  border: none;
+}
+#Modal-button-close:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
 /*///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Unauthorized page styling
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -1626,8 +1640,7 @@ AddUser.jsx component styling
 }
 
 #AddUser-button-submit,
-#AddUser-button-cancel,
-#AddUser-button-modal {
+#AddUser-button-cancel {
   background-color: rgb(255, 204, 51, 1);  
   font-size: large;
   width: 5rem;
@@ -1636,8 +1649,7 @@ AddUser.jsx component styling
   border: none;
 }
 #AddUser-button-submit:hover,
-#AddUser-button-cancel:hover,
-#AddUser-button-modal:hover {  
+#AddUser-button-cancel:hover {  
   background-color: rgb(255, 224, 133, 1);
   cursor: pointer;
   transition: 0.3s;
@@ -1708,8 +1720,7 @@ EditUser.jsx component styling
 }
 
 #EditUser-button-submit,
-#EditUser-button-cancel,
-#EditUser-button-modal {
+#EditUser-button-cancel {
   background-color: rgb(255, 204, 51, 1);  
   font-size: large;
   width: 5rem;
@@ -1718,8 +1729,7 @@ EditUser.jsx component styling
   border: none;
 }
 #EditUser-button-submit:hover,
-#EditUser-button-cancel:hover,
-#EditUser-button-modal:hover {  
+#EditUser-button-cancel:hover {  
   background-color: rgb(255, 224, 133, 1);
   cursor: pointer;
   transition: 0.3s;
