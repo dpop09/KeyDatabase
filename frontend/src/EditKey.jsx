@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from './AuthContext';
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
+import { Modal, Box } from '@mui/material';
 
 function EditKey() {
 
@@ -17,10 +18,27 @@ function EditKey() {
             </div>
         )
     }
+    // state variables for the modals
+    const [showModal, setShowModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
     const [requestForms, setRequestForms] = useState([]);
     const [selectedForm, setSelectedForm] = useState(null);
     const [pdfData, setPdfData] = useState(null);
+
+    // modal handlers
+    const handleModalClose = () => setShowModal(false);
+    const handleModalShow = () => setShowModal(true);
+    const handleConfirmationModalClose = () => setShowConfirmationModal(false);
+    const handleConfirmationModalShow = () => {
+        if (permissions !== "Admin") {
+            setErrorMessage("This action can only be performed by an admin.");
+            handleModalShow();
+            return
+        }
+        setShowConfirmationModal(true);
+    }
 
     const navigate = useNavigate();
     const handleCancel = () => {
@@ -81,22 +99,22 @@ function EditKey() {
     const handleSubmitEdit = async (event) => {
         event.preventDefault();
         const tag_number = (document.getElementById('EditKey-input-tag_number').value) ? 
-                            {value: document.getElementById('EditKey-input-tag_number').value, edit_flag: true} : 
+                            {value: document.getElementById('EditKey-input-tag_number').value.trim(), edit_flag: true} : 
                             {value: document.getElementById('EditKey-input-tag_number').placeholder, edit_flag: false};
         const tag_color = (document.getElementById('EditKey-input-tag_color').value) ?
-                            {value: document.getElementById('EditKey-input-tag_color').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-input-tag_color').value.trim(), edit_flag: true} :
                             {value: document.getElementById('EditKey-input-tag_color').placeholder, edit_flag: false};
         const core_number = (document.getElementById('EditKey-input-core_number').value) ?
-                            {value: document.getElementById('EditKey-input-core_number').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-input-core_number').value.trim(), edit_flag: true} :
                             {value: document.getElementById('EditKey-input-core_number').placeholder, edit_flag: false};
         const room_number = (document.getElementById('EditKey-input-room_number').value) ? 
-                            {value: document.getElementById('EditKey-input-room_number').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-input-room_number').value.trim(), edit_flag: true} :
                             {value: document.getElementById('EditKey-input-room_number').placeholder, edit_flag: false};
         const room_type = (document.getElementById('EditKey-input-room_type').value) ?
-                            {value: document.getElementById('EditKey-input-room_type').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-input-room_type').value.trim(), edit_flag: true} :
                             {value: document.getElementById('EditKey-input-room_type').placeholder, edit_flag: false};
         const key_number = (document.getElementById('EditKey-input-key_number').value) ?
-                            {value: document.getElementById('EditKey-input-key_number').value, edit_flag: true} :
+                            {value: document.getElementById('EditKey-input-key_number').value.trim(), edit_flag: true} :
                             {value: document.getElementById('EditKey-input-key_number').placeholder, edit_flag: false};
         const key_holder_fname = (document.getElementById('EditKey-input-key_holder_fname').value) ?
                             {value: document.getElementById('EditKey-input-key_holder_fname').value, edit_flag: true} :
@@ -117,11 +135,13 @@ function EditKey() {
                             old_form_id: (keyData.form_id != null) ? keyData.form_id : null,
                             new_form_id: (selectedForm != null) ? selectedForm.form_id : null};
         if (!tag_number.value || !tag_color.value || !core_number.value || !room_number.value || !room_type.value || !key_number.value ) { // check if any of the core key fields are empty
-            alert("Please fill out all required fields.");
+            setErrorMessage("Please fill out all required fields.");
+            handleModalShow();
             return
         }
         if (selectedForm != null && request_form.assigned_column == null) { // if a form is selected and the assigned key is not selected, show an alert
-            alert("Please select an assigned key column.");
+            setErrorMessage("Please select a column this key should be assigned to.");
+            handleModalShow();
             return
         }
         try {
@@ -151,7 +171,8 @@ function EditKey() {
                 setKeyData(data); // update the key data before navigating to the key info page
                 navigate('/keyinfo');
             } else { // if the response is unsuccessful
-                console.log("Internal Server Error. Please try again later.");
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
             }
         } catch (error) {
             console.log(error);
@@ -177,19 +198,15 @@ function EditKey() {
                 setKeyData(data); // update the key data before navigating to the key info page
                 navigate('/keyinfo');
             } else { // if the response is unsuccessful
-                console.log("Internal Server Error. Please try again later.");
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
             }
         } catch (error) {
             console.log(error);
         }
     }
 
-    const handleDeleteKey = async (event) => {
-        if (permissions !== "Admin") {
-            alert("This action can only be performed by an admin.");
-            return
-        }
-        event.preventDefault();
+    const handleDeleteKey = async () => {
         try {
             const response = await fetch('http://localhost:8081/delete-key', { // send a POST request to the backend route
                 method: 'POST',
@@ -199,9 +216,12 @@ function EditKey() {
                 body: JSON.stringify({ access_id: accessId, key_number: keyData.key_number, form_id: keyData.form_id != null ? keyData.form_id : null })
             })
             if (response.ok) { // if the response is successful
+                handleConfirmationModalClose();
                 navigate('/keys');
             } else { // if the response is unsuccessful
-                console.log("Internal Server Error. Please try again later.");
+                handleConfirmationModalClose();
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
             }
         } catch (error) {
             console.log(error);
@@ -226,7 +246,8 @@ function EditKey() {
                 const data = await response.json();
                 setRequestForms(data);
             } else { // if the response is unsuccessful
-                console.log("Internal Server Error. Please try again later.");
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
             }
         } catch (error) {
             console.log(error);
@@ -559,7 +580,7 @@ function EditKey() {
                     </div>
                     <div id="EditKey-div-row-flex-box">
                         <h3>Delete Key:</h3>
-                        <button id="EditKey-button-remove-key" onClick={handleDeleteKey}>Delete Key</button>
+                        <button id="EditKey-button-remove-key" onClick={handleConfirmationModalShow}>Delete Key</button>
                     </div>
                 </div>
                 <div id="EditKey-div-button-container">
@@ -567,6 +588,45 @@ function EditKey() {
                     <button id="EditKey-button-submit" onClick={handleSubmitEdit}>Submit</button>
                 </div>
             </div>
+            <Modal open={showModal} onClose={handleModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <h2>{errorMessage}</h2>
+                    <button id="Modal-button-close" onClick={handleModalClose}>Close</button>
+                </Box>
+            </Modal>
+            <Modal open={showConfirmationModal} onClose={handleConfirmationModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <h2>Are you sure you'd like to delete key {keyData.key_number}?</h2>
+                    <div id="Modal-div-buttons">
+                        <button id="Modal-button-close" onClick={handleConfirmationModalClose}>Cancel</button>
+                        <button id="Modal-button-confirm" onClick={handleDeleteKey}>Delete</button>
+                    </div>
+                </Box>
+            </Modal>
         </> 
     )  
 }

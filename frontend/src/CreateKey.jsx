@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from './AuthContext'
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
+import { Modal, Box } from '@mui/material';
 
 function CreateKey() {
 
@@ -17,12 +18,18 @@ function CreateKey() {
             </div>
         )
     }
-
+    // state variables for the modals
+    const [showModal, setShowModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
     // state variables to hold all of the request forms and the selected form
     const [requestForms, setRequestForms] = useState([]);
     const [selectedForm, setSelectedForm] = useState(null);
     // state variable to hold PDF data
     const [pdfData, setPdfData] = useState(null);
+
+    // modal handlers
+    const handleModalClose = () => setShowModal(false);
+    const handleModalShow = () => setShowModal(true);
 
     // navigation back to the keys page
     const navigate = useNavigate();
@@ -80,12 +87,12 @@ function CreateKey() {
     const handleCreateKey = async (event) => {
         event.preventDefault();
         // get values from the input fields
-        const tag_number = document.getElementById('CreateKey-input-tag_number').value;
-        const tag_color = document.getElementById('CreateKey-input-tag_color').value;
-        const core_number = document.getElementById('CreateKey-input-core_number').value;
-        const room_number = document.getElementById('CreateKey-input-room_number').value;
-        const room_type = document.getElementById('CreateKey-input-room_type').value;
-        const key_number = document.getElementById('CreateKey-input-key_number').value;
+        const tag_number = document.getElementById('CreateKey-input-tag_number').value.trim();
+        const tag_color = document.getElementById('CreateKey-input-tag_color').value.trim();
+        const core_number = document.getElementById('CreateKey-input-core_number').value.trim();
+        const room_number = document.getElementById('CreateKey-input-room_number').value.trim();
+        const room_type = document.getElementById('CreateKey-input-room_type').value.trim();
+        const key_number = document.getElementById('CreateKey-input-key_number').value.trim();
         const key_holder_fname = document.getElementById('CreateKey-input-key_holder_fname').value;
         const key_holder_lname = document.getElementById('CreateKey-input-key_holder_lname').value;
         const key_holder_access_id = document.getElementById('CreateKey-input-key_holder_access_id').value;
@@ -95,11 +102,13 @@ function CreateKey() {
         const assigned_key_value = document.querySelector('input[name="assignedKey"]:checked');
         const assigned_key = assigned_key_value ? assigned_key_value.value : null; // if no radio button is selected, assigned_key will be null
         if (!tag_number || !tag_color || !core_number || !room_number || !room_type || !key_number ) { // check if any of the core key fields are empty
-            alert("Please fill out all required fields.");
+            setErrorMessage("Please fill out all required fields.");
+            handleModalShow();
             return
         }
         if (selectedForm != null && assigned_key == null) { // if a form is selected and the assigned key is not selected, show an alert
-            alert("Please select an assigned key.");
+            setErrorMessage("Please select a column this key should be assigned to.");
+            handleModalShow();
             return
         }
         try {
@@ -128,7 +137,8 @@ function CreateKey() {
             if (response.ok) { // if the response is successful
                 navigate('/keys');
             } else { // if the response is unsuccessful
-                console.log("Internal Server Error. Please try again later.");
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
             }
         } catch (error) {
             console.log(error);
@@ -447,6 +457,24 @@ function CreateKey() {
                     <button id="CreateKey-button-submit" onClick={handleCreateKey}>Submit</button>
                 </div>
             </div>
+            <Modal open={showModal} onClose={handleModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <h2>{errorMessage}</h2>
+                    <button id="Modal-button-close" onClick={handleModalClose}>Close</button>
+                </Box>
+            </Modal>
         </> 
     )  
 }

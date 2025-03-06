@@ -1,29 +1,7 @@
-const mysql = require('mysql');
-const dotenv = require('dotenv');
+const db = require('./db');
+const errorLogOperations = require('./errorLogOperations');
 const fs = require('fs').promises;
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
-const { scrapeWayneData } = require('./scrape');
-const errorLogOperations = require('./errorLogOperations');
-dotenv.config(); // read from .env file
-
-// create a connection to the database
-const db = mysql.createConnection({
-    host: process.env.HOST,
-    user: process.env.USER,
-    password: process.env.PASSWORD,
-    database: process.env.DATABASE,
-    port: process.env.DB_PORT
-})
-
-// connect to the database
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection failed: ' + err.stack);
-        return;
-    }
-    console.log('Connected to the database.');
-});
 
 const dbOperations = {
     getAll: async function () {
@@ -800,7 +778,32 @@ const dbOperations = {
             errorLogOperations.logError(error); // Log the error
             console.log(error);
         }
-    }
+    },
+    deleteHistoryLog: async function() {
+        try {
+            const sql = 'DELETE FROM history';
+            const sql_reset_auto_increment = 'ALTER TABLE history AUTO_INCREMENT = 1'; // Reset auto-increment
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        db.query(sql_reset_auto_increment, (resetErr) => { // Reset auto-increment after deletion
+                            if (resetErr) {
+                                reject(resetErr);
+                            } else {
+                                resolve(result);
+                            }
+                        });
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
 }
 
 module.exports = dbOperations

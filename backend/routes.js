@@ -416,4 +416,17 @@ router.post('/get-name-title-from-access-id', async (request, response) => {
     }
 })
 
+router.post('/delete-history', async (request, response) => {
+    try {
+        const {access_id} = request.body;
+        const result = await dbOperations.deleteHistoryLog();
+        const history_log_result = await historyLogOperations.logDeleteHistoryLog(access_id);
+        response.status(200).send(result)
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+})
+
 module.exports = router;
