@@ -72,8 +72,7 @@ function AddUser() {
         }
     }
 
-    const getInfoFromAccessId = async (event) => {
-        event.preventDefault();
+    const getInfoFromAccessId = async () => {
         const input_access_id = document.getElementById('AddUser-input-access-id').value
         // regular expression to match exactly 2 letters followed by 4 digits
         const regex = /^[A-Za-z]{2}\d{4}$/;

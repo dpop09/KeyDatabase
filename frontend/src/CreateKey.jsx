@@ -84,8 +84,7 @@ function CreateKey() {
     }
 
     // function to create a new key
-    const handleCreateKey = async (event) => {
-        event.preventDefault();
+    const handleCreateKey = async () => {
         // get values from the input fields
         const tag_number = document.getElementById('CreateKey-input-tag_number').value.trim();
         const tag_color = document.getElementById('CreateKey-input-tag_color').value.trim();
@@ -149,8 +148,7 @@ function CreateKey() {
     }
 
     // function to search for a request form
-    const handleSearchForm = async (event) => {
-        event.preventDefault();
+    const handleSearchForm = async () => {
         // get value from the input field
         const row = document.getElementById('CreateKey-input-assign-form-search').value;
         // if search is empty, do nothing
@@ -170,7 +168,8 @@ function CreateKey() {
                 const data = await response.json();
                 setRequestForms(data);
             } else { // if the response is unsuccessful
-                console.log("Internal Server Error. Please try again later.");
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
             }
         } catch (error) {
             console.log(error);
@@ -178,14 +177,12 @@ function CreateKey() {
     }
 
     // function to clear the search
-    const handleClearSearch = async (event) => {
-        event.preventDefault();
+    const handleClearSearch = async () => {
         document.getElementById('CreateKey-input-assign-form-search').value = null
         getKeyRequestForms();
     }
 
-    const getInfoFromAccessId = async (event) => {
-        event.preventDefault();
+    const getInfoFromAccessId = async () => {
         const input_access_id = document.getElementById('CreateKey-input-key_holder_access_id').value
         // regular expression to match exactly 2 letters followed by 4 digits
         const regex = /^[A-Za-z]{2}\d{4}$/;

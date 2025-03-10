@@ -449,4 +449,43 @@ router.post('/delete-history', async (request, response) => {
     }
 })
 
+router.post('/search-history', async (request, response) => {
+    try {
+        const { row } = request.body;
+        const result = await dbOperations.searchHistory(row);
+        response.status(200).send(result);
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.post('/advanced-search-history', async (request, response) => {
+    try {
+        const { log_id,
+            user,
+            target_type,
+            target_id,
+            action_type,
+            action_details,
+            date,
+            time } = request.body;
+        const result = await dbOperations.advancedSearchHistory(
+            log_id,
+            user,
+            target_type,
+            target_id,
+            action_type,
+            action_details,
+            date,
+            time);
+        response.status(200).send(result);
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
 module.exports = router;

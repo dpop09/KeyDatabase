@@ -718,7 +718,6 @@ const dbOperations = {
         if (conditions.length > 0) {
             sql += " WHERE " + conditions.join(" AND ");
         }
-        console.log(sql)
         // Execute the query (replace 'db.query' with your actual query execution function).
         try {
             const response = await new Promise((resolve, reject) => {
@@ -821,6 +820,99 @@ const dbOperations = {
             errorLogOperations.logError(error);
             console.error("Error checking key in database:", error);
             return false; // Return false in case of an error
+        }
+    },
+    searchHistory: async function(row) {
+        try {
+            const sql = 'SELECT * FROM history WHERE log_id LIKE ? OR user LIKE ? OR target_type LIKE ? OR target_id LIKE ? OR action_type LIKE ? OR log_action LIKE ? OR log_time LIKE ?';
+            // Create a search term with wildcards.
+            const searchTerm = `%${row}%`;
+            const values = [
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm
+            ];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
+    advancedSearchHistory: async function(log_id, user, target_type, target_id, action_type, action_details, date, time) {
+        // Array to hold SQL conditions
+        let conditions = [];
+        // Array to hold parameter values (for the '?' placeholders)
+        let params = [];
+        // Add conditions for each column if the parameter is not null.
+        if (log_id) {
+            conditions.push('log_id = ?');
+            params.push(log_id);
+        }
+        if (user) {
+            conditions.push('user = ?');
+            params.push(user);
+        }
+        if (target_type) {
+            conditions.push('target_type = ?');
+            params.push(target_type);
+        }
+        if (target_id) {
+            conditions.push('target_id = ?');
+            params.push(target_id);
+        }
+        if (action_type) {
+            conditions.push('action_type = ?');
+            params.push(action_type);
+        }
+        if (action_details) {
+            conditions.push('log_action LIKE ?');
+            params.push(`%${action_details}%`);
+        }
+        if (date && !time) { // if date is given but not time
+            conditions.push('log_time LIKE ?');
+            params.push(`%${date}%`);
+        }
+        if (time && !date) { // if time is given but not date
+            conditions.push('log_time LIKE ?');
+            params.push(`%${time}%`);
+        }
+        if (date && time) { // if date and time is given
+            const date_time = `${date} ${time}`;
+            conditions.push('log_time LIKE ?');
+            params.push(`%${date_time}%`);
+        }
+        // Build the final query.
+        let sql = "SELECT * FROM history";
+        if (conditions.length > 0) {
+            sql += " WHERE " + conditions.join(" AND ");
+        }
+        try {
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, params, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
         }
     },
 }
