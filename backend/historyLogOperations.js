@@ -171,23 +171,23 @@ const historyLogOperations = {
             console.log(error);
         }
     },
-    logEditRequestForm: async function(user_access_id, form_id, first_name, last_name, access_id, date_signed, file_buffer_flag) {
+    logEditRequestForm: async function(user_access_id, form_id, first_name, last_name, access_id, date_signed, file_buffer_flag, first_name_edit_flag, last_name_edit_flag, access_id_edit_flag, date_signed_edit_flag) {
         const user = await dbOperations.getFullNameFromAccessID(user_access_id);
         let text = `Request form was edited with the following information:\n`;
         if (file_buffer_flag) {
             text += `Uploaded a new PDF file, `;
         }
-        if (first_name.edit_flag) {
-            text += `first_name = '${first_name.value}'`;
+        if (first_name_edit_flag) {
+            text += `, first_name = '${first_name}'`;
         }
-        if (last_name.edit_flag) {
-            text += `last_name = '${last_name.value}'`;
+        if (last_name_edit_flag) {
+            text += `, last_name = '${last_name}'`;
         }
-        if (access_id.edit_flag) {
-            text += `access_id = '${access_id}'`;
+        if (access_id_edit_flag) {
+            text += `, access_id = '${access_id}'`;
         }
-        if (date_signed.edit_flag) {
-            text += `date_signed = '${date_signed}'`;
+        if (date_signed_edit_flag) {
+            text += `, date_signed = '${date_signed}'`;
         }
         try {
             const sql = 'INSERT INTO history (user, target_type, target_id, action_type, log_action) VALUES (?, ?, ?, ?, ?)';

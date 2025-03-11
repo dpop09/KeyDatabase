@@ -85,10 +85,8 @@ const dbOperations = {
     },
     editKey: async function (tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id) {
         try {
-            const date_assigned_parts = date_assigned.split(/[-\/]/); // Split date
-            const formatted_date_assigned = `${date_assigned_parts[2]}-${date_assigned_parts[0]}-${date_assigned_parts[1]}`; // Rebuild date
             const sql = 'UPDATE `Keys` SET tag_number = ?, tag_color = ?, core_number = ?, room_number = ?, room_type = ?, key_holder_fname = ?, key_holder_lname = ?, key_holder_access_id = ?, date_assigned = ?, comments = ?, form_id = ? WHERE key_number = ?';
-            const values = [tag_number, tag_color, core_number, room_number, room_type, key_holder_fname, key_holder_lname, key_holder_access_id, formatted_date_assigned, comments, new_form_id, key_number];
+            const values = [tag_number, tag_color, core_number, room_number, room_type, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id, key_number];
             // Perform the update to the key
             await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
@@ -718,7 +716,6 @@ const dbOperations = {
         if (conditions.length > 0) {
             sql += " WHERE " + conditions.join(" AND ");
         }
-        console.log(sql)
         // Execute the query (replace 'db.query' with your actual query execution function).
         try {
             const response = await new Promise((resolve, reject) => {
@@ -799,6 +796,118 @@ const dbOperations = {
                 });
             });
             return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
+    isKeyInDatabase: async function(key_number) {
+        try {
+            const sql = 'SELECT 1 FROM `Keys` WHERE key_number = ? LIMIT 1';
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, [key_number], (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result.length > 0); // returns true if key exists, false otherwise
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error);
+            console.error("Error checking key in database:", error);
+            return false; // Return false in case of an error
+        }
+    },
+    searchHistory: async function(row) {
+        try {
+            const sql = 'SELECT * FROM history WHERE log_id LIKE ? OR user LIKE ? OR target_type LIKE ? OR target_id LIKE ? OR action_type LIKE ? OR log_action LIKE ? OR log_time LIKE ?';
+            // Create a search term with wildcards.
+            const searchTerm = `%${row}%`;
+            const values = [
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm,
+                searchTerm
+            ];
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response;
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);
+        }
+    },
+    advancedSearchHistory: async function(log_id, user, target_type, target_id, action_type, action_details, date, time) {
+        // Array to hold SQL conditions
+        let conditions = [];
+        // Array to hold parameter values (for the '?' placeholders)
+        let params = [];
+        // Add conditions for each column if the parameter is not null.
+        if (log_id) {
+            conditions.push('log_id = ?');
+            params.push(log_id);
+        }
+        if (user) {
+            conditions.push('user = ?');
+            params.push(user);
+        }
+        if (target_type) {
+            conditions.push('target_type = ?');
+            params.push(target_type);
+        }
+        if (target_id) {
+            conditions.push('target_id = ?');
+            params.push(target_id);
+        }
+        if (action_type) {
+            conditions.push('action_type = ?');
+            params.push(action_type);
+        }
+        if (action_details) {
+            conditions.push('log_action LIKE ?');
+            params.push(`%${action_details}%`);
+        }
+        if (date && !time) { // if date is given but not time
+            conditions.push('log_time LIKE ?');
+            params.push(`%${date}%`);
+        }
+        if (time && !date) { // if time is given but not date
+            conditions.push('log_time LIKE ?');
+            params.push(`%${time}%`);
+        }
+        if (date && time) { // if date and time is given
+            const date_time = `${date} ${time}`;
+            conditions.push('log_time LIKE ?');
+            params.push(`%${date_time}%`);
+        }
+        // Build the final query.
+        let sql = "SELECT * FROM history";
+        if (conditions.length > 0) {
+            sql += " WHERE " + conditions.join(" AND ");
+        }
+        try {
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, params, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response
         } catch (error) {
             errorLogOperations.logError(error); // Log the error
             console.log(error);

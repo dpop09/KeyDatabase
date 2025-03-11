@@ -7,6 +7,7 @@ const { scrapeWayneData } = require('./scrape');
 const os = require('os');
 const { access } = require('fs');
 const { v4: uuidv4 } = require('uuid');
+const { sendKeyPickupEmail } = require('./emailOperations');
 
 const router = express.Router();
 
@@ -216,11 +217,31 @@ router.post('/create-key', async (request, response) => {
             comments, 
             new_form_id, 
             assigned_key } = request.body;
-        const result = await dbOperations.createKey(tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id);
-        const history_log_result = await  historyLogOperations.logCreateKey(access_id, tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id)
-        if (new_form_id != null) { // if a form is provided
+
+        // check if the key already exists
+        const does_key_already_exist = await dbOperations.isKeyInDatabase(key_number);
+        if (does_key_already_exist) {
+            return response.status(409).json({ error: "Key already exists in the database." }); // 409 Conflict
+        }
+
+        // create the key if it doesn't exist
+        const result = await dbOperations.createKey(
+            tag_number, tag_color, core_number, room_number, room_type, key_number, 
+            key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, 
+            comments, new_form_id);
+
+        // log key creation in history
+        const history_log_result = await  historyLogOperations.logCreateKey(
+            access_id, tag_number, tag_color, core_number, room_number, room_type, 
+            key_number, key_holder_fname, key_holder_lname, key_holder_access_id, 
+            date_assigned, comments, new_form_id)
+
+        // update the request form if a form is provided
+        if (new_form_id != null) {
             const update_new_form_result = await dbOperations.updateKeyNumberInRequestForm(key_number, new_form_id, assigned_key); 
         }
+
+        // send success response
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -243,20 +264,22 @@ router.post('/search-request-form', async (request, response) => {
 
 router.post('/update-key-request-form', upload.single('file'), async (request, response) => {
     try {
-        const { user_access_id, form_id, first_name, last_name, access_id, date_signed } = request.body;
-        console.log(user_access_id, form_id, first_name)
+        const { user_access_id, form_id, first_name, first_name_edit_flag, last_name, last_name_edit_flag,
+             access_id, access_id_edit_flag, date_signed, date_signed_edit_flag } = request.body;
         const file_buffer = request.file ? request.file.buffer : null;
         let result = null;
         if (file_buffer) { // if the user did upload a new pdf file, we replace the old pdf file
             result = await dbOperations.updateKeyRequestFormWithFileBuffer(
-                form_id, first_name.value, last_name.value, access_id.value, date_signed.value, file_buffer
+                form_id, first_name, last_name, access_id, date_signed, file_buffer
             );
         } else { // otherwise, the user left the upload file blank and we fallback on the old one
             result = await dbOperations.updateKeyRequestFormWithoutFileBuffer(
-                form_id, first_name.value, last_name.value, access_id.value, date_signed.value
+                form_id, first_name, last_name, access_id, date_signed
             );
         }
-        const history_log_result = await historyLogOperations.logEditRequestForm(user_access_id, form_id, first_name, last_name, access_id, date_signed, (file_buffer) ? true : false)
+        const history_log_result = await historyLogOperations.logEditRequestForm(user_access_id, 
+            form_id, first_name, last_name, access_id, date_signed, (file_buffer) ? true : false, 
+            first_name_edit_flag, last_name_edit_flag, access_id_edit_flag, date_signed_edit_flag);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -422,6 +445,57 @@ router.post('/delete-history', async (request, response) => {
         const result = await dbOperations.deleteHistoryLog();
         const history_log_result = await historyLogOperations.logDeleteHistoryLog(access_id);
         response.status(200).send(result)
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+})
+
+router.post('/search-history', async (request, response) => {
+    try {
+        const { row } = request.body;
+        const result = await dbOperations.searchHistory(row);
+        response.status(200).send(result);
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.post('/advanced-search-history', async (request, response) => {
+    try {
+        const { log_id,
+            user,
+            target_type,
+            target_id,
+            action_type,
+            action_details,
+            date,
+            time } = request.body;
+        const result = await dbOperations.advancedSearchHistory(
+            log_id,
+            user,
+            target_type,
+            target_id,
+            action_type,
+            action_details,
+            date,
+            time);
+        response.status(200).send(result);
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+});
+
+router.post('/send-email', async (request, response) => {
+    try {
+        const { access_id } = request.body;
+        const result = await sendKeyPickupEmail(access_id);
+        response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
         console.log(error);

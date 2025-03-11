@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from './AuthContext'
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
+import { Modal, Box } from '@mui/material';
 
 function Home() {
 
@@ -17,9 +18,16 @@ function Home() {
             </div>
         )
     }
+    // state variables for the modals
+    const [showModal, setShowModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const [data, setData] = useState([]);
     const [displayAdvancedSearch, setDisplayAdvancedSearch] = useState(false)
+
+    // modal handlers
+    const handleModalClose = () => setShowModal(false);
+    const handleModalShow = () => setShowModal(true);
 
     const toggleDisplayAdvancedSearch = () => {
         setDisplayAdvancedSearch(!displayAdvancedSearch)
@@ -44,8 +52,7 @@ function Home() {
         getAllKeys();
     }, []);
 
-    const handleSearch = async (event) => {
-        event.preventDefault();
+    const handleSearch = async () => {
         const row = document.getElementById('Keys-input-search-row').value;
         if (!row) {
             return
@@ -62,21 +69,20 @@ function Home() {
             if (data) { // if the response is successful
                 setData(data);
             } else { // if the response is unsuccessful
-                alert("Internal Server Error. Please try again later.");
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
             }
         } catch (error) {
             console.log(error);
         }
     }
 
-    const handleClearSearch = async (event) => {
-        event.preventDefault();
+    const handleClearSearch = async () => {
         document.getElementById('Keys-input-search-row').value = null
         getAllKeys();
     }
 
-    const handleAdvancedSearch = async (event) => {
-        event.preventDefault();
+    const handleAdvancedSearch = async () => {
         const input_tag_num = document.getElementById('Keys-input-advanced-search-tag-num').value
         const input_core = document.getElementById('Keys-input-advanced-search-core').value
         const input_room_num = document.getElementById('Keys-input-advanced-search-room-num').value
@@ -106,21 +112,32 @@ function Home() {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({ input_tag_num, input_core, input_room_num, input_room_type, input_key_num, input_availability, input_fname, input_lname,input_access_id, input_date_assigned })
+                body: JSON.stringify({ 
+                    input_tag_num, 
+                    input_core, 
+                    input_room_num, 
+                    input_room_type,
+                    input_key_num, 
+                    input_availability, 
+                    input_fname, 
+                    input_lname,
+                    input_access_id, 
+                    input_date_assigned 
+                })
             })
             const data = await response.json();
             if (data) { // if the response is successful
                 setData(data);
             } else { // if the response is unsuccessful
-                alert("Internal Server Error. Please try again later.");
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
             }
         } catch (error) {
             console.log(error)
         }
     }
 
-    const handleClearAdvancedSearch = async (event) => {
-        event.preventDefault();
+    const handleClearAdvancedSearch = async () => {
         document.getElementById('Keys-input-advanced-search-tag-num').value = null
         document.getElementById('Keys-input-advanced-search-core').value = null
         document.getElementById('Keys-input-advanced-search-room-num').value = null
@@ -283,6 +300,24 @@ function Home() {
                     </table>
                 </div>
             </div>
+            <Modal open={showModal} onClose={handleModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <h2>{errorMessage}</h2>
+                    <button id="Modal-button-close" onClick={handleModalClose}>Close</button>
+                </Box>
+            </Modal>
         </>
     )
 }

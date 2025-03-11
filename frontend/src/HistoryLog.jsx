@@ -80,23 +80,93 @@ function HistoryLog() {
     }
 
     const handleSearch = async (event) => {
-        event.preventDefault();
-        return
+        const row = document.getElementById('HistoryLog-input-search-row').value;
+        if (!row) { 
+            return;
+        }
+        try {
+            const response = await fetch('http://localhost:8081/search-history', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ row: row })
+            })
+            const data = await response.json();
+            if (data) { // if the response is successful
+                setData(data);
+            } else { // if the response is unsuccessful
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
-    const handleClearSearch = async (event) => {
-        event.preventDefault();
+    const handleClearSearch = async () => {
         document.getElementById('HistoryLog-input-search-row').value = null
         getAllHistory();
     }
 
-    const handleAdvancedSearch = async (event) => {
-        event.preventDefault();
-        return
+    const handleAdvancedSearch = async () => {
+        const log_id = document.getElementById('HistoryLog-input-advanced-search-log-id').value;
+        const user = document.getElementById('HistoryLog-input-advanced-search-user').value;
+        const target_type = document.getElementById('HistoryLog-input-advanced-search-target-type').value;
+        const target_id = document.getElementById('HistoryLog-input-advanced-search-target-id').value;
+        const action_type = document.getElementById('HistoryLog-input-advanced-search-action-type').value;
+        const action_details = document.getElementById('HistoryLog-input-advanced-search-action-details').value;
+        const date = document.getElementById('HistoryLog-input-advanced-search-date').value;
+        const time = document.getElementById('HistoryLog-input-advanced-search-time').value;
+        // do nothing if all of the inputs are empty
+        if (log_id &&
+            user &&
+            target_type &&
+            target_id &&
+            action_type &&
+            action_details &&
+            date &&
+            time) {
+            return
+        }
+        try {
+            const response = await fetch('http://localhost:8081/advanced-search-history', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    log_id,
+                    user,
+                    target_type,
+                    target_id,
+                    action_type,
+                    action_details,
+                    date,
+                    time 
+                })
+            })
+            const data = await response.json();
+            if (data) { // if the response is successful
+                setData(data);
+            } else { // if the response is unsuccessful
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
-    const handleClearAdvancedSearch = async (event) => {
-        event.preventDefault();
+    const handleClearAdvancedSearch = async () => {
+        document.getElementById('HistoryLog-input-advanced-search-log-id').value = null;
+        document.getElementById('HistoryLog-input-advanced-search-user').value = null;
+        document.getElementById('HistoryLog-input-advanced-search-target-type').value = null;
+        document.getElementById('HistoryLog-input-advanced-search-target-id').value = null;
+        document.getElementById('HistoryLog-input-advanced-search-action-type').value = null;
+        document.getElementById('HistoryLog-input-advanced-search-action-details').value = null;
+        document.getElementById('HistoryLog-input-advanced-search-date').value = null;
+        document.getElementById('HistoryLog-input-advanced-search-time').value = null;
         getAllHistory();
     }
 
@@ -159,16 +229,32 @@ function HistoryLog() {
                                 <input id="HistoryLog-input-advanced-search-log-id" />
                             </div>
                             <div class="HistoryLog-div-advanced-search-grid-item">
-                                <label for="HistoryLog-input-advanced-search-access-id">Access ID:</label>
-                                <input id="HistoryLog-input-advanced-search-access-id" />
+                                <label for="HistoryLog-input-advanced-search-user">User:</label>
+                                <input id="HistoryLog-input-advanced-search-user" />
                             </div>
                             <div class="HistoryLog-div-advanced-search-grid-item">
-                                <label for="HistoryLog-input-advanced-search-action">Action:</label>
-                                <input id="HistoryLog-input-advanced-search-action" />
+                                <label for="HistoryLog-input-advanced-search-target-type">Target Type:</label>
+                                <input id="HistoryLog-input-advanced-search-target-type" />
+                            </div>
+                            <div class="HistoryLog-div-advanced-search-grid-item">
+                                <label for="HistoryLog-input-advanced-search-target-id">Target ID:</label>
+                                <input id="HistoryLog-input-advanced-search-target-id" />
+                            </div>
+                            <div class="HistoryLog-div-advanced-search-grid-item">
+                                <label for="HistoryLog-input-advanced-search-action-type">Action Type:</label>
+                                <input id="HistoryLog-input-advanced-search-action-type" />
+                            </div>
+                            <div class="HistoryLog-div-advanced-search-grid-item">
+                                <label for="HistoryLog-input-advanced-search-action-details">Action Details:</label>
+                                <input id="HistoryLog-input-advanced-search-action-details" />
+                            </div>
+                            <div class="HistoryLog-div-advanced-search-grid-item">
+                                <label for="HistoryLog-input-advanced-search-date">Date:</label>
+                                <input id="HistoryLog-input-advanced-search-date" type="date"/>
                             </div>
                             <div class="HistoryLog-div-advanced-search-grid-item">
                                 <label for="HistoryLog-input-advanced-search-time">Time:</label>
-                                <input id="HistoryLog-input-advanced-search-time" />
+                                <input id="HistoryLog-input-advanced-search-time" type="time"/>
                             </div>
                         </div>
                     </div>
