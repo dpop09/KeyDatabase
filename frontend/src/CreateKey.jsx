@@ -21,15 +21,20 @@ function CreateKey() {
     // state variables for the modals
     const [showModal, setShowModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
+    const [showEmailModal, setShowEmailModal] = useState(false);
     // state variables to hold all of the request forms and the selected form
     const [requestForms, setRequestForms] = useState([]);
     const [selectedForm, setSelectedForm] = useState(null);
     // state variable to hold PDF data
     const [pdfData, setPdfData] = useState(null);
+    // state variable to hold email recipient's access id
+    const [recipientAccessId, setRecipientAccessId] = useState(null)
 
     // modal handlers
     const handleModalClose = () => setShowModal(false);
     const handleModalShow = () => setShowModal(true);
+    const handleEmailModalClose = () => setShowEmailModal(false);
+    const handleEmailModalShow = () => setShowEmailModal(true);
 
     // navigation back to the keys page
     const navigate = useNavigate();
@@ -134,7 +139,10 @@ function CreateKey() {
                 })
             })
             if (response.status === 200) { // if the response is successful
-                navigate('/keys');
+                const email_flag = checkToSendKeyPickupEmail(key_holder_access_id, key_holder_fname, key_holder_lname, date_assigned);
+                if (!email_flag) { // if conditions don't meet to send an email, then we navigate back to the keys page
+                    navigate('/keys');
+                }
             } else if (response.status === 500) { // if the response is unsuccessful
                 setErrorMessage("Internal Server Error. Please try again later.");
                 handleModalShow();
@@ -250,6 +258,8 @@ function CreateKey() {
             return "Idle"; // Signed but no assigned keys
         } else if (hasValidDate && hasAssignedKey) {
             return "Active"; // Signed and at least one key assigned
+        } else if (!hasValidDate && hasAssignedKey) { 
+            return "Awaitng Signature"; // has at least one key assigned but is not signed
         }
         return "Unknown"; // Fallback case
     };
@@ -259,14 +269,56 @@ function CreateKey() {
         const hasAssignedKey = d.assigned_key_1 || d.assigned_key_2 || d.assigned_key_3 || d.assigned_key_4;
     
         if (!hasValidDate && !hasAssignedKey) {
-            return "gold"; // Pending
+            return "orange"; // Pending
         } else if (hasValidDate && !hasAssignedKey) {
             return "lightcoral"; // Idle
         } else if (hasValidDate && hasAssignedKey) {
             return "lightgreen"; // Active
+        } else if (!hasValidDate && hasAssignedKey) { // has at least one key assigned but is not signed
+            return "gold"; // awaiting signature
         }
         return "grey"; // Default case
     };
+
+    const checkToSendKeyPickupEmail = (access_id, first_name, last_name, date_assigned) => {
+        if (selectedForm == null || !access_id || !first_name || !last_name || !date_assigned) {
+            return false;
+        }
+        if (selectedForm.date_signed === '0000-00-00' && 
+            selectedForm.access_id === access_id && 
+            selectedForm.first_name === first_name && 
+            selectedForm.last_name === last_name) {
+            setRecipientAccessId(access_id);
+            handleEmailModalShow(access_id);
+            return true
+        }
+        return false
+    }
+
+    const handleSendKeyPickupEmail = async () => {
+        if (recipientAccessId === null) {
+            return;
+        }
+        try {
+            const response = await fetch('http://localhost:8081/send-email', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ access_id : recipientAccessId })
+            })
+            if (response.ok) { // if the response is successful
+                handleEmailModalClose();
+                navigate('/keys');
+            } else { // if the response is unsuccessful
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
+            }
+        } catch (error) {
+            setErrorMessage("Internal Server Error. Please try again later.");
+            handleModalShow();
+        }
+    }
 
     return (
         <>
@@ -473,6 +525,27 @@ function CreateKey() {
                 }}>
                     <h2>{errorMessage}</h2>
                     <button id="Modal-button-close" onClick={handleModalClose}>Close</button>
+                </Box>
+            </Modal>
+            <Modal open={showEmailModal} onClose={handleEmailModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <p>The system has detected that this person is awaiting a key and it is ready for pickup. Would you like to send a notification email?</p>
+                    <div id="Modal-div-buttons">
+                        <button id="Modal-button-close" onClick={handleEmailModalClose}>Cancel</button>
+                        <button id="Modal-button-send" onClick={handleSendKeyPickupEmail}>Send</button>
+                    </div>
                 </Box>
             </Modal>
         </> 

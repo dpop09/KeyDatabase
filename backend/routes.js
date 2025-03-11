@@ -7,6 +7,7 @@ const { scrapeWayneData } = require('./scrape');
 const os = require('os');
 const { access } = require('fs');
 const { v4: uuidv4 } = require('uuid');
+const { sendKeyPickupEmail } = require('./emailOperations');
 
 const router = express.Router();
 
@@ -263,20 +264,22 @@ router.post('/search-request-form', async (request, response) => {
 
 router.post('/update-key-request-form', upload.single('file'), async (request, response) => {
     try {
-        const { user_access_id, form_id, first_name, last_name, access_id, date_signed } = request.body;
-        console.log(user_access_id, form_id, first_name)
+        const { user_access_id, form_id, first_name, first_name_edit_flag, last_name, last_name_edit_flag,
+             access_id, access_id_edit_flag, date_signed, date_signed_edit_flag } = request.body;
         const file_buffer = request.file ? request.file.buffer : null;
         let result = null;
         if (file_buffer) { // if the user did upload a new pdf file, we replace the old pdf file
             result = await dbOperations.updateKeyRequestFormWithFileBuffer(
-                form_id, first_name.value, last_name.value, access_id.value, date_signed.value, file_buffer
+                form_id, first_name, last_name, access_id, date_signed, file_buffer
             );
         } else { // otherwise, the user left the upload file blank and we fallback on the old one
             result = await dbOperations.updateKeyRequestFormWithoutFileBuffer(
-                form_id, first_name.value, last_name.value, access_id.value, date_signed.value
+                form_id, first_name, last_name, access_id, date_signed
             );
         }
-        const history_log_result = await historyLogOperations.logEditRequestForm(user_access_id, form_id, first_name, last_name, access_id, date_signed, (file_buffer) ? true : false)
+        const history_log_result = await historyLogOperations.logEditRequestForm(user_access_id, 
+            form_id, first_name, last_name, access_id, date_signed, (file_buffer) ? true : false, 
+            first_name_edit_flag, last_name_edit_flag, access_id_edit_flag, date_signed_edit_flag);
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);
@@ -487,5 +490,17 @@ router.post('/advanced-search-history', async (request, response) => {
         response.status(500).send(error);
     }
 });
+
+router.post('/send-email', async (request, response) => {
+    try {
+        const { access_id } = request.body;
+        const result = await sendKeyPickupEmail(access_id);
+        response.status(200).send(result);
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+})
 
 module.exports = router;

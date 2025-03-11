@@ -90,23 +90,27 @@ function EditRequestForm() {
         event.preventDefault();
     
         const first_name = (document.getElementById('EditRequestForm-input-first-name').value) ?
-                        {value: document.getElementById('EditRequestForm-input-first-name').value.trim(), edit_flag: true} :
-                        {value: document.getElementById('EditRequestForm-input-first-name').placeholder, edit_flag: false};
+                        document.getElementById('EditRequestForm-input-first-name').value.trim() :
+                        document.getElementById('EditRequestForm-input-first-name').placeholder;
+        const first_name_edit_flag = (document.getElementById('EditRequestForm-input-first-name').value) ? true : false;
         const last_name = (document.getElementById('EditRequestForm-input-last-name').value) ?
-                        {value: document.getElementById('EditRequestForm-input-last-name').value.trim(), edit_flag: true} :
-                        {value: document.getElementById('EditRequestForm-input-last-name').placeholder, edit_flag: false};
+                        document.getElementById('EditRequestForm-input-last-name').value.trim() :
+                        document.getElementById('EditRequestForm-input-last-name').placeholder;
+        const last_name_edit_flag = (document.getElementById('EditRequestForm-input-last-name').value) ? true : false;
         const access_id = (document.getElementById('EditRequestForm-input-access-id').value) ?
-                        {value: document.getElementById('EditRequestForm-input-access-id').value.trim(), edit_flag: true} :
-                        {value: document.getElementById('EditRequestForm-input-access-id').placeholder, edit_flag: false};
+                        document.getElementById('EditRequestForm-input-access-id').value.trim() :
+                        document.getElementById('EditRequestForm-input-access-id').placeholder;
+        const access_id_edit_flag = (document.getElementById('EditRequestForm-input-access-id').value) ? true : false;
         const date_signed = (document.getElementById('EditRequestForm-input-date-signed').value) ?
-                        {value: document.getElementById('EditRequestForm-input-date-signed').value, edit_flag: true} :
-                        {value: document.getElementById('EditRequestForm-input-date-signed').placeholder, edit_flag: false};
+                        document.getElementById('EditRequestForm-input-date-signed').value :
+                        document.getElementById('EditRequestForm-input-date-signed').placeholder;
+        const date_signed_edit_flag = (document.getElementById('EditRequestForm-input-date-signed').value) ? true : false;
         
         // Properly retrieve the file
         const fileInput = document.getElementById('EditRequestForm-input-file');
         const file = fileInput && fileInput.files.length > 0 ? fileInput.files[0] : null;
         // check if any of the core fields are empty
-        if (!first_name.value || !last_name.value || !access_id.value) {
+        if (!first_name || !last_name || !access_id) {
             setErrorMessage("Please fill out all required fields.");
             handleModalShow();
             return
@@ -116,9 +120,13 @@ function EditRequestForm() {
         formData.append('user_access_id', accessId);
         formData.append('form_id', requestFormData.form_id);
         formData.append('first_name', first_name);
+        formData.append('first_name_edit_flag', first_name_edit_flag);
         formData.append('last_name', last_name);
+        formData.append('last_name_edit_flag', last_name_edit_flag);
         formData.append('access_id', access_id);
+        formData.append('access_id_edit_flag', access_id_edit_flag);
         formData.append('date_signed', date_signed);
+        formData.append('date_signed_edit_flag', date_signed_edit_flag);
         
         if (file) {
             formData.append('file', file);

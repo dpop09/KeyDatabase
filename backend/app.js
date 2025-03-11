@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const routes = require('./routes'); // Import your routes
-//const { sendEmail } = require('./emailOperations');
 
 const app = express();
 app.use(cors());
@@ -12,6 +11,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/', routes);
 
 // Set up the web server listener
-app.listen(8081, async () => {
+app.listen(8081, () => {
     console.log("I am listening.");
 });

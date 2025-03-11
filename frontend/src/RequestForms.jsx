@@ -183,6 +183,8 @@ function RequestForms() {
             return "Idle"; // Signed but no assigned keys
         } else if (hasValidDate && hasAssignedKey) {
             return "Active"; // Signed and at least one key assigned
+        } else if (!hasValidDate && hasAssignedKey) { // has at least one key assigned but is not signed
+            return "Awaiting Signature";
         }
         return "Unknown"; // Fallback case
     };
@@ -192,11 +194,13 @@ function RequestForms() {
         const hasAssignedKey = d.assigned_key_1 || d.assigned_key_2 || d.assigned_key_3 || d.assigned_key_4;
     
         if (!hasValidDate && !hasAssignedKey) {
-            return "gold"; // Pending
+            return "orange"; // Pending
         } else if (hasValidDate && !hasAssignedKey) {
             return "lightcoral"; // Idle
         } else if (hasValidDate && hasAssignedKey) {
             return "lightgreen"; // Active
+        } else if (!hasValidDate && hasAssignedKey) { // has at least one key assigned but is not signed
+            return "gold";
         }
         return "grey"; // Default case
     };

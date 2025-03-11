@@ -85,10 +85,8 @@ const dbOperations = {
     },
     editKey: async function (tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id) {
         try {
-            const date_assigned_parts = date_assigned.split(/[-\/]/); // Split date
-            const formatted_date_assigned = `${date_assigned_parts[2]}-${date_assigned_parts[0]}-${date_assigned_parts[1]}`; // Rebuild date
             const sql = 'UPDATE `Keys` SET tag_number = ?, tag_color = ?, core_number = ?, room_number = ?, room_type = ?, key_holder_fname = ?, key_holder_lname = ?, key_holder_access_id = ?, date_assigned = ?, comments = ?, form_id = ? WHERE key_number = ?';
-            const values = [tag_number, tag_color, core_number, room_number, room_type, key_holder_fname, key_holder_lname, key_holder_access_id, formatted_date_assigned, comments, new_form_id, key_number];
+            const values = [tag_number, tag_color, core_number, room_number, room_type, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id, key_number];
             // Perform the update to the key
             await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {

@@ -22,10 +22,12 @@ function EditKey() {
     const [showModal, setShowModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState(null);
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [showEmailModal, setShowEmailModal] = useState(false);
 
     const [requestForms, setRequestForms] = useState([]);
     const [selectedForm, setSelectedForm] = useState(null);
     const [pdfData, setPdfData] = useState(null);
+    const [recipientAccessId, setRecipientAccessId] = useState(null)
 
     // modal handlers
     const handleModalClose = () => setShowModal(false);
@@ -39,6 +41,8 @@ function EditKey() {
         }
         setShowConfirmationModal(true);
     }
+    const handleEmailModalClose = () => setShowEmailModal(false);
+    const handleEmailModalShow = () => setShowEmailModal(true);
 
     const navigate = useNavigate();
     const handleCancel = () => {
@@ -169,7 +173,10 @@ function EditKey() {
             if (response.ok) { // if the response is successful
                 const data = await response.json();
                 setKeyData(data); // update the key data before navigating to the key info page
-                navigate('/keyinfo');
+                const email_flag = checkToSendKeyPickupEmail(key_holder_access_id.value, key_holder_fname.value, key_holder_lname.value, date_assigned.value);
+                if (!email_flag) { // if conditions don't meet to send an email, then we navigate back to the keyinfo page
+                    navigate('/keyinfo');
+                }
             } else { // if the response is unsuccessful
                 setErrorMessage("Internal Server Error. Please try again later.");
                 handleModalShow();
@@ -213,7 +220,11 @@ function EditKey() {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({ access_id: accessId, key_number: keyData.key_number, form_id: keyData.form_id != null ? keyData.form_id : null })
+                body: JSON.stringify({ 
+                    access_id: accessId, 
+                    key_number: keyData.key_number, 
+                    form_id: keyData.form_id != null ? keyData.form_id : null 
+                })
             })
             if (response.ok) { // if the response is successful
                 handleConfirmationModalClose();
@@ -260,8 +271,7 @@ function EditKey() {
         getKeyRequestForms();
     }
 
-    const getInfoFromAccessId = async (event) => {
-        event.preventDefault();
+    const getInfoFromAccessId = async () => {
         const input_access_id = document.getElementById('EditKey-input-key_holder_access_id').value
         // regular expression to match exactly 2 letters followed by 4 digits
         const regex = /^[A-Za-z]{2}\d{4}$/;
@@ -332,6 +342,8 @@ function EditKey() {
             return "Idle"; // Signed but no assigned keys
         } else if (hasValidDate && hasAssignedKey) {
             return "Active"; // Signed and at least one key assigned
+        } else if (!hasValidDate && hasAssignedKey) { 
+            return "Awaitng Signature"; // has at least one key assigned but is not signed
         }
         return "Unknown"; // Fallback case
     };
@@ -341,14 +353,56 @@ function EditKey() {
         const hasAssignedKey = d.assigned_key_1 || d.assigned_key_2 || d.assigned_key_3 || d.assigned_key_4;
     
         if (!hasValidDate && !hasAssignedKey) {
-            return "gold"; // Pending
+            return "orange"; // Pending
         } else if (hasValidDate && !hasAssignedKey) {
             return "lightcoral"; // Idle
         } else if (hasValidDate && hasAssignedKey) {
             return "lightgreen"; // Active
+        } else if (!hasValidDate && hasAssignedKey) { // has at least one key assigned but is not signed
+            return "gold"; // awaiting signature
         }
         return "grey"; // Default case
     };
+
+    const checkToSendKeyPickupEmail = (access_id, first_name, last_name, date_assigned) => {
+        if (selectedForm == null || !access_id || !first_name || !last_name || !date_assigned) {
+            return false;
+        }
+        if (selectedForm.date_signed === '0000-00-00' && 
+            selectedForm.access_id === access_id && 
+            selectedForm.first_name === first_name && 
+            selectedForm.last_name === last_name) {
+            setRecipientAccessId(access_id);
+            handleEmailModalShow();
+            return true
+        }
+        return false
+    }
+
+    const handleSendKeyPickupEmail = async (access_id) => {
+        if (recipientAccessId === null) {
+            return;
+        }
+        try {
+            const response = await fetch('http://localhost:8081/send-email', { // send a POST request to the backend route
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify({ access_id : recipientAccessId })
+            })
+            if (response.ok) { // if the response is successful
+                handleEmailModalClose();
+                navigate('/keyinfo')
+            } else { // if the response is unsuccessful
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
+            }
+        } catch (error) {
+            setErrorMessage("Internal Server Error. Please try again later.");
+            handleModalShow();
+        }
+    }
 
     return (
         <>
@@ -438,7 +492,7 @@ function EditKey() {
                         </div>
                         <div id="EditKey-div-row-flex-box-even">
                             <h3>Date Assigned:</h3>
-                            <input type="text" id="EditKey-input-date_assigned" placeholder={displayDateAssigned} />
+                            <input type="date" id="EditKey-input-date_assigned" placeholder={displayDateAssigned} />
                         </div>
                         <div id="EditKey-div-row-flex-box">
                             <h3>Comments:</h3>
@@ -624,6 +678,27 @@ function EditKey() {
                     <div id="Modal-div-buttons">
                         <button id="Modal-button-close" onClick={handleConfirmationModalClose}>Cancel</button>
                         <button id="Modal-button-confirm" onClick={handleDeleteKey}>Delete</button>
+                    </div>
+                </Box>
+            </Modal>
+            <Modal open={showEmailModal} onClose={handleEmailModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <p>The system has detected that this person is awaiting a key and it is ready for pickup. Would you like to send a notification email?</p>
+                    <div id="Modal-div-buttons">
+                        <button id="Modal-button-close" onClick={handleEmailModalClose}>Cancel</button>
+                        <button id="Modal-button-send" onClick={handleSendKeyPickupEmail}>Send</button>
                     </div>
                 </Box>
             </Modal>

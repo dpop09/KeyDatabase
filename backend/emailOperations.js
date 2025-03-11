@@ -1,27 +1,47 @@
-const FormData = require('form-data');
-const Mailgun = require('mailgun.js');
+const nodemailer = require('nodemailer');
+const errorLogOperations = require('./errorLogOperations');
 const dotenv = require('dotenv');
-dotenv.config(); // Reads from .env file
+dotenv.config();
 
-async function sendEmail() {
-    const mailgun = new Mailgun(FormData);
-    const mg = mailgun.client({
-      username: "api",
-      key: process.env.MAILGUN_API,
+async function sendKeyPickupEmail(access_id) {
+    // Create a transporter using Gmail SMTP + your App Password
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+        user: process.env.GMAIL_ADDRESS,
+        pass: process.env.GMAIL_APP_PASSWORD, // the 16-char app password
+        },
     });
-    try {
-      const data = await mg.messages.create("sandbox7a7d373f57254825a78e1b06f3015289.mailgun.org", {
-        from: "Mailgun Sandbox <postmaster@sandbox7a7d373f57254825a78e1b06f3015289.mailgun.org>",
-        to: ["hc7822@wayne.edu"],
-        subject: "Test",
-        text: "Congratulations hc7822, you just sent an email with Mailgun! You are truly awesome!",
-      });
-  
-      console.log(data); // logs response data
-    } catch (error) {
-      console.log(error); //logs any error
-    }
-  }
 
-// Export the function
-module.exports = { sendEmail };
+    // Message configuration
+    const mailOptions = {
+        from: process.env.GMAIL_ADDRESS, 
+        to: `${access_id}@wayne.edu`,
+        subject: 'Key Pickup Notification',
+        text: `Hello,
+
+Your key request has been authorized, and your key(s) are ready for pick-up. Please come to the front desk of the Dean's Office (College of Engineering) with your One Card to retrieve and sign out your key(s).
+
+Office Hours:
+Mon - Fri, 9:00 AM - 5:00 PM
+
+This is an automated e-mail. Please DO NOT reply to this message.
+
+Sincerely,
+The Front Desk
+Dean's Office
+College of Engineering`
+    };
+
+    // Send the message
+    try {
+        const info = await transporter.sendMail(mailOptions);
+        return info;
+    } catch (error) {
+        console.error('Error sending email:', error);
+        errorLogOperations.logError('Error sending email:', error);
+        throw error;
+    }
+}
+
+module.exports = { sendKeyPickupEmail };
