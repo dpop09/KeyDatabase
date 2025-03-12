@@ -77,6 +77,7 @@ function EditRequestForm() {
                     setPdfData(e.target.result);
                 };
                 fileReader.readAsDataURL(file);
+                document.getElementById("EditRequestForm-span-file-name").textContent = file.name;
             } else {
                 setErrorMessage('Only PDF files are allowed');
                 handleModalShow();
@@ -216,6 +217,10 @@ function EditRequestForm() {
                         <div id="EditRequestForm-div-row-flex-box-title">
                             <h2>EDIT REQUEST FORM</h2>
                         </div>
+                        <div id="EditRequestForm-div-row-flex-box-even">
+                            <h3>Form ID:</h3>
+                            <input id="EditRequestForm-input-form-id" type="text" placeholder={requestFormData.form_id} disabled/>
+                        </div>
                         <div id="EditRequestForm-div-row-flex-box">
                             <h3>Access ID:</h3>
                             <input id="EditRequestForm-input-access-id" type="text" placeholder={requestFormData.access_id} onChange={getInfoFromAccessId} />
@@ -250,7 +255,11 @@ function EditRequestForm() {
                         </div>
                         <div id="EditRequestForm-div-row-flex-box">
                             <h3>PDF File:</h3>
-                            <input id="EditRequestForm-input-file" type="file" accept=".pdf" onChange={handleFileChange} />
+                            <div id="EditRequestForm-div-file-input-container">
+                                <span id="EditRequestForm-span-file-name">No file chosen</span>
+                                <label id="EditRequestForm-label-browse-file" for="EditRequestForm-input-file">Browse</label>
+                                <input type="file" id="EditRequestForm-input-file" accept="application/pdf" onChange={handleFileChange}/>
+                            </div>
                         </div>
                         <div id="EditRequestForm-div-row-flex-box-title">
                             <h2>QUICK ACTIONS</h2>

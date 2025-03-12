@@ -1314,13 +1314,48 @@ AddRequestForm.jsx component styling
 #AddRequestForm-input-first-name,
 #AddRequestForm-input-last-name,
 #AddRequestForm-input-access-id,
-#AddRequestForm-input-date-signed,
-#AddRequestForm-input-file {
+#AddRequestForm-input-date-signed {
   font-size: larger;
   width: 50%;
   height: 80%;
   border: 2px black solid;
   border-radius: 5px;
+}
+#AddRequestForm-input-date-signed {
+  width: 50.4%
+}
+#AddRequestForm-div-file-input-container {
+  display: flex;
+  align-items: center;
+  width: 50.4%;
+  height: 80%;
+  border: 2px solid black;
+  border-radius: 5px;
+  background: white;
+  font-size: larger;
+  overflow: hidden;
+}
+#AddRequestForm-span-file-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+#AddRequestForm-input-file[type="file"] {
+  display: none;
+}
+#AddRequestForm-label-browse-file {
+  font-size: large;
+  border: none;
+  border-left: black solid 2px;
+  padding: 20px 5px;
+  background-color: rgb(255, 204, 51, 1);
+}
+#AddRequestForm-label-browse-file:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
 }
 
 #AddRequestForm-div-image-container {
@@ -1425,13 +1460,48 @@ EditRequestForm.jsx component styling
 #EditRequestForm-input-last-name,
 #EditRequestForm-input-access-id,
 #EditRequestForm-input-date-signed,
-#EditRequestForm-input-key-number,
-#EditRequestForm-input-file {
+#EditRequestForm-input-key-number {
   font-size: larger;
   width: 50%;
   height: 80%;
   border: 2px black solid;
   border-radius: 5px;
+}
+#EditRequestForm-input-date-signed {
+  width: 50.4%;
+}
+#EditRequestForm-div-file-input-container {
+  display: flex;
+  align-items: center;
+  width: 50.4%;
+  height: 80%;
+  border: 2px solid black;
+  border-radius: 5px;
+  background: white;
+  font-size: larger;
+  overflow: hidden;
+}
+#EditRequestForm-span-file-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+#EditRequestForm-input-file[type="file"] {
+  display: none;
+}
+#EditRequestForm-label-browse-file {
+  font-size: large;
+  border: none;
+  border-left: black solid 2px;
+  padding: 20px 5px;
+  background-color: rgb(255, 204, 51, 1);
+}
+#EditRequestForm-label-browse-file:hover {
+  background-color: rgb(255, 224, 133, 1);
+  cursor: pointer;
+  transition: 0.3s;
 }
 #EditRequestForm-button-delete {
   background-color: #dc4c64;
