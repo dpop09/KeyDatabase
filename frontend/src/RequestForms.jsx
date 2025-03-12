@@ -116,7 +116,14 @@ function RequestForms() {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({ input_status, input_fname, input_lname, input_access_id, input_date_signed, input_assigned_key })
+                body: JSON.stringify({ 
+                    input_status, 
+                    input_fname, 
+                    input_lname, 
+                    input_access_id, 
+                    input_date_signed, 
+                    input_assigned_key 
+                })
             })
             const data = await response.json();
             if (data) { // if the response is successful
@@ -235,6 +242,7 @@ function RequestForms() {
                                 <select id="RequestForms-input-advanced-search-status">
                                     <option value={null}></option>
                                     <option value="Active">Active</option>
+                                    <option value="Awaiting Signature">Awaiting Signature</option>
                                     <option value="Pending">Pending</option>
                                     <option value="Idle">Idle</option>
                                 </select>

@@ -339,15 +339,15 @@ CreateKey.jsx component styling
 #CreateKey-input-key_holder_lname,
 #CreateKey-input-key_holder_access_id,
 #CreateKey-input-date_assigned,
-#CreateKey-textarea-comments,
-#CreateKey-input-last_edited_by,
-#CreateKey-input-date_last_edited,
-#CreateKey-input-key_request_form {
+#CreateKey-textarea-comments {
   font-size: larger;
   width: 50%;
   height: 80%;
   border: 2px black solid;
   border-radius: 5px;
+}
+#CreateKey-input-date_assigned {
+  width: 50.4%;
 }
 #CreateKey-textarea-comments {
   resize: none;
@@ -799,6 +799,9 @@ EditKey.jsx component styling
   height: 80%;
   border: 2px black solid;
   border-radius: 5px;
+}
+#EditKey-input-date_assigned {
+  width: 50.4%;
 }
 #EditKey-textarea-comments {
   resize: none;

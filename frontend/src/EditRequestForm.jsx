@@ -116,6 +116,12 @@ function EditRequestForm() {
             handleModalShow();
             return
         }
+        // check if no edits have been made
+        if (!first_name_edit_flag && !last_name_edit_flag && !access_id_edit_flag && !date_signed_edit_flag && file === null) {
+            setErrorMessage("No edits have been made.");
+            handleModalShow();
+            return
+        }
 
         const formData = new FormData();
         formData.append('user_access_id', accessId);

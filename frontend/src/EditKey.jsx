@@ -41,7 +41,10 @@ function EditKey() {
         }
         setShowConfirmationModal(true);
     }
-    const handleEmailModalClose = () => setShowEmailModal(false);
+    const handleEmailModalClose = () => {
+        setShowEmailModal(false);
+        navigate('/keyinfo')
+    }
     const handleEmailModalShow = () => setShowEmailModal(true);
 
     const navigate = useNavigate();
@@ -147,6 +150,14 @@ function EditKey() {
             setErrorMessage("Please select a column this key should be assigned to.");
             handleModalShow();
             return
+        }
+        // check if no edits were made
+        if (!tag_number.edit_flag && !tag_color.edit_flag && !core_number.edit_flag && !room_number.edit_flag && 
+            !room_type.edit_flag && !key_number.edit_flag && !key_holder_fname.edit_flag && !key_holder_lname.edit_flag &&
+            !key_holder_access_id.edit_flag && !date_assigned.edit_flag && !comments.edit_flag && request_form.new_form_id === null) {
+            setErrorMessage("No edits have been made.");
+            handleModalShow();
+            return   
         }
         try {
             const response = await fetch('http://localhost:8081/edit-key', { // send a POST request to the backend route
@@ -492,7 +503,7 @@ function EditKey() {
                         </div>
                         <div id="EditKey-div-row-flex-box-even">
                             <h3>Date Assigned:</h3>
-                            <input type="date" id="EditKey-input-date_assigned" placeholder={displayDateAssigned} />
+                            <input type="date" id="EditKey-input-date_assigned" placeholder={keyData.date_assigned} />
                         </div>
                         <div id="EditKey-div-row-flex-box">
                             <h3>Comments:</h3>
@@ -628,11 +639,11 @@ function EditKey() {
                     <div id="EditKey-div-quick-actions-title">
                         <h2>QUICK ACTIONS</h2>
                     </div>
-                    <div id="EditKey-div-row-flex-box-even">
+                    <div id="EditKey-div-row-flex-box">
                         <h3>Remove Holder:</h3>
                         <button id="EditKey-button-remove-holder" onClick={handleRemoveHolder}>Remove Holder</button>
                     </div>
-                    <div id="EditKey-div-row-flex-box">
+                    <div id="EditKey-div-row-flex-box-even">
                         <h3>Delete Key:</h3>
                         <button id="EditKey-button-remove-key" onClick={handleConfirmationModalShow}>Delete Key</button>
                     </div>
@@ -697,7 +708,7 @@ function EditKey() {
                 }}>
                     <p>The system has detected that this person is awaiting a key and it is ready for pickup. Would you like to send a notification email?</p>
                     <div id="Modal-div-buttons">
-                        <button id="Modal-button-close" onClick={handleEmailModalClose}>Cancel</button>
+                        <button id="Modal-button-close" onClick={handleEmailModalClose}>No</button>
                         <button id="Modal-button-send" onClick={handleSendKeyPickupEmail}>Send</button>
                     </div>
                 </Box>

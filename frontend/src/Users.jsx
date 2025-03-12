@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from './AuthContext'
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
+import { Modal, Box } from '@mui/material';
 
 function Users() {
 
@@ -18,8 +19,14 @@ function Users() {
         )
     }
 
+    const [showModal, setShowModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
     // component state variables
     const [userData, setUserData] = useState([]);
+
+    // modal handlers
+    const handleModalClose = () => setShowModal(false);
+    const handleModalShow = () => setShowModal(true);
 
     const navigate = useNavigate();
 
@@ -38,12 +45,9 @@ function Users() {
         getAllUserData();
     }, []);
 
-    const handleSearch = async (event) => {
-        event.preventDefault();
+    const handleSearch = async () => {
         const row = document.getElementById('Users-input-search-row').value;
-        if (!row) {
-            return
-        }
+        if (!row) return;
         try {
             const response = await fetch('http://localhost:8081/search-user', { // send a POST request to the backend route
                 method: 'POST',
@@ -52,11 +56,12 @@ function Users() {
                 },
                 body: JSON.stringify({ row: row })
             });
-            const data = await response.json();
-            if (data) { // if the response is successful
+            if (response.status === 200) {
+                const data = await response.json();
                 setUserData(data);
             } else { // if the response is unsuccessful
-                alert("Internal Server Error. Please try again later.");
+                setErrorMessage("Internal Server Error. Please try again later.");
+                handleModalShow();
             }
         } catch (error) {
             console.log(error);
@@ -74,7 +79,8 @@ function Users() {
             navigate('/adduser');
         }
         else {
-            alert('This action can only be performed by an admin.');
+            setErrorMessage('This action can only be performed by an admin.');
+            handleModalShow();
         }
     }
 
@@ -83,7 +89,8 @@ function Users() {
             setSelectedUser(user);
             navigate('/edituser');
         } else {
-            alert('This action can only be performed by an admin.');
+            setErrorMessage('This action can only be performed by an admin.');
+            handleModalShow();
         }
     }
 
@@ -122,6 +129,24 @@ function Users() {
                     </table>
                 </div>
             </div>
+            <Modal open={showModal} onClose={handleModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <h2>{errorMessage}</h2>
+                    <button id="Modal-button-close" onClick={handleModalClose}>Close</button>
+                </Box>
+            </Modal>
         </>
     )
 }

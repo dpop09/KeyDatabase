@@ -108,40 +108,25 @@ function KeyInfo() {
                         <div id="KeyInfo-div-row-flex-box-title">
                             <h2>KEY HOLDER INFO</h2>
                         </div>
-                        <div id="KeyInfo-div-row-flex-box-even">
+                        <div id="KeyInfo-div-row-flex-box">
                             <h3>Key Holder's First Name:</h3>
                             <h3>{keyData.key_holder_fname}</h3>
                         </div>
-                        <div id="KeyInfo-div-row-flex-box">
+                        <div id="KeyInfo-div-row-flex-box-even">
                             <h3>Key Holder's Last Name:</h3>
                             <h3>{keyData.key_holder_lname}</h3>
                         </div>
-                        <div id="KeyInfo-div-row-flex-box-even">
+                        <div id="KeyInfo-div-row-flex-box">
                             <h3>Key Holder's Access ID:</h3>
                             <h3>{keyData.key_holder_access_id}</h3>
                         </div>
-                        <div id="KeyInfo-div-row-flex-box">
+                        <div id="KeyInfo-div-row-flex-box-even">
                             <h3>Date Assigned:</h3>
                             <h3>{displayDateAssigned}</h3>
                         </div>
-                        <div id="KeyInfo-div-row-flex-box-even">
+                        <div id="KeyInfo-div-row-flex-box">
                             <h3>Comments:</h3>
                             <h3>{keyData.comments}</h3>
-                        </div>
-                        <div id="KeyInfo-div-row-flex-box-title">
-                            <h2>METADATA</h2>
-                        </div>
-                        <div id="KeyInfo-div-row-flex-box">
-                            <h3>Last Edited By:</h3>
-                            <h3>{keyData.last_edited_by}</h3>
-                        </div>
-                        <div id="KeyInfo-div-row-flex-box-even">
-                            <h3>Last Action Made:</h3>
-                            <h3>{keyData.last_action_made}</h3>
-                        </div>
-                        <div id="KeyInfo-div-row-flex-box">
-                            <h3>Date Last Edited:</h3>
-                            <h3>{displayDateLastEdited}</h3>
                         </div>
                     </div>
                     <div id="KeyInfo-div-request-form-container">
