@@ -5,9 +5,10 @@ const historyLogOperations = require('./historyLogOperations')
 const errorLogOperations = require('./errorLogOperations');
 const { scrapeWayneData } = require('./scrape');
 const os = require('os');
-const { access } = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const { sendKeyPickupEmail } = require('./emailOperations');
+const mysqldump = require('mysqldump');
+const path = require('path');
 
 const router = express.Router();
 
@@ -28,8 +29,6 @@ router.get('/get-access-id', async (request, response) => {
         // get the logged in username (accessID) from the operating system
         var access_id = os.userInfo().username;
         var permission = "Unauthorized";
-
-        access_id = "hc7822" // for testing
 
         // check if the detected accessID is listed in the database
         const isAccessIdWhiteListed = await dbOperations.isAccessIdWhiteListed(access_id);
@@ -500,6 +499,37 @@ router.post('/send-email', async (request, response) => {
         errorLogOperations.logError(error);
         console.log(error);
         response.status(500).send(error);
+    }
+})
+
+router.get('/backup', async (request, response) => {
+    const backup_path = path.join(__dirname, 'backup.sql');
+    try {
+        const result = mysqldump({
+            connection: {
+                host: 'localhost',
+                user: 'root',
+                password: '',
+                database: 'keysdb'
+            },
+            dumpToFile: backup_path
+        })
+        response.status(200).send(result);
+    } catch (error) {
+        errorLogOperations.logError('Backup failed: ', error);
+        console.log('Backup failed: ', error);
+        response.status(500).send(error)
+    }
+})
+
+router.get('/delete-db', async (request, response) => {
+    try {
+        const result = await dbOperations.deleteDatabase();
+        response.status(200).send(result);
+    } catch (error) {
+        errorLogOperations.logError('Database deletion failed: ', error);
+        console.log('Datbase deletion failed: ', error);
+        response.status(500).send(error)
     }
 })
 

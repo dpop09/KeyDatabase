@@ -19,6 +19,9 @@ function NavBar() {
     const gotoUsers = () => {
         navigate('/users');
     }
+    const gotoSettings = () => {
+        navigate('/settings')
+    }
 
     return (
         <div id="NavBar-div-container">
@@ -28,6 +31,7 @@ function NavBar() {
                 <button id="NavBar-button-link" onClick={gotoRequestForms}>REQUEST FORMS</button>
                 <button id="NavBar-button-link" onClick={gotoHistoryLog}>HISTORY</button>
                 <button id="NavBar-button-link" onClick={gotoUsers}>USERS</button>
+                <button id="NavBar-button-link" onClick={gotoSettings}>SETTINGS</button>
             </div>
         </div>
     )

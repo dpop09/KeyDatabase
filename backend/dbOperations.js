@@ -921,6 +921,24 @@ const dbOperations = {
             console.log(error);
         }
     },
+    deleteDatabase: async function() {
+        const sql = 'DROP DATABASE IF EXISTS `keysdb`';
+        try {
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);  
+        }
+    }
 }
 
 module.exports = dbOperations
