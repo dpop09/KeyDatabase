@@ -45,8 +45,10 @@ function AddRequestForm() {
                     setPdfData(e.target.result);
                 };
                 fileReader.readAsDataURL(file);
+                document.getElementById("AddRequestForm-span-file-name").textContent = file.name;
             } else {
                 alert('Only PDF files are allowed');
+                handleModalShow();
             }
         } else {
             setPdfData(null);
@@ -153,7 +155,11 @@ function AddRequestForm() {
                         </div>
                         <div id="AddRequestForm-div-row-flex-box">
                             <h2>*PDF File: </h2>
-                            <input type="file" id="AddRequestForm-input-file" accept="application/pdf" onChange={handleFileChange} />
+                            <div id="AddRequestForm-div-file-input-container">
+                                <span id="AddRequestForm-span-file-name">No file chosen</span>
+                                <label id="AddRequestForm-label-browse-file" for="AddRequestForm-input-file">Browse</label>
+                                <input type="file" id="AddRequestForm-input-file" accept="application/pdf" onChange={handleFileChange}/>
+                            </div>
                         </div>
                     </div>
                     <div id="AddRequestForm-div-image-container">

@@ -621,6 +621,14 @@ const dbOperations = {
                   (COALESCE(assigned_key_1, '') <> '' OR COALESCE(assigned_key_2, '') <> '' OR COALESCE(assigned_key_3, '') <> '' OR COALESCE(assigned_key_4, '') <> '')
                 )
               `;
+            } else if (input_status === "Awaiting Signature") {
+                sql += `
+                AND (
+                  (date_signed IS NULL OR date_signed = '0000-00-00')
+                  AND 
+                  (COALESCE(assigned_key_1, '') <> '' OR COALESCE(assigned_key_2, '') <> '' OR COALESCE(assigned_key_3, '') <> '' OR COALESCE(assigned_key_4, '') <> '')
+                )
+              `;
             }
           }
       
@@ -913,6 +921,24 @@ const dbOperations = {
             console.log(error);
         }
     },
+    deleteDatabase: async function() {
+        const sql = 'DROP DATABASE IF EXISTS `keysdb`';
+        try {
+            const response = await new Promise((resolve, reject) => {
+                db.query(sql, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                });
+            });
+            return response
+        } catch (error) {
+            errorLogOperations.logError(error); // Log the error
+            console.log(error);  
+        }
+    }
 }
 
 module.exports = dbOperations

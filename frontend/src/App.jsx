@@ -12,6 +12,7 @@ import Users from './Users.jsx'
 import NavBar from './NavBar.jsx'
 import AddUser from './AddUser.jsx'
 import EditUser from './EditUser.jsx'
+import Settings from './Settings.jsx'
 
 function App() {
 
@@ -73,6 +74,11 @@ function App() {
             exact
             path='/addrequestform'
             element={<AddRequestForm />}
+          />
+          <Route
+            exact
+            path='/settings'
+            element={<Settings />}
           />
           <Route
             exact
