@@ -298,7 +298,8 @@ const dbOperations = {
         try {
             const sql = 'INSERT INTO `keys` (tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, form_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
             const values = [tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, form_id];
-            const response = await new Promise((resolve, reject) => {
+            // Insert the key
+            await new Promise((resolve, reject) => {
                 db.query(sql, values, (err, result) => {
                     if (err) {
                         reject(err);
@@ -307,7 +308,21 @@ const dbOperations = {
                     }
                 });
             });
-            return response;
+
+            // Now fetch that newly created key
+            const select_sql = 'SELECT * FROM `Keys` WHERE key_number = ?';
+            const select_values = [key_number];
+            const newKeyData = await new Promise((resolve, reject) => {
+                db.query(select_sql, select_values, (err, result) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result[0]);
+                    }
+                });
+            });
+
+            return newKeyData; // Return the newly created key
         } catch (error) {
             errorLogOperations.logError(error); // Log the error
             console.log(error);

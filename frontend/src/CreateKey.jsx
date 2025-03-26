@@ -7,7 +7,7 @@ import { Modal, Box } from '@mui/material';
 function CreateKey() {
 
     // global state variables
-    const { accessId, permissions } = useContext(AuthContext)
+    const { accessId, permissions, setKeyData } = useContext(AuthContext)
 
     // display an unauthorized page if the permissions is not found in the database
     if (permissions === "Unauthorized") {
@@ -33,7 +33,10 @@ function CreateKey() {
     // modal handlers
     const handleModalClose = () => setShowModal(false);
     const handleModalShow = () => setShowModal(true);
-    const handleEmailModalClose = () => setShowEmailModal(false);
+    const handleEmailModalClose = () => {
+        setShowEmailModal(false);
+        navigate('/keyinfo')
+    }
     const handleEmailModalShow = () => setShowEmailModal(true);
 
     // navigation back to the keys page
@@ -139,9 +142,11 @@ function CreateKey() {
                 })
             })
             if (response.status === 200) { // if the response is successful
+                const data = await response.json();
+                setKeyData(data); // update the key data before navigating to the key info page
                 const email_flag = checkToSendKeyPickupEmail(key_holder_access_id, key_holder_fname, key_holder_lname, date_assigned);
                 if (!email_flag) { // if conditions don't meet to send an email, then we navigate back to the keys page
-                    navigate('/keys');
+                    navigate('/keyinfo');
                 }
             } else if (response.status === 500) { // if the response is unsuccessful
                 setErrorMessage("Internal Server Error. Please try again later.");
@@ -309,7 +314,6 @@ function CreateKey() {
             })
             if (response.ok) { // if the response is successful
                 handleEmailModalClose();
-                navigate('/keys');
             } else { // if the response is unsuccessful
                 setErrorMessage("Internal Server Error. Please try again later.");
                 handleModalShow();
@@ -543,7 +547,7 @@ function CreateKey() {
                 }}>
                     <p>The system has detected that this person is awaiting a key and it is ready for pickup. Would you like to send a notification email?</p>
                     <div id="Modal-div-buttons">
-                        <button id="Modal-button-close" onClick={handleEmailModalClose}>Cancel</button>
+                        <button id="Modal-button-close" onClick={handleEmailModalClose}>No</button>
                         <button id="Modal-button-send" onClick={handleSendKeyPickupEmail}>Send</button>
                     </div>
                 </Box>
