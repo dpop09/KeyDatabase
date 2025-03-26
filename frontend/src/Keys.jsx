@@ -184,6 +184,34 @@ function Home() {
         return `${month} ${dayWithOrdinal}, ${year}`;
     }
 
+    // Helper function to compute contrast color from any CSS color string
+    const getContrastColor = (d) => {
+        if (d.tag_color === null) return 'black';
+    
+        // Create a temporary element to convert the color string to an RGB value
+        const tempElem = document.createElement('div');
+        tempElem.style.color = d.tag_color;
+        document.body.appendChild(tempElem);
+    
+        // Get the computed color in rgb(a) format (e.g., "rgb(255, 165, 0)")
+        const computedColor = window.getComputedStyle(tempElem).color;
+        document.body.removeChild(tempElem);
+    
+        // Extract the r, g, b values
+        const rgbValues = computedColor.match(/\d+/g);
+        if (!rgbValues || rgbValues.length < 3) return 'black';
+    
+        const r = parseInt(rgbValues[0], 10);
+        const g = parseInt(rgbValues[1], 10);
+        const b = parseInt(rgbValues[2], 10);
+    
+        // Calculate the luminance using the ITU-R BT.709 formula
+        const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+        // If luminance is high, return black; otherwise return white.
+        return luminance > 0.5 ? 'black' : 'white';
+    }
+
     return (
         <>
             <NavBar />
@@ -276,7 +304,10 @@ function Home() {
                                 <tr id="Keys-tr" key={i} onClick={() => handleRowClick(d)}>
                                     <td 
                                         id="Keys-td"
-                                        style={{ backgroundColor: d.tag_color || 'transparent' }} // Set background color or default to transparent
+                                        style={{ 
+                                            backgroundColor: d.tag_color || 'transparent', // Set background color or default to transparent
+                                            color: getContrastColor(d) // Dynamically set text color for contrast
+                                        }}
                                     >{d.tag_number}
                                     </td>
                                     <td id="Keys-td">{d.core_number}</td>
