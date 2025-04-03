@@ -1574,8 +1574,8 @@ Users.jsx component styling
 #Users-div-container {
   text-align: center;
   width: auto;
-  padding: 2rem;
-  padding-top: 0;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 #Users-div-top-flex-box {
