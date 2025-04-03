@@ -117,8 +117,8 @@ Keys.jsx component styling
 
 #Keys-div-container {
   text-align: center;
-  padding: 2rem;
-  padding-top: 0;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 #Keys-div-top-flex-box {
@@ -236,8 +236,8 @@ Keys.jsx component styling
 }
 
 #Keys-table-container {
+  height: 75vh;
   overflow-y: auto;
-  margin-bottom: 1.25rem;
   border: 2px solid black;
   border-radius: 5px;
 }
@@ -1636,6 +1636,7 @@ Users.jsx component styling
 }
 
 #Users-div-table-container {
+  height: 75vh;
   overflow-y: auto;
   border: 2px solid black;
   border-radius: 5px;
@@ -1849,8 +1850,8 @@ HistoryLog.jsx component styling
 
 #HistoryLog-div-container {
   text-align: center;
-  padding: 2rem;
-  padding-top: 0;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
 #HistoryLog-div-top-flex-box {
@@ -1965,7 +1966,7 @@ HistoryLog.jsx component styling
 }
 
 #HistoryLog-table-container {
-  height: 70vh;
+  height: 75vh;
   overflow-y: auto;
   border: 2px solid black;
   border-radius: 5px;
