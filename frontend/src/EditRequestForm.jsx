@@ -25,7 +25,14 @@ function EditRequestForm() {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
     const [pdfData, setPdfData] = useState(null);
-
+    const [dateSigned, setDateSigned] = useState(() => {
+        const rawDate = requestFormData.date_signed;
+        if (rawDate && rawDate !== "0000-00-00" && !isNaN(new Date(rawDate).getTime())) { // if there is a date_signed provided
+            return new Date(rawDate).toISOString().split('T')[0]; // set the useState to a string version of it
+        }
+        return ''; // else make the useState an empty string
+    });
+      
     // modal handlers
     const handleModalClose = () => setShowModal(false);
     const handleModalShow = () => setShowModal(true);
@@ -68,6 +75,15 @@ function EditRequestForm() {
         getPdfData();
     }, []);
 
+    useEffect(() => {
+        const rawDate = requestFormData.date_signed;
+        if (rawDate && rawDate !== "0000-00-00" && !isNaN(new Date(rawDate).getTime())) {
+            setDateSigned(new Date(rawDate).toISOString().split('T')[0]);
+        } else {
+            setDateSigned('');
+        }
+    }, [requestFormData.date_signed])
+
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -87,6 +103,12 @@ function EditRequestForm() {
         }
     }
 
+    // Helper function to check if a date is valid
+    const isValidDate = (date) => {
+        const parsed = new Date(date);
+        return date && date !== "0000-00-00" && !isNaN(parsed.getTime());
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
     
@@ -102,9 +124,14 @@ function EditRequestForm() {
                         document.getElementById('EditRequestForm-input-access-id').value.trim() :
                         document.getElementById('EditRequestForm-input-access-id').placeholder;
         const access_id_edit_flag = (document.getElementById('EditRequestForm-input-access-id').value) ? true : false;
-        const date_signed = (document.getElementById('EditRequestForm-input-date-signed').value) ?
-                        document.getElementById('EditRequestForm-input-date-signed').value :
-                        document.getElementById('EditRequestForm-input-date-signed').placeholder;
+        const inputDateValue = document.getElementById('EditRequestForm-input-date-signed').value;
+        // Get the default date string if requestFormData.date_signed is valid, or empty string otherwise
+        const defaultDate = isValidDate(requestFormData.date_signed)
+            ? new Date(requestFormData.date_signed).toISOString().split('T')[0]
+            : '';
+        const date_signed = (inputDateValue !== defaultDate) ?
+                        inputDateValue :
+                        requestFormData.date_signed;
         const date_signed_edit_flag = (document.getElementById('EditRequestForm-input-date-signed').value) ? true : false;
         
         // Properly retrieve the file
@@ -241,7 +268,12 @@ function EditRequestForm() {
                         </div>
                         <div id="EditRequestForm-div-row-flex-box-even">
                             <h3>Date Signed:</h3>
-                            <input id="EditRequestForm-input-date-signed" type="date" placeholder={requestFormData.date_signed} />
+                            <input
+                                type="date"
+                                id="EditRequestForm-input-date-signed"
+                                value={dateSigned}
+                                onChange={(e) => setDateSigned(e.target.value)}
+                            />
                         </div>
                         <div id="EditRequestForm-div-row-flex-box">
                             <h3>Assigned Key 1:</h3>

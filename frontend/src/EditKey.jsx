@@ -28,6 +28,13 @@ function EditKey() {
     const [selectedForm, setSelectedForm] = useState(null);
     const [pdfData, setPdfData] = useState(null);
     const [recipientAccessId, setRecipientAccessId] = useState(null)
+    const [dateAssigned, setDateAssigned] = useState(() => {
+        const rawDate = keyData.date_assigned;
+        if (rawDate && rawDate !== "0000-00-00" && !isNaN(new Date(rawDate).getTime())) { // if there is a date_assigned provided
+            return new Date(rawDate).toISOString().split('T')[0]; // set the useState to a string version of it
+        }
+        return ''; // else make the useState an empty string
+    });
 
     // modal handlers
     const handleModalClose = () => setShowModal(false);
@@ -61,7 +68,16 @@ function EditKey() {
 
     useEffect(() => {
         getKeyRequestForms();
-    }, []);
+    }, [])
+
+    useEffect(() => {
+        const rawDate = keyData.date_assigned;
+        if (rawDate && rawDate !== "0000-00-00" && !isNaN(new Date(rawDate).getTime())) {
+            setDateAssigned(new Date(rawDate).toISOString().split('T')[0]);
+        } else {
+            setDateAssigned('');
+        }
+    }, [keyData.date_assigned]);
 
     const handleSelectForm = (form) => {
         if (selectedForm === form) { // if the form is already selected
@@ -70,14 +86,6 @@ function EditKey() {
         }
         setSelectedForm(form); // else select the form
     }
-
-    const displayDateAssigned = keyData.date_assigned 
-        ? new Date(keyData.date_assigned).toLocaleDateString("en-US", {
-            month: "2-digit",
-            day: "2-digit",
-            year: "numeric"
-        }) 
-        : "";
 
     const getPdfData = async (form_id) => {
         if (selectedForm != null) // if a form is already selected, do nothing
@@ -102,6 +110,12 @@ function EditKey() {
             console.log(error);
         }
     }
+
+    // Helper function to check if a date is valid
+    const isValidDate = (date) => {
+        const parsed = new Date(date);
+        return date && date !== "0000-00-00" && !isNaN(parsed.getTime());
+    };
 
     const handleSubmitEdit = async (event) => {
         event.preventDefault();
@@ -132,9 +146,14 @@ function EditKey() {
         const key_holder_access_id = (document.getElementById('EditKey-input-key_holder_access_id').value) ?
                             {value: document.getElementById('EditKey-input-key_holder_access_id').value, edit_flag: true} :
                             {value: document.getElementById('EditKey-input-key_holder_access_id').placeholder, edit_flag: false};
-        const date_assigned = (document.getElementById('EditKey-input-date_assigned').value) ?
-                            {value: document.getElementById('EditKey-input-date_assigned').value, edit_flag: true} :
-                            {value: document.getElementById('EditKey-input-date_assigned').placeholder, edit_flag: false};
+        const inputDateValue = document.getElementById('EditKey-input-date_assigned').value;
+        // Get the default date string if keyData.date_assigned is valid, or empty string otherwise
+        const defaultDate = isValidDate(keyData.date_assigned)
+            ? new Date(keyData.date_assigned).toISOString().split('T')[0]
+            : '';
+        const date_assigned = (inputDateValue !== defaultDate) ?
+                            {value: inputDateValue, edit_flag: true} :
+                            {value: keyData.date_assigned, edit_flag: false};
         const comments = (document.getElementById('EditKey-textarea-comments').value) ?
                             {value: document.getElementById('EditKey-textarea-comments').value, edit_flag: true} :
                             {value: document.getElementById('EditKey-textarea-comments').placeholder, edit_flag: false};
@@ -503,7 +522,12 @@ function EditKey() {
                         </div>
                         <div id="EditKey-div-row-flex-box-even">
                             <h3>Date Assigned:</h3>
-                            <input type="date" id="EditKey-input-date_assigned" placeholder={keyData.date_assigned} />
+                            <input
+                                type="date"
+                                id="EditKey-input-date_assigned"
+                                value={dateAssigned}
+                                onChange={(e) => setDateAssigned(e.target.value)}
+                            />
                         </div>
                         <div id="EditKey-div-row-flex-box">
                             <h3>Comments:</h3>
