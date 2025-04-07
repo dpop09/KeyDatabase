@@ -95,7 +95,7 @@ function CreateKey() {
     const handleCreateKey = async () => {
         // get values from the input fields
         const tag_number = document.getElementById('CreateKey-input-tag_number').value.trim();
-        const tag_color = document.getElementById('CreateKey-input-tag_color').value.trim();
+        const tag_color = document.getElementById('CreateKey-select-tag_color').value.trim();
         const core_number = document.getElementById('CreateKey-input-core_number').value.trim();
         const room_number = document.getElementById('CreateKey-input-room_number').value.trim();
         const room_type = document.getElementById('CreateKey-input-room_type').value.trim();
@@ -339,7 +339,25 @@ function CreateKey() {
                         </div>
                         <div id ="CreateKey-div-row-flex-box-even">
                             <h3>*Tag Color:</h3>
-                            <input type="text" id="CreateKey-input-tag_color" />
+                            <select id="CreateKey-select-tag_color">
+                                <option value="" hidden>Select a color</option>
+                                <option id="option-white" value="White">White</option>
+                                <option id="option-light-grey" value="LightGrey">Light Grey</option>
+                                <option id="option-grey" value="Grey">Grey</option>
+                                <option id="option-black" value="Black">Black</option>
+                                <option id="option-red" value="Red">Red</option>
+                                <option id="option-orange" value="Orange">Orange</option>
+                                <option id="option-yellow" value="Yellow">Yellow</option>
+                                <option id="option-lime" value="Lime">Lime</option>
+                                <option id="option-green" value="Green">Green</option>
+                                <option id="option-light-blue" value="LightBlue">Light Blue</option>
+                                <option id="option-cyan" value="LightSeaGreen">Light Sea Green</option>
+                                <option id="option-blue" value="Blue">Blue</option>
+                                <option id="option-purple" value="RebeccaPurple">Rebecca Purple</option>
+                                <option id="option-violet" value="Violet">Violet</option>
+                                <option id="option-pink" value="Pink">Pink</option>
+                                <option id="option-brown" value="SaddleBrown">Saddle Brown</option>
+                            </select>
                         </div>
                         <div id="CreateKey-div-row-flex-box">
                             <h3>*Core Number:</h3>
