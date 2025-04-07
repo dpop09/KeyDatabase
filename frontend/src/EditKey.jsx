@@ -122,9 +122,9 @@ function EditKey() {
         const tag_number = (document.getElementById('EditKey-input-tag_number').value) ? 
                             {value: document.getElementById('EditKey-input-tag_number').value.trim(), edit_flag: true} : 
                             {value: document.getElementById('EditKey-input-tag_number').placeholder, edit_flag: false};
-        const tag_color = (document.getElementById('EditKey-input-tag_color').value) ?
-                            {value: document.getElementById('EditKey-input-tag_color').value.trim(), edit_flag: true} :
-                            {value: document.getElementById('EditKey-input-tag_color').placeholder, edit_flag: false};
+        const tag_color = (document.getElementById('EditKey-select-tag_color').value) ?
+                            {value: document.getElementById('EditKey-select-tag_color').value.trim(), edit_flag: true} :
+                            {value: keyData.tag_color, edit_flag: false};
         const core_number = (document.getElementById('EditKey-input-core_number').value) ?
                             {value: document.getElementById('EditKey-input-core_number').value.trim(), edit_flag: true} :
                             {value: document.getElementById('EditKey-input-core_number').placeholder, edit_flag: false};
@@ -455,13 +455,25 @@ function EditKey() {
                         </div>
                         <div id ="EditKey-div-row-flex-box-even">
                             <h3>*Tag Color:</h3>
-                            <input 
-                                type="text" 
-                                id="EditKey-input-tag_color" 
-                                placeholder={keyData.tag_color} 
-                                disabled={permissions !== "Admin"} 
-                                className={permissions === "Admin" ? "admin-input" : "non-admin-input"}
-                            />
+                            <select id="EditKey-select-tag_color" placeholder={keyData.tag_color}>
+                                <option value="" hidden={true}>{keyData.tag_color}</option>
+                                <option id="option-white" value="White">White</option>
+                                <option id="option-light-grey" value="LightGrey">Light Grey</option>
+                                <option id="option-grey" value="Grey">Grey</option>
+                                <option id="option-black" value="Black">Black</option>
+                                <option id="option-red" value="Red">Red</option>
+                                <option id="option-orange" value="Orange">Orange</option>
+                                <option id="option-yellow" value="Yellow">Yellow</option>
+                                <option id="option-lime" value="Lime">Lime</option>
+                                <option id="option-green" value="Green">Green</option>
+                                <option id="option-light-blue" value="LightBlue">Light Blue</option>
+                                <option id="option-cyan" value="LightSeaGreen">Light Sea Green</option>
+                                <option id="option-blue" value="Blue">Blue</option>
+                                <option id="option-purple" value="RebeccaPurple">Rebecca Purple</option>
+                                <option id="option-violet" value="Violet">Violet</option>
+                                <option id="option-pink" value="Pink">Pink</option>
+                                <option id="option-brown" value="SaddleBrown">Saddle Brown</option>
+                            </select>
                         </div>
                         <div id="EditKey-div-row-flex-box">
                             <h3>*Core Number:</h3>

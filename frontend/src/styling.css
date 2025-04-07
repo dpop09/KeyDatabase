@@ -329,7 +329,7 @@ CreateKey.jsx component styling
 }
 
 #CreateKey-input-tag_number,
-#CreateKey-input-tag_color,
+#CreateKey-select-tag_color,
 #CreateKey-input-core_number,
 #CreateKey-input-room_number,
 #CreateKey-input-room_type,
@@ -346,8 +346,13 @@ CreateKey.jsx component styling
   border: 2px black solid;
   border-radius: 5px;
 }
+#CreateKey-select-tag_color {
+  width: 51.1%;
+  height: 88%;
+}
 #CreateKey-input-date_assigned {
   width: 50.4%;
+  height: 84%;
 }
 #CreateKey-textarea-comments {
   resize: none;
@@ -780,7 +785,7 @@ EditKey.jsx component styling
 }
 
 #EditKey-input-tag_number,
-#EditKey-input-tag_color,
+#EditKey-select-tag_color,
 #EditKey-input-core_number,
 #EditKey-input-room_number,
 #EditKey-input-room_type,
@@ -800,8 +805,79 @@ EditKey.jsx component styling
   border: 2px black solid;
   border-radius: 5px;
 }
+#EditKey-select-tag_color {
+  width: 51.1%;
+  height: 88%;
+}
+#option-white {
+  background-color: white;
+  color: black;
+}
+#option-light-grey {
+  background-color: lightgrey;
+  color: black;
+}
+#option-grey {
+  background-color: grey;
+  color: white;
+}
+#option-black {
+  background-color: black;
+  color: white;
+}
+#option-red {
+  background-color: red;
+  color: black;
+}
+#option-orange {
+  background-color: orange;
+  color: black;
+}
+#option-yellow {
+  background-color: yellow;
+  color: black;
+}
+#option-lime {
+  background-color: lime;
+  color: black;
+}
+#option-green {
+  background-color: green;
+  color: white;
+}
+#option-light-blue {
+  background-color: lightblue;
+  color: black;
+}
+#option-cyan {
+  background-color: LightSeaGreen;
+  color: white;
+}
+#option-blue {
+  background-color: blue;
+  color: white;
+}
+#option-purple {
+  background-color: rebeccapurple;
+  color: white;
+}
+#option-violet {
+  background-color: violet;
+  color: black;
+}
+#option-pink {
+  background-color: pink;
+  color: black;
+}
+#option-brown {
+  background-color: SaddleBrown;
+  color: white;
+}
 #EditKey-input-date_assigned {
   width: 50.4%;
+}
+#EditKey-input-date_assigned {
+  height: 84%;
 }
 #EditKey-textarea-comments {
   resize: none;
