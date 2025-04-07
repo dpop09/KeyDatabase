@@ -449,8 +449,6 @@ function EditKey() {
                                 type="text" 
                                 id="EditKey-input-tag_number" 
                                 placeholder={keyData.tag_number} 
-                                disabled={permissions !== "Admin"} 
-                                className={permissions === "Admin" ? "admin-input" : "non-admin-input"}
                             />
                         </div>
                         <div id ="EditKey-div-row-flex-box-even">

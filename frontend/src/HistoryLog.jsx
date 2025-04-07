@@ -57,6 +57,10 @@ function HistoryLog() {
         getAllHistory();
     }, []);
 
+    const reverseData = () => {
+        setData(prevData => [...prevData].reverse());
+    };
+
     const handleDeleteHistory = async () => {
         try {
             const response = await fetch('http://localhost:8081/delete-history', { // send a POST request to the backend route
@@ -210,6 +214,7 @@ function HistoryLog() {
                         <button id="HistoryLog-button-clear-search" onClick={handleClearSearch}>Clear</button>
                     </div>
                     <div id="HistoryLog-div-action-buttons">
+                        <button id="HistoryLog-button-sort" onClick={reverseData} />
                         <button id="HistoryLog-button-advanced-search" onClick={toggleDisplayAdvancedSearch} />
                         <button id="HistoryLog-button-delete-all" onClick={handleConfirmationModalShow} />
                     </div>

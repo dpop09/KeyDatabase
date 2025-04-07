@@ -1972,11 +1972,25 @@ HistoryLog.jsx component styling
 }
 
 #HistoryLog-div-action-buttons {
-  width: 7.5%;
+  width: 10%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+#HistoryLog-button-sort {
+  width: 52px;
+  height: 52px;
+  background-color: transparent;
+  background-image: url('./assets/sort_history_icon_default.png');
+  background-size: cover;
+  border: none;
+  outline: none;
+}
+#HistoryLog-button-sort:hover {
+  background-image: url('./assets/sort_history_icon_hover.png');
+  cursor: pointer;
+  transition: .3s;
 }
 #HistoryLog-button-advanced-search {
   width: 52px;

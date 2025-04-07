@@ -132,7 +132,7 @@ function EditRequestForm() {
         const date_signed = (inputDateValue !== defaultDate) ?
                         inputDateValue :
                         requestFormData.date_signed;
-        const date_signed_edit_flag = (document.getElementById('EditRequestForm-input-date-signed').value) ? true : false;
+        const date_signed_edit_flag = (inputDateValue !== defaultDate) ? true : false;
         
         // Properly retrieve the file
         const fileInput = document.getElementById('EditRequestForm-input-file');
