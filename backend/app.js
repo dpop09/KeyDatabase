@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const errorLogOperations = require('./errorLogOperations');
 const routes = require('./routes'); // Import your routes
 
 const app = express();
