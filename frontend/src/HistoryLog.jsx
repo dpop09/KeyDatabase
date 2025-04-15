@@ -174,6 +174,10 @@ function HistoryLog() {
         getAllHistory();
     }
 
+    const handleDownloadHistoryLog = async () => {
+        return
+    }
+
     const getOrdinal = (n) => {
         const s = ["th", "st", "nd", "rd"],
             v = n % 100;
@@ -215,6 +219,7 @@ function HistoryLog() {
                     </div>
                     <div id="HistoryLog-div-action-buttons">
                         <button id="HistoryLog-button-sort" onClick={reverseData} />
+                        <button id="HistoryLog-button-download" onClick={handleDownloadHistoryLog} />
                         <button id="HistoryLog-button-advanced-search" onClick={toggleDisplayAdvancedSearch} />
                         <button id="HistoryLog-button-delete-all" onClick={handleConfirmationModalShow} />
                     </div>

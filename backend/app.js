@@ -10,7 +10,19 @@ app.use(express.urlencoded({ extended: false }));
 // Use routes from routes.js
 app.use('/', routes);
 
+const PORT = 8081;
+
 // Set up the web server listener
-app.listen(8081, () => {
-    console.log("I am listening.");
+const server = app.listen(PORT, () => {
+    console.log(`I am listening on port ${PORT}.`);
+});
+
+// Listen for errors on the server
+server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+        console.error(`Error: Port ${PORT} is already in use. Please free the port or choose a different one.`);
+        process.exit(1);
+    } else {
+        console.error(error);
+    }
 });

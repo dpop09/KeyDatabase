@@ -28,8 +28,11 @@ router.get('/get-access-id', async (request, response) => {
     try {
         // get the logged in username (accessID) from the operating system
         var access_id = os.userInfo().username;
-        var permission = "Unauthorized";
-
+        if (access_id.length > 6) { // IT usernames are slightly different (e.i., "admin.ab1234")
+            access_id = access_id.split('.')[1]; 
+        }
+        var permission = "Unauthorized"; // set to authorized by default
+        
         // check if the detected accessID is listed in the database
         const isAccessIdWhiteListed = await dbOperations.isAccessIdWhiteListed(access_id);
         if (isAccessIdWhiteListed) { // if the accessID does not exist in the database, set permission to "Unauthorized"
@@ -59,22 +62,6 @@ router.post('/search-key', async (request, response) => {
         const { row } = request.body;
         const result = await dbOperations.searchKey(row);
         response.status(200).send(result);
-    } catch (error) {
-        errorLogOperations.logError(error);
-        console.log(error);
-        response.status(500).send(error);
-    }
-});
-
-router.post('/getKeyRequestForm' , async (request, response) => {
-    try {
-        const { key_number } = request.body;
-        const result = await dbOperations.getKeyRequestForm(key_number);
-        if (result) {
-            response.status(200).send(result);
-        } else {
-            response.status(404).send('Key Request Form not found');
-        }
     } catch (error) {
         errorLogOperations.logError(error);
         console.log(error);
@@ -401,8 +388,30 @@ router.post('/advanced-search-request-form', async (request, response) => {
 
 router.post('/advanced-search-key', async (request, response) => {
     try {
-        const { input_tag_num, input_core, input_room_num, input_room_type, input_key_num, input_availability, input_fname, input_lname, input_access_id, input_date_assigned } = request.body;
-        const result = await dbOperations.advancedSearchKey(input_tag_num, input_core, input_room_num, input_room_type, input_key_num, input_availability, input_fname, input_lname, input_access_id, input_date_assigned);
+        const { 
+            input_tag_num, 
+            input_core, 
+            input_room_num, 
+            input_room_type, 
+            input_key_num, 
+            input_availability, 
+            input_fname, 
+            input_lname, 
+            input_access_id, 
+            input_date_assigned 
+        } = request.body;
+        const result = await dbOperations.advancedSearchKey(
+            input_tag_num, 
+            input_core, 
+            input_room_num, 
+            input_room_type, 
+            input_key_num, 
+            input_availability, 
+            input_fname, 
+            input_lname, 
+            input_access_id, 
+            input_date_assigned
+        );
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError(error);

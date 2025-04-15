@@ -163,11 +163,25 @@ Keys.jsx component styling
 }
 
 #Keys-div-action-buttons {
-  width: 7.5%;
+  width: 11%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+#Keys-button-download {
+  width: 52px;
+  height: 52px;
+  background-color: transparent;
+  background-image: url('./assets/download_icon_default.png');
+  background-size: cover;
+  border: none;
+  outline: none;
+}
+#Keys-button-download:hover {
+  background-image: url('./assets/download_icon_hover.png');
+  cursor: pointer;
+  transition: .3s;
 }
 #Keys-button-advanced-search {
   width: 52px;
@@ -245,16 +259,19 @@ Keys.jsx component styling
   width: 100%;
   border-collapse: collapse;
 }
-#Keys-td, #Keys-th {
-  border: 1px solid #ddd;
-  padding: 8px;
+#Keys-tr-header {
+  position: sticky;
+  top: 0;
 }
 #Keys-th {
   color: white;
-  padding-top: 12px;
-  padding-bottom: 12px;
   text-align: left;
+  padding: 8px;
   background-color: rgb(9, 64, 56, 1);
+}
+#Keys-td {
+  border: 1px solid black;
+  padding: 8px;
 }
 #Keys-tr {
   text-align: left;
@@ -441,25 +458,22 @@ CreateKey.jsx component styling
   width: 100%;
   border-collapse: collapse;
 }
-#CreateKey-th {
+#CreateKey-th-header {
   position: sticky;
   top: 0;
-  background-color: rgb(9, 64, 56, 1);
-  z-index: 10; /* Make sure the header stays above the table rows */
-}
-#CreateKey-td, #CreateKey-th {
-  border: 1px solid #ddd;
-  padding: 8px;
 }
 #CreateKey-th {
   color: white;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding: 8px;
   text-align: left;
   background-color: rgb(9, 64, 56, 1);
 }
 #CreateKey-tr {
   text-align: left;
+}
+#CreateKey-td {
+  border: 1px solid black;
+  padding: 8px;
 }
 #CreateKey-tr:nth-child(odd) {
   background-color: #e2e2e2;
@@ -971,25 +985,22 @@ EditKey.jsx component styling
   width: 100%;
   border-collapse: collapse;
 }
-#EditKey-th {
+#EditKey-th-header {
   position: sticky;
   top: 0;
-  background-color: rgb(9, 64, 56, 1);
-  z-index: 10; /* Make sure the header stays above the table rows */
-}
-#EditKey-td, #EditKey-th {
-  border: 1px solid #ddd;
-  padding: 8px;
 }
 #EditKey-th {
   color: white;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding: 8px;
   text-align: left;
   background-color: rgb(9, 64, 56, 1);
 }
 #EditKey-tr {
   text-align: left;
+}
+#EditKey-td {
+  border: 1px solid black;
+  padding: 8px;
 }
 #EditKey-tr:nth-child(odd) {
   background-color: #e2e2e2;
@@ -1213,11 +1224,25 @@ RequestForms.jsx component styling
 }
 
 #RequestForms-div-action-buttons {
-  width: 7.5%;
+  width: 11%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+#RequestForms-button-download {
+  width: 52px;
+  height: 52px;
+  background-color: transparent;
+  background-image: url('./assets/download_icon_default.png');
+  background-size: cover;
+  border: none;
+  outline: none;
+}
+#RequestForms-button-download:hover {
+  background-image: url('./assets/download_icon_hover.png');
+  cursor: pointer;
+  transition: .3s;
 }
 #RequestForms-button-add-form {
   width: 52px;
@@ -1304,16 +1329,19 @@ RequestForms.jsx component styling
   width: 100%;
   border-collapse: collapse;
 }
-#RequestForms-td, #RequestForms-th {
-  border: 1px solid #ddd;
-  padding: 8px;
+#RequestForms-tr-header {
+  position: sticky;
+  top: 0;
 }
 #RequestForms-th {
   color: white;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding: 8px;
   text-align: left;
   background-color: rgb(9, 64, 56, 1);
+}
+#RequestForms-td {
+  border: 1px solid black;
+  padding: 8px;
 }
 #RequestForms-tr {
   text-align: left;
@@ -1722,16 +1750,19 @@ Users.jsx component styling
   width: 100%;
   border-collapse: collapse;
 }
-#Users-td, #Users-th {
-  border: 1px solid #ddd;
-  padding: 8px;
+#Users-tr-header {
+  position: sticky;
+  top: 0;
 }
 #Users-th {
   color: white;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding: 8px;
   text-align: left;
   background-color: rgb(9, 64, 56, 1);
+}
+#Users-td {
+  border: 1px solid black;
+  padding: 8px;
 }
 #Users-tr {
   text-align: left;
@@ -1972,12 +2003,13 @@ HistoryLog.jsx component styling
 }
 
 #HistoryLog-div-action-buttons {
-  width: 10%;
+  width: 14%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }
+
 #HistoryLog-button-sort {
   width: 52px;
   height: 52px;
@@ -1989,6 +2021,20 @@ HistoryLog.jsx component styling
 }
 #HistoryLog-button-sort:hover {
   background-image: url('./assets/sort_history_icon_hover.png');
+  cursor: pointer;
+  transition: .3s;
+}
+#HistoryLog-button-download {
+  width: 52px;
+  height: 52px;
+  background-color: transparent;
+  background-image: url('./assets/download_icon_default.png');
+  background-size: cover;
+  border: none;
+  outline: none;
+}
+#HistoryLog-button-download:hover {
+  background-image: url('./assets/download_icon_hover.png');
   cursor: pointer;
   transition: .3s;
 }
@@ -2065,17 +2111,19 @@ HistoryLog.jsx component styling
   width: 100%;
   border-collapse: collapse;
 }
-#HistoryLog-td,
-#HistoryLog-th {
-  border: 1px solid #ddd;
-  padding: 8px;
+#HistoryLog-tr-header {
+  position: sticky;
+  top: 0;
 }
 #HistoryLog-th {
   color: white;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding: 8px;
   text-align: left;
   background-color: rgb(9, 64, 56, 1);
+}
+#HistoryLog-td {
+  border: 1px solid black;
+  padding: 8px;
 }
 #HistoryLog-tr {
   text-align: left;
