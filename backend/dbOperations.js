@@ -793,7 +793,8 @@ const dbOperations = {
                     }
                 });
             });
-            return response;
+            // return the data as newest to oldest
+            return response.reverse();
         } catch (error) {
             errorLogOperations.logError(error); // Log the error
             console.log(error);

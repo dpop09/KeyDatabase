@@ -109,7 +109,7 @@ function Users() {
                 <div id="Users-div-table-container">
                     <table id="Users-table">
                         <tbody>
-                            <tr id="Users-tr">
+                            <tr id="Users-tr-header">
                                 <th id="Users-th">First Name</th>
                                 <th id="Users-th">Last Name</th>
                                 <th id="Users-th">Access ID</th>

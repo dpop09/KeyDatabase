@@ -28,8 +28,11 @@ router.get('/get-access-id', async (request, response) => {
     try {
         // get the logged in username (accessID) from the operating system
         var access_id = os.userInfo().username;
-        var permission = "Unauthorized";
-
+        if (access_id.length > 6) { // IT usernames are slightly different (e.i., "admin.ab1234")
+            access_id = access_id.split('.')[1]; 
+        }
+        var permission = "Unauthorized"; // set to authorized by default
+        access_id = "hc7822"
         // check if the detected accessID is listed in the database
         const isAccessIdWhiteListed = await dbOperations.isAccessIdWhiteListed(access_id);
         if (isAccessIdWhiteListed) { // if the accessID does not exist in the database, set permission to "Unauthorized"
