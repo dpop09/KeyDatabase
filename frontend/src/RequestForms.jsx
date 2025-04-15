@@ -147,6 +147,10 @@ function RequestForms() {
         getAllRequestForms();
     }
 
+    const handleDownloadRequestForms = async () => {
+        return
+    }
+
     const handleRowClick = (d) => {
         setRequestFormData(d);
         navigate('/editrequestform');
@@ -223,6 +227,7 @@ function RequestForms() {
                         <button id="RequestForms-button-clear-search" onClick={handleClearSearch}>Clear</button>
                     </div>
                     <div id="RequestForms-div-action-buttons">
+                        <button id="RequestForms-button-download" onClick={handleDownloadRequestForms} />
                         <button id="RequestForms-button-advanced-search" onClick={toggleDisplayAdvancedSearch} />
                         <button id="RequestForms-button-add-form" onClick={handleAddRequestForm}/>
                     </div>

@@ -151,6 +151,10 @@ function Home() {
         getAllKeys();
     }
 
+    const handleDownloadKeys = async () => {
+        return
+    }
+
     const handleRowClick = (d) => {
         setKeyData(d);
         navigate('/keyinfo');
@@ -223,8 +227,9 @@ function Home() {
                         <button id="Keys-button-clear-search" onClick={handleClearSearch}>Clear</button>
                     </div>
                     <div id="Keys-div-action-buttons">
+                        <button id="Keys-button-download" onClick={handleDownloadKeys} />
                         <button id="Keys-button-advanced-search" onClick={toggleDisplayAdvancedSearch} />
-                        <button id="Keys-button-create-key" onClick={handleCreateKey}/>
+                        <button id="Keys-button-create-key" onClick={handleCreateKey} />
                     </div>
                 </div>
                 {displayAdvancedSearch && (
