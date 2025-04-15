@@ -1,7 +1,5 @@
 const db = require('./db');
 const errorLogOperations = require('./errorLogOperations');
-const fs = require('fs').promises;
-const path = require('path');
 
 const dbOperations = {
     getAll: async function () {
@@ -51,36 +49,6 @@ const dbOperations = {
         } catch (error) {
             errorLogOperations.logError(error); // Log the error
             console.log(error);
-        }
-    },
-    getKeyRequestForm: async function (key_number) {
-        try {
-            // Define the path to the PDF file in the key_request_forms folder
-            const filePath = path.join(__dirname, '../', 'key_request_forms', `${key_number}.pdf`);
-            const options = {
-                format: 'jpeg',
-                out_dir: path.dirname(filePath),
-                out_prefix: key_number,
-                page: 1 // Render only the first page as an image, or specify range if needed
-            };
-    
-            // Convert PDF to image
-            await pdf.convert(filePath, options);
-    
-            // Read the generated image file
-            const imagePath = path.join(options.out_dir, `${options.out_prefix}-1.jpg`);
-            const imageData = await fs.readFile(imagePath);
-    
-            // Convert image to base64
-            const base64Image = imageData.toString('base64');
-
-            // Delete the temporary image file after reading it
-            await fs.unlink(imagePath);
-    
-            // Return the base64 image data
-            return { image_data: base64Image };
-        } catch (error) {
-            return null;
         }
     },
     editKey: async function (tag_number, tag_color, core_number, room_number, room_type, key_number, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned, comments, new_form_id) {

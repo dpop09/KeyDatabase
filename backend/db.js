@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const errorLogOperations = require('./errorLogOperations');
 const dotenv = require('dotenv');
 dotenv.config(); // read from .env file
 
@@ -14,10 +15,11 @@ const db = mysql.createConnection({
 // connect to the database
 db.connect((err) => {
     if (err) {
-        console.error('Database connection failed: ' + err.stack);
+        console.error('Database connection failed. Check your XAMPP control panel to see if both Apache and MySQL are running. Refer to the user manual to fix this issue: ' + err.stack);
+        errorLogOperations.logError(err)
         return;
     }
-    console.log('Connected to the database.');
+    console.log('Connected to the database successfully!');
 });
 
 module.exports = db;

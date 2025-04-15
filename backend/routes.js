@@ -69,22 +69,6 @@ router.post('/search-key', async (request, response) => {
     }
 });
 
-router.post('/getKeyRequestForm' , async (request, response) => {
-    try {
-        const { key_number } = request.body;
-        const result = await dbOperations.getKeyRequestForm(key_number);
-        if (result) {
-            response.status(200).send(result);
-        } else {
-            response.status(404).send('Key Request Form not found');
-        }
-    } catch (error) {
-        errorLogOperations.logError(error);
-        console.log(error);
-        response.status(500).send(error);
-    }
-});
-
 router.post('/edit-key', async (request, response) => {
     try {
         const { access_id,
