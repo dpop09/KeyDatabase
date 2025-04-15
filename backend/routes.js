@@ -32,7 +32,7 @@ router.get('/get-access-id', async (request, response) => {
             access_id = access_id.split('.')[1]; 
         }
         var permission = "Unauthorized"; // set to authorized by default
-        access_id = "hc7822"
+        
         // check if the detected accessID is listed in the database
         const isAccessIdWhiteListed = await dbOperations.isAccessIdWhiteListed(access_id);
         if (isAccessIdWhiteListed) { // if the accessID does not exist in the database, set permission to "Unauthorized"
