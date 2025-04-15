@@ -59,14 +59,6 @@ function KeyInfo() {
             year: "numeric"
         }) 
         : "";
-    
-    const displayDateLastEdited = keyData.date_last_edited 
-    ? new Date(keyData.date_last_edited).toLocaleDateString("en-US", {
-        month: "2-digit",
-        day: "2-digit",
-        year: "numeric"
-    }) 
-    : "";
 
     return (
         <>

@@ -580,7 +580,7 @@ const dbOperations = {
         input_access_id,
         input_date_signed,
         input_assigned_key,
-        input_status // new parameter for filtering by status
+        input_status
       ) {
         try {
           // Start the base query
@@ -663,100 +663,93 @@ const dbOperations = {
           errorLogOperations.logError(error);
           console.log(error);
         }
-      },      
-    advancedSearchKey: async function(tag_number, core_number, room_number, room_type, key_number, availability, key_holder_fname, key_holder_lname, key_holder_access_id, date_assigned) {
-        // Array to hold SQL conditions
-        let conditions = [];
-        // Array to hold parameter values (for the '?' placeholders)
-        let params = [];
-        // Add conditions for each column if the parameter is not null.
-        if (tag_number) {
-            conditions.push("tag_number = ?");
-            params.push(tag_number);
-        }
-        if (core_number) {
-            conditions.push("core_number = ?");
-            params.push(core_number);
-        }
-        if (room_number) {
-            conditions.push("room_number = ?");
-            params.push(room_number);
-        }
-        if (room_type) {
-            conditions.push("room_type = ?");
-            params.push(room_type);
-        }
-        if (key_number) {
-            conditions.push("key_number = ?");
-            params.push(key_number);
-        }
-        if (key_holder_fname) {
-            conditions.push("key_holder_fname = ?");
-            params.push(key_holder_fname);
-        }
-        if (key_holder_lname) {
-            conditions.push("key_holder_lname = ?");
-            params.push(key_holder_lname);
-        }
-        if (key_holder_access_id) {
-            conditions.push("key_holder_access_id = ?");
-            params.push(key_holder_access_id);
-        }
-        if (date_assigned) {
-            conditions.push("date_assigned = ?");
-            params.push(date_assigned);
-        }
-        
-        // Check that availability is provided (including when it is "false")
-        if (availability !== null && availability !== undefined && availability !== '') {
-            // Convert the value to a boolean.
-            // Note: availability might come in as a string from your select element.
-            let availBool;
-            if (availability === "true" || availability === true) {
-                availBool = true;
-            } else if (availability === "false" || availability === false) {
-                availBool = false;
-            }
-            // Only add conditions if we got a valid boolean.
-            if (availBool === true) {
-                // Key is available if none of the assignment fields are set,
-                // including date_assigned being either NULL or "1969-12-31"
-                conditions.push(
-                    "key_holder_fname IS NULL AND key_holder_lname IS NULL AND key_holder_access_id IS NULL AND (date_assigned IS NULL OR date_assigned = '1969-12-31')"
-            );
-            } else if (availBool === false) {
-                // Key is not available if all assignment fields are set,
-                // and date_assigned is not NULL or "1969-12-31"
-                conditions.push(
-                    "key_holder_fname IS NOT NULL AND key_holder_lname IS NOT NULL AND key_holder_access_id IS NOT NULL AND (date_assigned IS NOT NULL AND date_assigned <> '1969-12-31')"
-                );
-            }
-        }
-  
-        
-        // Build the final query.
-        let sql = "SELECT * FROM `keys`";
-        if (conditions.length > 0) {
-            sql += " WHERE " + conditions.join(" AND ");
-        }
-        // Execute the query (replace 'db.query' with your actual query execution function).
+    },      
+    advancedSearchKey: async function(
+        input_tag_num, 
+        input_core, 
+        input_room_num, 
+        input_room_type, 
+        input_key_num, 
+        input_availability, 
+        input_fname, 
+        input_lname, 
+        input_access_id, 
+        input_date_assigned
+    ) {
         try {
-            const response = await new Promise((resolve, reject) => {
-                db.query(sql, params, (err, result) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(result);
-                    }
-                });
-            });
-            return response
-        } catch (err) {
-            // Handle any errors as appropriate for your app.
-            console.error("Error executing advanced search query:", err);
-            throw err;
+        // Start the base query
+        let sql = "SELECT * FROM `keys` WHERE 1=1";
+        let values = [];
+    
+        // Dynamically add filters based on provided input values
+        if (input_tag_num) {
+            sql += " AND tag_number = ?";
+            values.push(input_tag_num);
         }
-    },
+        if (input_core) {
+            sql += " AND core_number = ?";
+            values.push(input_core);
+        }
+        if (input_room_num) {
+            sql += " AND room_number = ?";
+            values.push(input_room_num);
+        }
+        if (input_room_type) {
+            sql += " AND room_type = ?";
+            values.push(input_room_type);
+        }
+        if (input_key_num) {
+            sql += " AND key_number = ?";
+            values.push(input_key_num);
+        }
+        if (input_fname) {
+            sql += " AND key_holder_fname = ?";
+            values.push(input_fname);
+        }
+        if (input_lname) {
+            sql += " AND key_holder_lname = ?";
+            values.push(input_lname);
+        }
+        if (input_access_id) {
+            sql += " AND key_holder_access_id = ?";
+            values.push(input_access_id);
+        }
+        if (input_date_assigned) {
+            sql += " AND date_assigned = ?";
+            values.push(input_date_assigned);
+        }
+        // Handle availability input
+        if (input_availability) {
+            if (input_availability === "true") {
+                sql += " AND (key_holder_fname IS NULL OR key_holder_fname = '')";
+                sql += " AND (key_holder_lname IS NULL OR key_holder_lname = '')";
+                sql += " AND (key_holder_access_id IS NULL OR key_holder_access_id = '')";
+                sql += " AND (date_assigned IS NULL OR date_assigned = '')";
+            } else if (input_availability === "false") {
+                sql += " AND (key_holder_fname IS NOT NULL AND key_holder_fname <> '')";
+                sql += " AND (key_holder_lname IS NOT NULL AND key_holder_lname <> '')";
+                sql += " AND (key_holder_access_id IS NOT NULL AND key_holder_access_id <> '')";
+                sql += " AND (date_assigned IS NOT NULL AND date_assigned <> '')";
+            }
+        }
+    
+        // Execute the query using a promise wrapper
+        const response = await new Promise((resolve, reject) => {
+            db.query(sql, values, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+            });
+        });
+    
+        return response;
+        } catch (error) {
+            errorLogOperations.logError(error);
+            console.log(error);
+        }
+    },      
     getFullNameFromAccessID: async function(access_id) {
         try {
             // Use a comma to select multiple columns
