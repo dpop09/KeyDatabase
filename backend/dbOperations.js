@@ -1,4 +1,6 @@
 const db = require('./db');
+const fs = require('fs');
+const path = require('path');
 const errorLogOperations = require('./errorLogOperations');
 
 const dbOperations = {
@@ -914,6 +916,156 @@ const dbOperations = {
         } catch (error) {
             errorLogOperations.logError(error); // Log the error
             console.log(error);  
+        }
+    },
+    downloadAllKeys: async function() {
+        try {
+            const sql = 'SELECT * FROM `Keys`';
+    
+            const keys = await new Promise((resolve, reject) => {
+                db.query(sql, (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result);
+                });
+            });
+    
+            if (!keys.length) {
+                console.log('No keys found.');
+                return;
+            }
+    
+            // Extract headers and rows
+            const headers = Object.keys(keys[0]);
+            const rows = keys.map(row => headers.map(h => `${row[h] ?? ''}`));
+    
+            // Calculate column widths
+            const colWidths = headers.map((header, i) =>
+                Math.max(
+                    header.length,
+                    ...rows.map(row => row[i]?.toString().length || 0)
+                )
+            );
+    
+            // Build string output
+            const pad = (str, width) => str.toString().padEnd(width, ' ');
+            const headerLine = headers.map((h, i) => pad(h, colWidths[i])).join(' | ');
+            const divider = colWidths.map(w => '-'.repeat(w)).join('-|-');
+            const dataLines = rows.map(row =>
+                row.map((cell, i) => pad(cell, colWidths[i])).join(' | ')
+            );
+    
+            const formattedText = [headerLine, divider, ...dataLines].join('\n');
+    
+            // Save to file
+            const date = new Date().toISOString().split('T')[0];
+            const fileName = `keys_${date}.txt`;
+            const filePath = path.join(__dirname, '..', 'filedrop', fileName);
+    
+            await fs.promises.writeFile(filePath, formattedText);
+    
+            return true;
+        } catch (error) {
+            errorLogOperations.logError(error);
+            console.log(error);
+            return false;
+        }
+    },
+    downloadAllRequestForms: async function() {
+        try {
+            const sql = 'SELECT * FROM key_request_form';
+    
+            const forms = await new Promise((resolve, reject) => {
+                db.query(sql, (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result);
+                });
+            });
+    
+            if (!forms.length) {
+                console.log('No request forms found.');
+                return false;
+            }
+    
+            // Remove 'image_data' column
+            const headers = Object.keys(forms[0]).filter(h => h !== 'image_data');
+            const rows = forms.map(row =>
+                headers.map(h => `${row[h] ?? ''}`)
+            );
+    
+            // Calculate column widths
+            const colWidths = headers.map((header, i) =>
+                Math.max(header.length, ...rows.map(row => row[i]?.toString().length || 0))
+            );
+    
+            const pad = (str, width) => str.toString().padEnd(width, ' ');
+            const headerLine = headers.map((h, i) => pad(h, colWidths[i])).join(' | ');
+            const divider = colWidths.map(w => '-'.repeat(w)).join('-|-');
+            const dataLines = rows.map(row =>
+                row.map((cell, i) => pad(cell, colWidths[i])).join(' | ')
+            );
+    
+            const formattedText = [headerLine, divider, ...dataLines].join('\n');
+    
+            const date = new Date().toISOString().split('T')[0];
+            const fileName = `request_forms_${date}.txt`;
+            const filePath = path.join(__dirname, '..', 'filedrop', fileName);
+    
+            await fs.promises.writeFile(filePath, formattedText);
+    
+            return true;
+        } catch (error) {
+            errorLogOperations.logError(error);
+            console.log(error);
+            return false;
+        }
+    },
+    downloadHistoryLog: async function() {
+        try {
+            const sql = 'SELECT * FROM history';
+    
+            const logs = await new Promise((resolve, reject) => {
+                db.query(sql, (err, result) => {
+                    if (err) reject(err);
+                    else resolve(result);
+                });
+            });
+    
+            if (!logs.length) {
+                console.log('No history log entries found.');
+                return;
+            }
+    
+            // Include all columns
+            const headers = Object.keys(logs[0]);
+            const rows = logs.map(row =>
+                headers.map(h => `${row[h] ?? ''}`)
+            );
+    
+            // Calculate column widths
+            const colWidths = headers.map((header, i) =>
+                Math.max(header.length, ...rows.map(row => row[i]?.toString().length || 0))
+            );
+    
+            const pad = (str, width) => str.toString().padEnd(width, ' ');
+            const headerLine = headers.map((h, i) => pad(h, colWidths[i])).join(' | ');
+            const divider = colWidths.map(w => '-'.repeat(w)).join('-|-');
+            const dataLines = rows.map(row =>
+                row.map((cell, i) => pad(cell, colWidths[i])).join(' | ')
+            );
+    
+            const formattedText = [headerLine, divider, ...dataLines].join('\n');
+    
+            const date = new Date().toISOString().split('T')[0];
+            const fileName = `history_log_${date}.txt`;
+            const filePath = path.join(__dirname, '..', 'filedrop', fileName);
+    
+            await fs.promises.writeFile(filePath, formattedText);
+    
+            return true;
+        } catch (error) {
+            errorLogOperations.logError(error);
+            console.log(error);
+            return false;
         }
     }
 }

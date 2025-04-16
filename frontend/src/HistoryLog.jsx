@@ -175,7 +175,18 @@ function HistoryLog() {
     }
 
     const handleDownloadHistoryLog = async () => {
-        return
+        try {
+            const response = await fetch('http://localhost:8081/download-history-log');
+            const result = await response.text(); // read the response as text
+            if (result === 'true') {
+                setErrorMessage('The history log was successfully copied to a text file in the project directory in filedrop.')
+            } else {
+                setErrorMessage('Failed to copy the history log to a text file. Please try again later.');
+            }
+            handleModalShow();
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const getOrdinal = (n) => {
