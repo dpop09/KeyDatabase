@@ -3,8 +3,8 @@ const path = require('path');
 
 const errorLogOperations = {
     logError: function (error) {
-        const logFilePath = path.join(__dirname, 'error_log.txt'); // Path to the error log txt file
-        const timestamp = new Date().toISOString(); // Current timestamp
+        const logFilePath = path.join(__dirname, '..', 'filedrop', 'error_log.txt'); // relative path to filedrop folder
+        const timestamp = new Date().toISOString(); // current timestamp
         const errorMessage = `[${timestamp}] ERROR: ${error.message}\nStack: ${error.stack}\n\n`;
 
         // Append error message to log file

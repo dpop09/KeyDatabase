@@ -32,7 +32,7 @@ router.get('/get-access-id', async (request, response) => {
             access_id = access_id.split('.')[1]; 
         }
         var permission = "Unauthorized"; // set to authorized by default
-        
+        access_id = "hc7822"
         // check if the detected accessID is listed in the database
         const isAccessIdWhiteListed = await dbOperations.isAccessIdWhiteListed(access_id);
         if (isAccessIdWhiteListed) { // if the accessID does not exist in the database, set permission to "Unauthorized"
@@ -539,6 +539,39 @@ router.get('/delete-db', async (request, response) => {
         errorLogOperations.logError('Database deletion failed: ', error);
         console.log('Datbase deletion failed: ', error);
         response.status(500).send(error)
+    }
+})
+
+router.get('/download-keys', async (request, response) => {
+    try {
+        const result = await dbOperations.downloadAllKeys();
+        response.status(200).send(result)
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+})
+
+router.get('/download-request-forms', async (request, response) => {
+    try {
+        const result = await dbOperations.downloadAllRequestForms();
+        response.status(200).send(result)
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
+    }
+})
+
+router.get('/download-history-log', async (request, response) => {
+    try {
+        const result = await dbOperations.downloadHistoryLog();
+        response.status(200).send(result)
+    } catch (error) {
+        errorLogOperations.logError(error);
+        console.log(error);
+        response.status(500).send(error);
     }
 })
 
