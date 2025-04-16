@@ -2,3 +2,5 @@
 node_modules
 key_request_forms
 error_log.txt
+/filedrop/*
+!/filedrop/.gitkeep

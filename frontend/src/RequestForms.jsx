@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from './AuthContext';
 import { useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
+import { Modal, Box } from '@mui/material';
 
 function RequestForms() {
 
@@ -17,6 +18,14 @@ function RequestForms() {
             </div>
         )
     }
+
+    // state variables for the modals
+    const [showModal, setShowModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState(null);
+
+    // modal handlers
+    const handleModalClose = () => setShowModal(false);
+    const handleModalShow = () => setShowModal(true);
 
     const [data, setData] = useState([]);
     const [imageData, setImageData] = useState(null);
@@ -148,7 +157,18 @@ function RequestForms() {
     }
 
     const handleDownloadRequestForms = async () => {
-        return
+        try {
+            const response = await fetch('http://localhost:8081/download-request-forms');
+            const result = await response.text(); // read the response as text
+            if (result === 'true') {
+                setErrorMessage('Request forms were successfully copied to a text file in the project directory in filedrop.')
+            } else {
+                setErrorMessage('Failed to copy request forms to a text file. Please try again later.');
+            }
+            handleModalShow();
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const handleRowClick = (d) => {
@@ -319,6 +339,24 @@ function RequestForms() {
                     </div>
                 </div>
             </div>
+            <Modal open={showModal} onClose={handleModalClose}>
+                <Box sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: 400,
+                    bgcolor: "background.paper",
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: "8px",
+                    alignItems: "center",     // Center horizontally
+                    textAlign: "center"       // Center text inside
+                }}>
+                    <h2>{errorMessage}</h2>
+                    <button id="Modal-button-close" onClick={handleModalClose}>Close</button>
+                </Box>
+            </Modal>
         </>
     )
 }

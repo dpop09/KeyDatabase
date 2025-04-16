@@ -152,7 +152,18 @@ function Home() {
     }
 
     const handleDownloadKeys = async () => {
-        return
+        try {
+            const response = await fetch('http://localhost:8081/download-keys');
+            const result = await response.text(); // read the response as text
+            if (result === 'true') {
+                setErrorMessage('Keys were successfully copied to a text file in the project directory in filedrop.')
+            } else {
+                setErrorMessage('Failed to copy keys to a text file. Please try again later.');
+            }
+            handleModalShow();
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const handleRowClick = (d) => {
