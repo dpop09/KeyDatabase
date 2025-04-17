@@ -3,7 +3,7 @@ create database keysdb;
 use keysdb;
 
 create table `keys`(
-    tag_number int(11),
+    tag_number varchar(50),
     tag_color varchar(50),
     core_number varchar(50),
     room_number float,
