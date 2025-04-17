@@ -36,14 +36,14 @@ function Settings() {
                     'Content-Type': 'application/json'
                 }
             });
-            if (response.status === 200) {
+            const result = await response.text(); // read the response as text
+            if (result === 'true') {
                 setAlertMessage("Database backup created successfully.")
-                handleAlertModalShow();
             } else { // if the response is unsuccessful
                 console.log(response)
                 setAlertMessage("Internal Server Error. Please try again later.");
-                handleAlertModalShow();
             }
+            handleAlertModalShow();
         } catch (error) {
             console.log(error);
         }
