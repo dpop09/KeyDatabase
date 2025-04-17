@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const errorLogOperations = require('./errorLogOperations');
 const mysqldump = require('mysqldump');
+const { exec } = require('child_process');
 
 const dbOperations = {
     getAll: async function () {
@@ -1069,25 +1070,30 @@ const dbOperations = {
             return false;
         }
     },
-    createDatabaseBackup: async function() {
-        const file_name = 'backup.sql'
-        const file_path = path.join(__dirname, '..', 'filedrop', file_name);
-        try {
-            const result = mysqldump({
-                connection: {
-                    host: 'localhost',
-                    user: 'root',
-                    password: '',
-                    database: 'keysdb'
-                },
-                dumpToFile: file_path
-            })
-            return true
-        } catch (error) {
-            errorLogOperations.logError(error);
-            console.log(error);
-            return false;
-        }
+    createDatabaseBackup: async function () {
+        // get today's date
+        const currentDate = new Date().toISOString().split('T')[0];
+        const fileName = `backup_${currentDate}.sql`;
+        const filePath = path.join(__dirname, '..', 'filedrop', fileName);
+    
+        return new Promise((resolve) => {
+            // use MySQL's built-in tool to export database contents
+            // --column-statistics=0: prevents errors with MariaDB
+            const dumpCommand = `mysqldump --column-statistics=0 -u root keysdb > "${filePath}"`;
+    
+            // run the command in the shell
+            exec(dumpCommand, (error, stdout, stderr) => {
+                if (error) {
+                    errorLogOperations.logError(error);
+                    console.error('Backup failed:', error);
+                    resolve(false);
+                    return;
+                }
+    
+                console.log(`Database backup complete: ${fileName}`);
+                resolve(true);
+            });
+        });
     }
 }
 
