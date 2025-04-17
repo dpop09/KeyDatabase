@@ -1079,7 +1079,7 @@ const dbOperations = {
         return new Promise((resolve) => {
             // use MySQL's built-in tool to export database contents
             // --column-statistics=0: prevents errors with MariaDB
-            const dumpCommand = `mysqldump --column-statistics=0 -u root keysdb > "${filePath}"`;
+            const dumpCommand = `"C:\\xampp\\mysql\\bin\\mysqldump.exe" --column-statistics=0 -u root keysdb > "${filePath}"`;
     
             // run the command in the shell
             exec(dumpCommand, (error, stdout, stderr) => {
