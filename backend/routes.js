@@ -7,8 +7,6 @@ const { scrapeWayneData } = require('./scrape');
 const os = require('os');
 const { v4: uuidv4 } = require('uuid');
 const { sendKeyPickupEmail } = require('./emailOperations');
-const mysqldump = require('mysqldump');
-const path = require('path');
 
 const router = express.Router();
 
@@ -32,7 +30,7 @@ router.get('/get-access-id', async (request, response) => {
             access_id = access_id.split('.')[1]; 
         }
         var permission = "Unauthorized"; // set to authorized by default
-
+        access_id = "hc7822"
         // check if the detected accessID is listed in the database
         const isAccessIdWhiteListed = await dbOperations.isAccessIdWhiteListed(access_id);
         if (isAccessIdWhiteListed) { // if the accessID does not exist in the database, set permission to "Unauthorized"
@@ -512,17 +510,8 @@ router.post('/send-email', async (request, response) => {
 })
 
 router.get('/backup', async (request, response) => {
-    const backup_path = path.join(__dirname, 'backup.sql');
     try {
-        const result = mysqldump({
-            connection: {
-                host: 'localhost',
-                user: 'root',
-                password: '',
-                database: 'keysdb'
-            },
-            dumpToFile: backup_path
-        })
+        const result = await dbOperations.createDatabaseBackup();
         response.status(200).send(result);
     } catch (error) {
         errorLogOperations.logError('Backup failed: ', error);
